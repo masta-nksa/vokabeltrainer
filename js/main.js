@@ -1,7 +1,8 @@
 // Einstiegspunkt: Start, Auswahl, Import, Verdrahtung der Bausteine.
 
 import * as storage from './storage/index.js';
-import { ensureBuiltinDecks, itemsFrom } from './data/decks.js';
+import { ensureBuiltinDecks, itemsFrom, languageName } from './data/decks.js';
+import * as tts from './speech/tts.js';
 import { readTextFile, deckFromCsv } from './data/csv.js';
 import { state } from './state.js';
 import { stripDiacritics } from './util.js';
@@ -90,11 +91,116 @@ function onSelectionChange() {
     hint.textContent = count === 0
         ? 'Wähle mindestens eine Lektion.'
         : `${count} Wörter ausgewählt`;
+
+    renderVoicePicker();
 }
 
 function selectedItems() {
     if (!state.deck) return [];
     return itemsFrom(state.deck, state.selectedUnits);
+}
+
+// ------------------------------------------------------------ Stimmenwahl
+
+/** Für welches Deck die Auswahl zuletzt aufgebaut wurde. */
+let voicePickerDeckId = null;
+
+/** Die Sprachen, in denen dieses Deck spricht. */
+function deckLanguages() {
+    const deck = state.deck;
+    return deck ? [...new Set([deck.targetLang, deck.sourceLang])] : [];
+}
+
+/** Ein echtes Wort aus dem Deck als Hörprobe. */
+function sampleFor(lang) {
+    const item = state.deck?.units[0]?.items[0];
+    if (!item) return lang;
+    return lang === state.deck.targetLang ? item.target : item.source;
+}
+
+function saveVoices() {
+    const map = {};
+    for (const lang of deckLanguages()) {
+        const uri = tts.getPreferred(lang);
+        if (uri) map[lang] = uri;
+    }
+    return storage.setSetting('voices', map);
+}
+
+/**
+ * Baut die Stimmenauswahl auf, eine Zeile je Sprache des Decks.
+ * @param {boolean} force Auch dann neu aufbauen, wenn das Deck dasselbe ist
+ */
+function renderVoicePicker(force = false) {
+    const box = document.getElementById('voice-picker');
+    const deck = state.deck;
+
+    if (!force && deck?.id === voicePickerDeckId) return;
+    voicePickerDeckId = deck?.id ?? null;
+
+    box.replaceChildren();
+    if (!deck) return;
+
+    if (!tts.isAvailable()) {
+        const hint = document.createElement('p');
+        hint.className = 'hint';
+        hint.textContent = 'Dieser Browser kann nichts vorlesen.';
+        box.append(hint);
+        return;
+    }
+
+    for (const lang of deckLanguages()) {
+        const row = document.createElement('div');
+        row.className = 'row';
+
+        const available = tts.voicesFor(lang);
+
+        // Ohne installierte Stimme liest der Browser den Text mit irgendeiner
+        // anderen vor. Das klingt falsch, ohne dass ein Fehler sichtbar wird –
+        // also wird es hier ausgesprochen.
+        if (available.length === 0) {
+            const warning = document.createElement('p');
+            warning.className = 'hint error';
+            warning.textContent =
+                `Für ${languageName(lang)} ist auf diesem Gerät keine Stimme installiert. `
+                + 'Der Browser liest den Text sonst mit einer fremden Stimme vor. '
+                + 'Unter Windows lässt sich das nachrüsten: Einstellungen, '
+                + 'Zeit und Sprache, Sprache und Region, Sprache hinzufügen, '
+                + 'dabei die Sprachausgabe mitinstallieren.';
+            box.append(warning);
+            continue;
+        }
+
+        const field = document.createElement('span');
+        const label = document.createElement('label');
+        label.textContent = languageName(lang);
+        label.htmlFor = `voice-${lang}`;
+
+        const select = document.createElement('select');
+        select.id = `voice-${lang}`;
+        select.append(new Option('automatisch wählen', ''));
+
+        for (const voice of available) {
+            select.append(new Option(`${voice.name} (${voice.lang})`, voice.voiceURI));
+        }
+
+        select.value = tts.getPreferred(lang);
+        select.addEventListener('change', async () => {
+            tts.setPreferred(lang, select.value);
+            await saveVoices();
+            tts.speak(sampleFor(lang), lang);
+        });
+
+        field.append(label, select);
+
+        const test = document.createElement('button');
+        test.type = 'button';
+        test.textContent = 'anhören';
+        test.addEventListener('click', () => tts.speak(sampleFor(lang), lang));
+
+        row.append(field, test);
+        box.append(row);
+    }
 }
 
 function initSelection() {
@@ -191,6 +297,13 @@ async function main() {
     quiz.init({ onLeave: openSelection });
 
     await ensureBuiltinDecks();
+
+    tts.usePreferred(await storage.getSetting('voices', {}));
+
+    // Chrome kennt die Stimmen beim ersten Aufbau oft noch nicht.
+    if (tts.isAvailable()) {
+        speechSynthesis.addEventListener('voiceschanged', () => renderVoicePicker(true));
+    }
 
     // Name und Held aus dem letzten Besuch übernehmen.
     const name = await storage.getSetting('learnerName', '');
