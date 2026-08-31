@@ -8,6 +8,9 @@ export const label = 'writing';
 export const description = 'Übersetzung selbst schreiben';
 export const inputKind = 'text';
 
+// Bestaetigt die getippte Form akustisch.
+export const speakAnswerOnCorrect = true;
+
 /** @param {import('../storage/index.js').Item} item */
 export function buildQuestion(item) {
     return {

@@ -8,6 +8,9 @@ export const label = 'spelling';
 export const description = 'Aus vier Schreibweisen die richtige erkennen';
 export const inputKind = 'choice';
 
+// Hier lohnt es sich: man hoert, wie sich die richtige Schreibweise anhoert.
+export const speakAnswerOnCorrect = true;
+
 /**
  * @param {import('../storage/index.js').Item} item
  * @param {import('../storage/index.js').Item[]} pool

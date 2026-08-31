@@ -184,7 +184,9 @@ function answer(given, button) {
         session.correct++;
         reward.better();
         button?.classList.add('right');
-        tts.speak(question.answer, langFor(question.answerSide));
+        if (mode.speakAnswerOnCorrect) {
+            tts.speak(question.answer, langFor(question.answerSide));
+        }
         resolveItem();
         scoreboard.render(session);
         window.setTimeout(nextQuestion, button ? 550 : 300);
