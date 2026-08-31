@@ -1,0 +1,1099 @@
+{
+  "id": "en-young-world-2",
+  "title": "English – Young World 2",
+  "sourceLang": "de",
+  "targetLang": "en",
+  "builtin": true,
+  "units": [
+    {
+      "id": "2_0",
+      "title": "2_0 Welcome back!",
+      "items": [
+        {
+          "id": "2_0-001",
+          "source": "eine Uhr",
+          "target": "a clock"
+        },
+        {
+          "id": "2_0-002",
+          "source": "ein Clown",
+          "target": "a clown"
+        },
+        {
+          "id": "2_0-003",
+          "source": "eine Ente",
+          "target": "a duck"
+        },
+        {
+          "id": "2_0-004",
+          "source": "eine Gitarre",
+          "target": "a guitar"
+        },
+        {
+          "id": "2_0-005",
+          "source": "ein See",
+          "target": "a lake"
+        },
+        {
+          "id": "2_0-006",
+          "source": "Was heißt das auf Englisch?",
+          "target": "What's this in English?"
+        },
+        {
+          "id": "2_0-007",
+          "source": "Das ist ein Bleistift.",
+          "target": "It's a pencil."
+        },
+        {
+          "id": "2_0-008",
+          "source": "eine Trompete",
+          "target": "a trumpet"
+        },
+        {
+          "id": "2_0-009",
+          "source": "Wie spät ist es?",
+          "target": "What's the time?"
+        },
+        {
+          "id": "2_0-010",
+          "source": "Es ist drei Uhr.",
+          "target": "It's three o'clock."
+        },
+        {
+          "id": "2_0-011",
+          "source": "ausmalen",
+          "target": "colour"
+        },
+        {
+          "id": "2_0-012",
+          "source": "schneiden",
+          "target": "cut"
+        },
+        {
+          "id": "2_0-013",
+          "source": "zeichnen",
+          "target": "draw"
+        },
+        {
+          "id": "2_0-014",
+          "source": "zuhören",
+          "target": "listen"
+        },
+        {
+          "id": "2_0-015",
+          "source": "schauen",
+          "target": "look"
+        },
+        {
+          "id": "2_0-016",
+          "source": "öffne dein Buch",
+          "target": "open your book"
+        },
+        {
+          "id": "2_0-017",
+          "source": "aufzeigen",
+          "target": "put your hand up"
+        },
+        {
+          "id": "2_0-018",
+          "source": "lesen",
+          "target": "read"
+        },
+        {
+          "id": "2_0-019",
+          "source": "schreiben",
+          "target": "write"
+        }
+      ]
+    },
+    {
+      "id": "2_1",
+      "title": "2_1 Let's be friends",
+      "items": [
+        {
+          "id": "2_1-001",
+          "source": "eine Burg",
+          "target": "a castle"
+        },
+        {
+          "id": "2_1-002",
+          "source": "eine Wolke",
+          "target": "a cloud"
+        },
+        {
+          "id": "2_1-003",
+          "source": "ein Wald",
+          "target": "a forest"
+        },
+        {
+          "id": "2_1-004",
+          "source": "Gras",
+          "target": "grass"
+        },
+        {
+          "id": "2_1-005",
+          "source": "ein Hügel",
+          "target": "a hill"
+        },
+        {
+          "id": "2_1-006",
+          "source": "ein Berg",
+          "target": "a mountain"
+        },
+        {
+          "id": "2_1-007",
+          "source": "ein Bild",
+          "target": "a picture"
+        },
+        {
+          "id": "2_1-008",
+          "source": "ein Skizzenbuch",
+          "target": "a sketchbook"
+        },
+        {
+          "id": "2_1-009",
+          "source": "der Himmel",
+          "target": "the sky"
+        },
+        {
+          "id": "2_1-010",
+          "source": "eine Straße",
+          "target": "a road"
+        },
+        {
+          "id": "2_1-011",
+          "source": "Ich komme aus Frankreich. Ich spreche Französisch.",
+          "target": "I'm from France. I speak French."
+        },
+        {
+          "id": "2_1-012",
+          "source": "Ich komme aus Spanien. Ich spreche Spanisch.",
+          "target": "I'm from Spain. I speak Spanish."
+        },
+        {
+          "id": "2_1-013",
+          "source": "Ich komme aus Italien. Ich spreche Italienisch.",
+          "target": "I'm from Italy. I speak Italian."
+        },
+        {
+          "id": "2_1-014",
+          "source": "Ich komme aus Portugal. Ich spreche Portugiesisch.",
+          "target": "I'm from Portugal. I speak Portuguese."
+        },
+        {
+          "id": "2_1-015",
+          "source": "Ich komme aus Deutschland. Ich spreche Deutsch.",
+          "target": "I'm from Germany. I speak German."
+        },
+        {
+          "id": "2_1-016",
+          "source": "Ich komme aus der Türkei. Ich spreche Türkisch.",
+          "target": "I'm from Turkey. I speak Turkish."
+        },
+        {
+          "id": "2_1-017",
+          "source": "Ich komme aus der Schweiz. Ich spreche Schweizerdeutsch und Französisch.",
+          "target": "I'm from Switzerland. I speak Swiss German and French."
+        },
+        {
+          "id": "2_1-018",
+          "source": "hellblau",
+          "target": "light blue"
+        },
+        {
+          "id": "2_1-019",
+          "source": "dunkelblau",
+          "target": "dark blue"
+        },
+        {
+          "id": "2_1-020",
+          "source": "hellgrün",
+          "target": "light green"
+        },
+        {
+          "id": "2_1-021",
+          "source": "dunkelgrün",
+          "target": "dark green"
+        }
+      ]
+    },
+    {
+      "id": "2_2",
+      "title": "2_2 All in a day",
+      "items": [
+        {
+          "id": "2_2-001",
+          "source": "Ich wache auf.",
+          "target": "I wake up."
+        },
+        {
+          "id": "2_2-002",
+          "source": "Ich stehe auf.",
+          "target": "I get up."
+        },
+        {
+          "id": "2_2-003",
+          "source": "Ich putze meine Zähne.",
+          "target": "I clean my teeth."
+        },
+        {
+          "id": "2_2-004",
+          "source": "Ich dusche mich.",
+          "target": "I have a shower."
+        },
+        {
+          "id": "2_2-005",
+          "source": "Ich bürste meine Haare.",
+          "target": "I brush my hair."
+        },
+        {
+          "id": "2_2-006",
+          "source": "Ich ziehe mich an.",
+          "target": "I get dressed."
+        },
+        {
+          "id": "2_2-007",
+          "source": "Ich gehe zur Schule.",
+          "target": "I go to school."
+        },
+        {
+          "id": "2_2-008",
+          "source": "Ich treffe meine Freunde.",
+          "target": "I meet my friends."
+        },
+        {
+          "id": "2_2-009",
+          "source": "Ich mache meine Hausaufgaben.",
+          "target": "I do my homework."
+        },
+        {
+          "id": "2_2-010",
+          "source": "am Morgen",
+          "target": "in the morning"
+        },
+        {
+          "id": "2_2-011",
+          "source": "am Nachmittag",
+          "target": "in the afternoon"
+        },
+        {
+          "id": "2_2-012",
+          "source": "am Abend",
+          "target": "in the evening"
+        },
+        {
+          "id": "2_2-013",
+          "source": "in der Nacht",
+          "target": "at night"
+        },
+        {
+          "id": "2_2-014",
+          "source": "Ich gehe ins Bett.",
+          "target": "I go to bed."
+        },
+        {
+          "id": "2_2-015",
+          "source": "Es ist sieben Uhr.",
+          "target": "It's seven o'clock."
+        },
+        {
+          "id": "2_2-016",
+          "source": "Es ist Viertel nach sieben.",
+          "target": "It's a quarter past seven."
+        },
+        {
+          "id": "2_2-017",
+          "source": "Es ist halb acht.",
+          "target": "It's half past seven."
+        },
+        {
+          "id": "2_2-018",
+          "source": "Es ist Viertel vor acht.",
+          "target": "It's a quarter to eight."
+        }
+      ]
+    },
+    {
+      "id": "2_3",
+      "title": "2_3 Let's play!",
+      "items": [
+        {
+          "id": "2_3-001",
+          "source": "Basketball",
+          "target": "basketball"
+        },
+        {
+          "id": "2_3-002",
+          "source": "Cricket",
+          "target": "cricket"
+        },
+        {
+          "id": "2_3-003",
+          "source": "Fußball",
+          "target": "football"
+        },
+        {
+          "id": "2_3-004",
+          "source": "Handball",
+          "target": "handball"
+        },
+        {
+          "id": "2_3-005",
+          "source": "Hockey",
+          "target": "hockey"
+        },
+        {
+          "id": "2_3-006",
+          "source": "Reiten",
+          "target": "horse riding"
+        },
+        {
+          "id": "2_3-007",
+          "source": "Tischtennis",
+          "target": "table tennis"
+        },
+        {
+          "id": "2_3-008",
+          "source": "Rugby",
+          "target": "rugby"
+        },
+        {
+          "id": "2_3-009",
+          "source": "Skifahren",
+          "target": "skiing"
+        },
+        {
+          "id": "2_3-010",
+          "source": "Snowboarden",
+          "target": "snowboarding"
+        },
+        {
+          "id": "2_3-011",
+          "source": "prellen",
+          "target": "bounce"
+        },
+        {
+          "id": "2_3-012",
+          "source": "springen",
+          "target": "jump"
+        },
+        {
+          "id": "2_3-013",
+          "source": "kicken",
+          "target": "kick"
+        },
+        {
+          "id": "2_3-014",
+          "source": "passen",
+          "target": "pass"
+        },
+        {
+          "id": "2_3-015",
+          "source": "gewinnen",
+          "target": "win"
+        },
+        {
+          "id": "2_3-016",
+          "source": "Nicht schubsen!",
+          "target": "Don't push!"
+        },
+        {
+          "id": "2_3-017",
+          "source": "ein Tor schießen",
+          "target": "score a goal"
+        },
+        {
+          "id": "2_3-018",
+          "source": "eine Mannschaft",
+          "target": "a team"
+        },
+        {
+          "id": "2_3-019",
+          "source": "Fußballschuhe",
+          "target": "football boots"
+        },
+        {
+          "id": "2_3-020",
+          "source": "ein Tennisschläger",
+          "target": "a tennis racquet"
+        },
+        {
+          "id": "2_3-021",
+          "source": "ein Snowboard",
+          "target": "a snowboard"
+        },
+        {
+          "id": "2_3-022",
+          "source": "ein Fahrradhelm",
+          "target": "a bike helmet"
+        }
+      ]
+    },
+    {
+      "id": "2_4",
+      "title": "2_4 Computers and codes",
+      "items": [
+        {
+          "id": "2_4-001",
+          "source": "ein Mülleimer",
+          "target": "a bin"
+        },
+        {
+          "id": "2_4-002",
+          "source": "ein Code",
+          "target": "a code"
+        },
+        {
+          "id": "2_4-003",
+          "source": "ein Computer",
+          "target": "a computer"
+        },
+        {
+          "id": "2_4-004",
+          "source": "ein Briefumschlag",
+          "target": "an envelope"
+        },
+        {
+          "id": "2_4-005",
+          "source": "ein Passwort",
+          "target": "a password"
+        },
+        {
+          "id": "2_4-006",
+          "source": "eine Tastatur",
+          "target": "a keyboard"
+        },
+        {
+          "id": "2_4-007",
+          "source": "ein Büro",
+          "target": "an office"
+        },
+        {
+          "id": "2_4-008",
+          "source": "eine Maus",
+          "target": "a mouse"
+        },
+        {
+          "id": "2_4-009",
+          "source": "ein Drucker",
+          "target": "a printer"
+        },
+        {
+          "id": "2_4-010",
+          "source": "ein Bildschirm",
+          "target": "a screen"
+        },
+        {
+          "id": "2_4-011",
+          "source": "ein Handy",
+          "target": "a mobile phone"
+        },
+        {
+          "id": "2_4-012",
+          "source": "das Alphabet",
+          "target": "the alphabet"
+        },
+        {
+          "id": "2_4-013",
+          "source": "Wie buchstabiert man deinen Namen?",
+          "target": "How do you spell your name?"
+        },
+        {
+          "id": "2_4-014",
+          "source": "Kannst du das bitte wiederholen?",
+          "target": "Can you repeat that, please?"
+        },
+        {
+          "id": "2_4-015",
+          "source": "Er gräbt.",
+          "target": "He's digging."
+        },
+        {
+          "id": "2_4-016",
+          "source": "Sie öffnet eine Schachtel.",
+          "target": "She's opening a box."
+        },
+        {
+          "id": "2_4-017",
+          "source": "Er druckt Dokumente aus.",
+          "target": "He's printing documents."
+        },
+        {
+          "id": "2_4-018",
+          "source": "Sie warten auf einen Bus.",
+          "target": "They are waiting for a bus."
+        },
+        {
+          "id": "2_4-019",
+          "source": "Sie arbeitet.",
+          "target": "She's working."
+        },
+        {
+          "id": "2_4-020",
+          "source": "Er beobachtet die Vögel.",
+          "target": "He's watching the birds."
+        }
+      ]
+    },
+    {
+      "id": "2_5",
+      "title": "2_5 Seasons and cycles",
+      "items": [
+        {
+          "id": "2_5-001",
+          "source": "Frühling",
+          "target": "spring"
+        },
+        {
+          "id": "2_5-002",
+          "source": "Sommer",
+          "target": "summer"
+        },
+        {
+          "id": "2_5-003",
+          "source": "Herbst",
+          "target": "autumn"
+        },
+        {
+          "id": "2_5-004",
+          "source": "Winter",
+          "target": "winter"
+        },
+        {
+          "id": "2_5-005",
+          "source": "ein Blatt",
+          "target": "a leaf"
+        },
+        {
+          "id": "2_5-006",
+          "source": "ein Loch",
+          "target": "a hole"
+        },
+        {
+          "id": "2_5-007",
+          "source": "ein Ast",
+          "target": "a branch"
+        },
+        {
+          "id": "2_5-008",
+          "source": "eine Stadt",
+          "target": "a town"
+        },
+        {
+          "id": "2_5-009",
+          "source": "eine Eiche",
+          "target": "an oak tree"
+        },
+        {
+          "id": "2_5-010",
+          "source": "ein Eichhörnchen",
+          "target": "a squirrel"
+        },
+        {
+          "id": "2_5-011",
+          "source": "Leute",
+          "target": "people"
+        },
+        {
+          "id": "2_5-012",
+          "source": "eine Pflanze",
+          "target": "a plant"
+        },
+        {
+          "id": "2_5-013",
+          "source": "eine Eichel",
+          "target": "an acorn"
+        },
+        {
+          "id": "2_5-014",
+          "source": "Ein Eichhörnchen pflanzt eine Eichel.",
+          "target": "A squirrel plants an acorn."
+        },
+        {
+          "id": "2_5-015",
+          "source": "Die Eichel wächst zu einem Baum heran.",
+          "target": "The acorn grows into a tree."
+        },
+        {
+          "id": "2_5-016",
+          "source": "Der Wind weht die Blätter.",
+          "target": "The wind blows the leaves."
+        },
+        {
+          "id": "2_5-017",
+          "source": "Ein stürmischer Tag.",
+          "target": "A stormy day."
+        },
+        {
+          "id": "2_5-018",
+          "source": "Er lebt in einer Großstadt.",
+          "target": "He lives in a city."
+        },
+        {
+          "id": "2_5-019",
+          "source": "Er lebt in einem Dorf.",
+          "target": "He lives in a village."
+        }
+      ]
+    },
+    {
+      "id": "2_6",
+      "title": "2_6 Towns and cities",
+      "items": [
+        {
+          "id": "2_6-001",
+          "source": "eine Kirche",
+          "target": "a church"
+        },
+        {
+          "id": "2_6-002",
+          "source": "ein Kino",
+          "target": "a cinema"
+        },
+        {
+          "id": "2_6-003",
+          "source": "eine Brücke",
+          "target": "a bridge"
+        },
+        {
+          "id": "2_6-004",
+          "source": "ein Museum",
+          "target": "a museum"
+        },
+        {
+          "id": "2_6-005",
+          "source": "ein Restaurant",
+          "target": "a restaurant"
+        },
+        {
+          "id": "2_6-006",
+          "source": "ein Platz",
+          "target": "a square"
+        },
+        {
+          "id": "2_6-007",
+          "source": "ein Fußballstadion",
+          "target": "a football stadium"
+        },
+        {
+          "id": "2_6-008",
+          "source": "eine Statue",
+          "target": "a statue"
+        },
+        {
+          "id": "2_6-009",
+          "source": "ein Supermarkt",
+          "target": "a supermarket"
+        },
+        {
+          "id": "2_6-010",
+          "source": "ein Theater",
+          "target": "a theatre"
+        },
+        {
+          "id": "2_6-011",
+          "source": "ein Bahnhof",
+          "target": "a train station"
+        },
+        {
+          "id": "2_6-012",
+          "source": "Ich habe einen lustigen Film gesehen.",
+          "target": "I saw a funny film."
+        },
+        {
+          "id": "2_6-013",
+          "source": "Ich habe ein Eis gegessen.",
+          "target": "I had an ice cream."
+        },
+        {
+          "id": "2_6-014",
+          "source": "Ich habe Fußball gespielt.",
+          "target": "I played football."
+        },
+        {
+          "id": "2_6-015",
+          "source": "Sollen wir ins Kino gehen?",
+          "target": "Shall we go to the cinema?"
+        },
+        {
+          "id": "2_6-016",
+          "source": "Ja, gute Idee.",
+          "target": "Yes, good idea."
+        },
+        {
+          "id": "2_6-017",
+          "source": "Ich war müde.",
+          "target": "I was tired."
+        },
+        {
+          "id": "2_6-018",
+          "source": "Ich bin um 9 Uhr ins Bett gegangen.",
+          "target": "I went to bed at 9 o'clock."
+        }
+      ]
+    },
+    {
+      "id": "2_7",
+      "title": "2_7 Story time",
+      "items": [
+        {
+          "id": "2_7-001",
+          "source": "ein Riese",
+          "target": "a giant"
+        },
+        {
+          "id": "2_7-002",
+          "source": "eine Krone",
+          "target": "a crown"
+        },
+        {
+          "id": "2_7-003",
+          "source": "eine Hexe",
+          "target": "a witch"
+        },
+        {
+          "id": "2_7-004",
+          "source": "ein Zauberer",
+          "target": "a wizard"
+        },
+        {
+          "id": "2_7-005",
+          "source": "eine Königin",
+          "target": "a queen"
+        },
+        {
+          "id": "2_7-006",
+          "source": "ein König",
+          "target": "a king"
+        },
+        {
+          "id": "2_7-007",
+          "source": "ein Drache",
+          "target": "a dragon"
+        },
+        {
+          "id": "2_7-008",
+          "source": "eine Prinzessin",
+          "target": "a princess"
+        },
+        {
+          "id": "2_7-009",
+          "source": "ein Prinz",
+          "target": "a prince"
+        },
+        {
+          "id": "2_7-010",
+          "source": "ein Schwert",
+          "target": "a sword"
+        },
+        {
+          "id": "2_7-011",
+          "source": "ein reicher Mann",
+          "target": "a rich man"
+        },
+        {
+          "id": "2_7-012",
+          "source": "ein armer Mann",
+          "target": "a poor man"
+        },
+        {
+          "id": "2_7-013",
+          "source": "ein alter Mann",
+          "target": "an old man"
+        },
+        {
+          "id": "2_7-014",
+          "source": "ein junger Mann",
+          "target": "a young man"
+        },
+        {
+          "id": "2_7-015",
+          "source": "ein dicker Mann",
+          "target": "a fat man"
+        },
+        {
+          "id": "2_7-016",
+          "source": "ein dünner Mann",
+          "target": "a thin man"
+        },
+        {
+          "id": "2_7-017",
+          "source": "eine Münze",
+          "target": "a coin"
+        },
+        {
+          "id": "2_7-018",
+          "source": "Geld",
+          "target": "money"
+        },
+        {
+          "id": "2_7-019",
+          "source": "fünfzig Pence",
+          "target": "fifty pence"
+        },
+        {
+          "id": "2_7-020",
+          "source": "fünf Pfund",
+          "target": "five pounds"
+        },
+        {
+          "id": "2_7-021",
+          "source": "Wie viel kostet es?",
+          "target": "How much is it?"
+        },
+        {
+          "id": "2_7-022",
+          "source": "Das macht bitte drei Pfund.",
+          "target": "It's three pounds, please."
+        },
+        {
+          "id": "2_7-023",
+          "source": "Bohnen",
+          "target": "beans"
+        },
+        {
+          "id": "2_7-024",
+          "source": "Bibliothek",
+          "target": "library"
+        }
+      ]
+    },
+    {
+      "id": "2_8",
+      "title": "2_8 Journeys and transport",
+      "items": [
+        {
+          "id": "2_8-001",
+          "source": "ein Flugzeug",
+          "target": "a plane"
+        },
+        {
+          "id": "2_8-002",
+          "source": "ein Hubschrauber",
+          "target": "a helicopter"
+        },
+        {
+          "id": "2_8-003",
+          "source": "ein Schiff",
+          "target": "a ship"
+        },
+        {
+          "id": "2_8-004",
+          "source": "Flügel",
+          "target": "wings"
+        },
+        {
+          "id": "2_8-005",
+          "source": "in der Luft",
+          "target": "in the air"
+        },
+        {
+          "id": "2_8-006",
+          "source": "eine Insel",
+          "target": "an island"
+        },
+        {
+          "id": "2_8-007",
+          "source": "ein Motor",
+          "target": "an engine"
+        },
+        {
+          "id": "2_8-008",
+          "source": "ein Auto",
+          "target": "a car"
+        },
+        {
+          "id": "2_8-009",
+          "source": "ein Rad",
+          "target": "a wheel"
+        },
+        {
+          "id": "2_8-010",
+          "source": "eine Yacht",
+          "target": "a yacht"
+        },
+        {
+          "id": "2_8-011",
+          "source": "auf dem Wasser",
+          "target": "on the water"
+        },
+        {
+          "id": "2_8-012",
+          "source": "ein Felsen",
+          "target": "a rock"
+        },
+        {
+          "id": "2_8-013",
+          "source": "ein Lastwagen",
+          "target": "a truck"
+        },
+        {
+          "id": "2_8-014",
+          "source": "ein Motorrad",
+          "target": "a motorbike"
+        },
+        {
+          "id": "2_8-015",
+          "source": "ein Zug",
+          "target": "a train"
+        },
+        {
+          "id": "2_8-016",
+          "source": "unter der Erde",
+          "target": "under the ground"
+        },
+        {
+          "id": "2_8-017",
+          "source": "Mein Lastwagen ist größer als deiner.",
+          "target": "My truck is bigger than your truck."
+        },
+        {
+          "id": "2_8-018",
+          "source": "ein schnelles Auto",
+          "target": "a fast car"
+        },
+        {
+          "id": "2_8-019",
+          "source": "ein langsames Auto",
+          "target": "a slow car"
+        },
+        {
+          "id": "2_8-020",
+          "source": "an Land",
+          "target": "on land"
+        },
+        {
+          "id": "2_8-021",
+          "source": "ein Krankenhaus",
+          "target": "a hospital"
+        },
+        {
+          "id": "2_8-022",
+          "source": "eine Rettung",
+          "target": "a rescue"
+        }
+      ]
+    },
+    {
+      "id": "2_9",
+      "title": "2_9 Fit and healthy",
+      "items": [
+        {
+          "id": "2_9-001",
+          "source": "Schulter",
+          "target": "shoulder"
+        },
+        {
+          "id": "2_9-002",
+          "source": "Rücken",
+          "target": "back"
+        },
+        {
+          "id": "2_9-003",
+          "source": "Ellbogen",
+          "target": "elbow"
+        },
+        {
+          "id": "2_9-004",
+          "source": "Knie",
+          "target": "knee"
+        },
+        {
+          "id": "2_9-005",
+          "source": "Knöchel",
+          "target": "ankle"
+        },
+        {
+          "id": "2_9-006",
+          "source": "Bauch",
+          "target": "stomach"
+        },
+        {
+          "id": "2_9-007",
+          "source": "Du solltest mehr Sport machen.",
+          "target": "You should do more exercise."
+        },
+        {
+          "id": "2_9-008",
+          "source": "Du solltest keine Süßigkeiten essen.",
+          "target": "You shouldn't eat sweets."
+        },
+        {
+          "id": "2_9-009",
+          "source": "Was ist los?",
+          "target": "What's the matter?"
+        },
+        {
+          "id": "2_9-010",
+          "source": "Ich bin erkältet.",
+          "target": "I've got a cold."
+        },
+        {
+          "id": "2_9-011",
+          "source": "Ich habe Rückenschmerzen.",
+          "target": "I've got backache."
+        },
+        {
+          "id": "2_9-012",
+          "source": "Ich habe Ohrenschmerzen.",
+          "target": "I've got earache."
+        },
+        {
+          "id": "2_9-013",
+          "source": "Ich habe Kopfschmerzen.",
+          "target": "I've got a headache."
+        },
+        {
+          "id": "2_9-014",
+          "source": "Ich habe Zahnschmerzen.",
+          "target": "I've got toothache."
+        },
+        {
+          "id": "2_9-015",
+          "source": "Ich habe Bauchschmerzen.",
+          "target": "I've got stomach ache."
+        },
+        {
+          "id": "2_9-016",
+          "source": "ein Knochen",
+          "target": "a bone"
+        },
+        {
+          "id": "2_9-017",
+          "source": "ein Arzt",
+          "target": "a doctor"
+        },
+        {
+          "id": "2_9-018",
+          "source": "ein Zahnarzt",
+          "target": "a dentist"
+        },
+        {
+          "id": "2_9-019",
+          "source": "Sport",
+          "target": "exercise"
+        },
+        {
+          "id": "2_9-020",
+          "source": "eine Kuh",
+          "target": "a cow"
+        },
+        {
+          "id": "2_9-021",
+          "source": "ein Schwein",
+          "target": "a pig"
+        },
+        {
+          "id": "2_9-022",
+          "source": "ein Hahn",
+          "target": "a cockerel"
+        },
+        {
+          "id": "2_9-023",
+          "source": "eine Henne",
+          "target": "a hen"
+        }
+      ]
+    }
+  ]
+}

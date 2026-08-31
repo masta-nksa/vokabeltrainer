@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mehrsprachiger Vokabeltrainer mit drei Lernmodi.">
+    <title>Vokabeltrainer</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>📚</text></svg>">
+</head>
+
+<body>
+    <div id="hero" class="hero" hidden>
+        <img id="hero-image" alt="">
+    </div>
+
+    <main class="page">
+
+        <!-- Startseite -->
+        <section id="screen-start" class="screen" hidden>
+            <h1>Vokabeltrainer</h1>
+            <form id="start-form" class="card">
+                <label for="name-input">Wie heisst du?</label>
+                <input type="text" id="name-input" autocomplete="given-name" required>
+
+                <label for="hero-select">Wen möchtest du freispielen?</label>
+                <select id="hero-select">
+                    <option value="">Niemanden</option>
+                </select>
+
+                <button type="submit" class="primary">Los geht es</button>
+            </form>
+        </section>
+
+        <!-- Wortschatz und Lektionen -->
+        <section id="screen-select" class="screen" hidden>
+            <h1 id="greeting"></h1>
+
+            <div class="card">
+                <label for="deck-select">Wortschatz</label>
+                <select id="deck-select"></select>
+
+                <div class="row spread">
+                    <span class="label">Lektionen</span>
+                    <span>
+                        <button type="button" id="units-all" class="link">alle</button>
+                        <button type="button" id="units-none" class="link">keine</button>
+                    </span>
+                </div>
+
+                <div id="unit-list" class="unit-list"></div>
+                <p id="selection-hint" class="hint"></p>
+            </div>
+
+            <div class="card">
+                <h2>Üben</h2>
+                <div class="modes">
+                    <button type="button" class="primary" data-mode="terms">terms</button>
+                    <button type="button" class="primary" data-mode="spelling">spelling</button>
+                    <button type="button" class="primary" data-mode="writing">writing</button>
+                </div>
+                <p class="hint">
+                    <strong>terms</strong> – hören und übersetzen ·
+                    <strong>spelling</strong> – richtige Schreibweise erkennen ·
+                    <strong>writing</strong> – selbst schreiben
+                </p>
+            </div>
+
+            <details class="card">
+                <summary>Drucken</summary>
+                <fieldset class="row">
+                    <legend class="label">Was soll auf dem Blatt stehen?</legend>
+                    <label><input type="radio" name="print-mode" value="both" checked> beide Sprachen</label>
+                    <label><input type="radio" name="print-mode" value="target"> nur Zielsprache</label>
+                    <label><input type="radio" name="print-mode" value="source"> nur Ausgangssprache</label>
+                </fieldset>
+                <button type="button" id="print-open">Vorschau öffnen</button>
+            </details>
+
+            <details class="card">
+                <summary>Eigenen Wortschatz laden</summary>
+                <form id="import-form">
+                    <label for="import-file">CSV-Datei</label>
+                    <input type="file" id="import-file" accept=".csv,text/csv">
+
+                    <label for="import-title">Bezeichnung</label>
+                    <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
+
+                    <div class="row">
+                        <span>
+                            <label for="import-source">Ausgangssprache</label>
+                            <select id="import-source">
+                                <option value="de" selected>Deutsch</option>
+                                <option value="en">Englisch</option>
+                                <option value="fr">Französisch</option>
+                                <option value="it">Italienisch</option>
+                                <option value="es">Spanisch</option>
+                                <option value="la">Latein</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label for="import-target">Zielsprache</label>
+                            <select id="import-target">
+                                <option value="en" selected>Englisch</option>
+                                <option value="fr">Französisch</option>
+                                <option value="it">Italienisch</option>
+                                <option value="es">Spanisch</option>
+                                <option value="la">Latein</option>
+                                <option value="de">Deutsch</option>
+                            </select>
+                        </span>
+                    </div>
+
+                    <label class="check">
+                        <input type="checkbox" id="import-target-first" checked>
+                        Spalte 2 enthält die Zielsprache
+                    </label>
+
+                    <button type="submit">Importieren</button>
+                    <p id="import-message" class="hint"></p>
+                </form>
+
+                <p class="hint">
+                    Erwartet werden drei Spalten, getrennt durch Semikolon:
+                    <code>Lektion;Zielsprache;Ausgangssprache</code>
+                </p>
+
+                <button type="button" id="deck-delete" class="link danger">
+                    Diesen Wortschatz löschen
+                </button>
+            </details>
+        </section>
+
+        <!-- Lernrunde -->
+        <section id="screen-quiz" class="screen" hidden>
+            <div class="row spread">
+                <div>
+                    <h1 id="quiz-title"></h1>
+                    <p id="quiz-subtitle" class="hint"></p>
+                </div>
+                <button type="button" id="quiz-home" class="link">abbrechen</button>
+            </div>
+
+            <p id="quiz-prompt" class="prompt"></p>
+            <button type="button" id="quiz-speak" class="link" hidden>nochmals hören</button>
+
+            <div id="quiz-options" class="options"></div>
+
+            <form id="answer-form" hidden>
+                <input type="text" id="answer-input" autocomplete="off" autocapitalize="off"
+                    autocorrect="off" spellcheck="false" placeholder="Übersetzung eintippen">
+                <button type="submit" class="primary">prüfen</button>
+            </form>
+
+            <p id="quiz-note" class="note" role="status" aria-live="polite"></p>
+            <p id="scoreboard" class="scoreboard" role="status" aria-live="polite" hidden></p>
+        </section>
+
+        <!-- Ergebnis -->
+        <section id="screen-result" class="screen" hidden>
+            <h1>Runde beendet</h1>
+            <p id="result-score" class="prompt"></p>
+
+            <div id="result-missed-box" class="card" hidden>
+                <h2>Das war noch nicht sicher</h2>
+                <ul id="result-list" class="result-list"></ul>
+            </div>
+
+            <div class="modes">
+                <button type="button" id="result-missed" class="primary">Fehler wiederholen</button>
+                <button type="button" id="result-again">ganze Runde nochmals</button>
+                <button type="button" id="result-home" class="link">zur Auswahl</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Druckvorschau -->
+    <div id="print-overlay" class="overlay" hidden></div>
+    <div id="print-dialog" class="dialog" role="dialog" aria-labelledby="print-heading" hidden>
+        <h2 id="print-heading">Druckvorschau</h2>
+        <div class="table-scroll">
+            <table id="print-table"></table>
+        </div>
+        <div class="row">
+            <button type="button" id="print-shuffle">mischen</button>
+            <button type="button" id="print-start" class="primary">drucken</button>
+            <button type="button" id="print-close" class="link">schliessen</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
