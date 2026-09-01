@@ -95,6 +95,24 @@ Abfrage auf bereits vorhandenen Daten. Der gesamte Datenzugriff läuft über
 `js/storage/index.js`; ein Server wird dort angeschlossen, nicht verstreut
 in der App.
 
+Das ist zugleich die Antwort auf die Frage nach einer Statistik. Entschieden
+(1. September 2026): **gemessen wird der Lernfortschritt, nicht der
+Seitenaufruf.** Wie oft die Seite geöffnet wurde, sagt über den Unterricht
+wenig; wie viele Vokabeln eine Klasse geübt hat und wo sie hängen bleibt,
+sagt viel. Die Daten dafür liegen bereits vor – es fehlt der Ort, an dem sie
+zusammenlaufen.
+
+Nötig sind dafür drei Dinge: ein Login, damit `userId` etwas bedeutet; ein
+Server, weil GitHub Pages nur Dateien ausliefert und nichts entgegennimmt;
+und eine Auswertungsansicht für die Lehrperson.
+
+**IP-Adressen werden bewusst nicht erfasst.** Sie sind Personendaten von
+Schülerinnen und Schülern und bräuchten Rechtsgrundlage und Information der
+Betroffenen – ein schlechtes Geschäft für eine Zahl, die ohnehin nicht die
+gesuchte ist. Wird eines Tages doch eine reine Besucherzählung gebraucht,
+genügt ein Dienst ohne IP-Speicherung wie GoatCounter mit einem einzigen
+Script-Tag; das Hosting muss dafür nicht wechseln.
+
 **Ausspracheprüfung.** `js/speech/assess.js` beschreibt die Schnittstelle für
 einen Dienst wie Azure Pronunciation Assessment. Der Schlüssel gehört nicht
 in den Browser, die Aufnahme geht an einen eigenen Proxy.
