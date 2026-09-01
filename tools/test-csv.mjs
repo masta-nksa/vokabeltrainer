@@ -34,5 +34,20 @@ const swapped = deckFromCsv(fromUtf16, {
 });
 check('Spaltentausch wirkt', swapped.units[0].items[0].source === 'a clock');
 
+// Lektionstitel mit gleichem ersten Wort dürfen nicht zu einer Lektion
+// verschmelzen – sonst wären "Lernziel 1" und "Lernziel 2" nicht mehr
+// einzeln wählbar.
+const lernziele = deckFromCsv(
+    'Lektion;Französisch;Deutsch\r\n'
+    + 'Lernziel 1;le livre;das Buch\r\n'
+    + 'Lernziel 2;lundi;Montag\r\n'
+    + 'Lernziel S;la gomme;der Gummi\r\n',
+    { id: 't', title: 'Test', sourceLang: 'de', targetLang: 'fr' });
+check('gleiches erstes Wort bleibt getrennt', lernziele.units.length === 3);
+check('Kennungen sind eindeutig',
+    new Set(lernziele.units.map(unit => unit.id)).size === 3);
+check('Kennung aus ganzem Titel', lernziele.units[0].id === 'lernziel-1');
+check('einzelnes erstes Wort bleibt Kennung', deck.units[0].id === 'U1');
+
 console.log(failures === 0 ? '\nAlle Prüfungen bestanden.' : `\n${failures} Prüfung(en) fehlgeschlagen.`);
 process.exit(failures === 0 ? 0 : 1);

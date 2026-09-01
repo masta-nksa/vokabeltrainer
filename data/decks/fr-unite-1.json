@@ -1,0 +1,284 @@
+{
+  "id": "fr-unite-1",
+  "title": "Französisch – Unité 1",
+  "sourceLang": "de",
+  "targetLang": "fr",
+  "units": [
+    {
+      "id": "lernziel-1",
+      "title": "Lernziel 1",
+      "items": [
+        {
+          "id": "lernziel-1-001",
+          "source": "Toll, es ist Schulanfang!",
+          "target": "Chouette, c'est la rentrée!"
+        },
+        {
+          "id": "lernziel-1-002",
+          "source": "Oje, es ist Schulanfang!",
+          "target": "Zut, c'est la rentrée!"
+        }
+      ]
+    },
+    {
+      "id": "lernziel-s",
+      "title": "Lernziel S",
+      "items": [
+        {
+          "id": "lernziel-s-001",
+          "source": "das Buch",
+          "target": "le livre"
+        },
+        {
+          "id": "lernziel-s-002",
+          "source": "das Lineal",
+          "target": "la règle"
+        },
+        {
+          "id": "lernziel-s-003",
+          "source": "der Ordner",
+          "target": "le classeur"
+        },
+        {
+          "id": "lernziel-s-004",
+          "source": "das Heft",
+          "target": "le cahier"
+        },
+        {
+          "id": "lernziel-s-005",
+          "source": "der Bleistift",
+          "target": "le crayon"
+        },
+        {
+          "id": "lernziel-s-006",
+          "source": "der Kugelschreiber",
+          "target": "le stylo"
+        },
+        {
+          "id": "lernziel-s-007",
+          "source": "der Gummi",
+          "target": "la gomme"
+        },
+        {
+          "id": "lernziel-s-008",
+          "source": "die Wandtafel",
+          "target": "le tableau noir"
+        },
+        {
+          "id": "lernziel-s-009",
+          "source": "das Etui",
+          "target": "la trousse"
+        },
+        {
+          "id": "lernziel-s-010",
+          "source": "der Tisch",
+          "target": "la table"
+        },
+        {
+          "id": "lernziel-s-011",
+          "source": "der Stuhl",
+          "target": "la chaise"
+        },
+        {
+          "id": "lernziel-s-012",
+          "source": "die Schultasche",
+          "target": "le cartable"
+        },
+        {
+          "id": "lernziel-s-013",
+          "source": "eine Agenda",
+          "target": "un agenda"
+        },
+        {
+          "id": "lernziel-s-014",
+          "source": "die Schere",
+          "target": "les ciseaux (m pl)"
+        }
+      ]
+    },
+    {
+      "id": "lernziel-2",
+      "title": "Lernziel 2",
+      "items": [
+        {
+          "id": "lernziel-2-001",
+          "source": "das Schulfach",
+          "target": "la matière scolaire"
+        },
+        {
+          "id": "lernziel-2-002",
+          "source": "Deutsch",
+          "target": "l'allemand (m)"
+        },
+        {
+          "id": "lernziel-2-003",
+          "source": "Französisch",
+          "target": "le français"
+        },
+        {
+          "id": "lernziel-2-004",
+          "source": "Englisch",
+          "target": "l'anglais (m)"
+        },
+        {
+          "id": "lernziel-2-005",
+          "source": "Mathematik",
+          "target": "les maths, les mathématiques (f pl)"
+        },
+        {
+          "id": "lernziel-2-006",
+          "source": "die Wochentage",
+          "target": "les jours (m) de la semaine"
+        },
+        {
+          "id": "lernziel-2-007",
+          "source": "Montag",
+          "target": "lundi"
+        },
+        {
+          "id": "lernziel-2-008",
+          "source": "Dienstag",
+          "target": "mardi"
+        },
+        {
+          "id": "lernziel-2-009",
+          "source": "Mittwoch",
+          "target": "mercredi"
+        },
+        {
+          "id": "lernziel-2-010",
+          "source": "Donnerstag",
+          "target": "jeudi"
+        },
+        {
+          "id": "lernziel-2-011",
+          "source": "Freitag",
+          "target": "vendredi"
+        },
+        {
+          "id": "lernziel-2-012",
+          "source": "Samstag",
+          "target": "samedi"
+        },
+        {
+          "id": "lernziel-2-013",
+          "source": "Sonntag",
+          "target": "dimanche"
+        },
+        {
+          "id": "lernziel-2-014",
+          "source": "das bildnerische Gestalten, die Zeichnung",
+          "target": "le dessin"
+        },
+        {
+          "id": "lernziel-2-015",
+          "source": "die Geografie",
+          "target": "la géo, la géographie"
+        },
+        {
+          "id": "lernziel-2-016",
+          "source": "die Geschichte",
+          "target": "l'histoire (f)"
+        },
+        {
+          "id": "lernziel-2-017",
+          "source": "das Turnen",
+          "target": "la gym, la gymnastique"
+        },
+        {
+          "id": "lernziel-2-018",
+          "source": "die Naturwissenschaften",
+          "target": "les sciences (f pl) de la nature"
+        },
+        {
+          "id": "lernziel-2-019",
+          "source": "die Musik",
+          "target": "la musique"
+        },
+        {
+          "id": "lernziel-2-020",
+          "source": "Handarbeit und Werken",
+          "target": "ACM (activités créatrices manuelles)"
+        }
+      ]
+    },
+    {
+      "id": "lernziel-3",
+      "title": "Lernziel 3",
+      "items": [
+        {
+          "id": "lernziel-3-001",
+          "source": "eine Schule",
+          "target": "une école"
+        },
+        {
+          "id": "lernziel-3-002",
+          "source": "rechnen",
+          "target": "calculer"
+        },
+        {
+          "id": "lernziel-3-003",
+          "source": "zeichnen",
+          "target": "dessiner"
+        },
+        {
+          "id": "lernziel-3-004",
+          "source": "singen",
+          "target": "chanter"
+        },
+        {
+          "id": "lernziel-3-005",
+          "source": "experimentieren",
+          "target": "expérimenter"
+        },
+        {
+          "id": "lernziel-3-006",
+          "source": "Französisch sprechen",
+          "target": "parler français"
+        },
+        {
+          "id": "lernziel-3-007",
+          "source": "Englisch sprechen",
+          "target": "parler anglais"
+        },
+        {
+          "id": "lernziel-3-008",
+          "source": "das Ausland erkunden",
+          "target": "explorer l'étranger"
+        },
+        {
+          "id": "lernziel-3-009",
+          "source": "ein Museum besuchen",
+          "target": "visiter un musée"
+        },
+        {
+          "id": "lernziel-3-010",
+          "source": "stricken",
+          "target": "tricoter"
+        },
+        {
+          "id": "lernziel-3-011",
+          "source": "ein Gedicht aufsagen",
+          "target": "réciter un poème"
+        },
+        {
+          "id": "lernziel-3-012",
+          "source": "basteln",
+          "target": "bricoler"
+        },
+        {
+          "id": "lernziel-3-013",
+          "source": "springen, hüpfen",
+          "target": "sauter"
+        },
+        {
+          "id": "lernziel-3-014",
+          "source": "klettern",
+          "target": "grimper"
+        }
+      ]
+    }
+  ],
+  "builtin": true,
+  "version": 1
+}

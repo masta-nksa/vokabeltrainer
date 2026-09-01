@@ -43,6 +43,26 @@ Lektion;Ausgangssprache;Zielsprache
 Über den Import-Knopf in der Lektionsauswahl einlesen. Der Wortschatz bleibt
 danach im Browser gespeichert.
 
+Lektionen mit gleichem ersten Wort – etwa "Lernziel 1" und "Lernziel 2" –
+bleiben getrennt und einzeln wählbar.
+
+### Mitgelieferte Wortschätze
+
+Ein Deck gehört nach `data/decks/` und mit einem Eintrag in
+`data/decks/index.json` angemeldet. Jeder Eintrag trägt eine `version`.
+
+Die App vergleicht diese Zahl bei jedem Start mit der Fassung im Browser und
+holt neu, was älter ist. Deshalb gilt: **wer ein bestehendes Deck ändert,
+zählt die `version` in beiden Dateien hoch.** Ohne das behalten alle, die die
+Seite schon einmal offen hatten, für immer den alten Stand. Ein Deck mit
+neuer Kennung wird immer geladen.
+
+Der Lernfortschritt hängt nicht am Deck, sondern liegt in einem eigenen
+Speicher – ein Ersetzen kostet niemanden seine Statistik. Selbst importierte
+Wortschätze werden nie überschrieben.
+
+Veröffentlicht wird durch Pushen auf `main`; GitHub Pages baut von selbst.
+
 ## Entwicklung
 
 Die App braucht keinen Build. Zum Testen genügt ein statischer Server, weil
@@ -61,7 +81,7 @@ node tools/test-csv.mjs
 Wortschatz aus einer CSV in ein Deck umwandeln:
 
 ```
-node tools/csv-to-deck.mjs <csv> <ziel.json> <deckId> <Titel> <sourceLang> <targetLang>
+node tools/csv-to-deck.mjs <csv> <ziel.json> <deckId> <Titel> <sourceLang> <targetLang> [version]
 ```
 
 ## Wie es weitergeht

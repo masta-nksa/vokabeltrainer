@@ -4,6 +4,7 @@
   "sourceLang": "de",
   "targetLang": "en",
   "builtin": true,
+  "version": 1,
   "units": [
     {
       "id": "2_0",

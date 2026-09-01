@@ -66,6 +66,37 @@ export function parseCsv(text) {
 }
 
 /**
+ * Kennung für eine Lektion aus ihrem Titel.
+ *
+ * Meist trägt der Titel die Kennung schon vorne weg ("2_0 Welcome back!").
+ * Wo das erste Wort mehrfach vorkommt – etwa bei "Lernziel 1", "Lernziel 2" –
+ * würde daraus für alle dieselbe Kennung, und die Lektionen fielen in der
+ * Auswahl zu einer einzigen zusammen. Dann muss der ganze Titel herhalten.
+ *
+ * @param {string[]} titles Alle Lektionstitel in der Reihenfolge der Datei
+ * @returns {Map<string, string>} Titel auf Kennung
+ */
+export function unitIds(titles) {
+    const unique = [...new Set(titles)];
+    const firstWords = unique.map(title => title.split(' ')[0]);
+    const ambiguous = new Set(
+        firstWords.filter((word, index) => firstWords.indexOf(word) !== index));
+
+    const slug = title => title
+        .toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+
+    const ids = new Map();
+    unique.forEach((title, index) => {
+        const first = firstWords[index];
+        ids.set(title, (first && !ambiguous.has(first)) ? first : (slug(title) || `u${index + 1}`));
+    });
+    return ids;
+}
+
+/**
  * Baut aus CSV-Text ein Deck.
  *
  * Erwartet drei Spalten: Lektion, und die beiden Sprachen. Welche der beiden
@@ -89,6 +120,7 @@ export function deckFromCsv(text, meta) {
     const targetFirst = meta.targetFirst !== false;
     const units = [];
     const byTitle = new Map();
+    const ids = unitIds(dataRows.map(row => row[0]).filter(Boolean));
 
     for (const row of dataRows) {
         const [unitTitle, second, third] = row;
@@ -97,7 +129,7 @@ export function deckFromCsv(text, meta) {
         if (!unitTitle || !source || !target) continue;
 
         if (!byTitle.has(unitTitle)) {
-            const unit = { id: unitTitle.split(' ')[0] || `u${units.length + 1}`, title: unitTitle, items: [] };
+            const unit = { id: ids.get(unitTitle), title: unitTitle, items: [] };
             byTitle.set(unitTitle, unit);
             units.push(unit);
         }

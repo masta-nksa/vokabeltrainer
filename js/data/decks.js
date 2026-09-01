@@ -5,14 +5,24 @@ import * as storage from '../storage/index.js';
 const BUILTIN_INDEX = 'data/decks/index.json';
 
 /**
- * Lädt die mitgelieferten Decks in die Datenbank, sofern noch nicht vorhanden.
- * Läuft bei jedem Start; bestehende Decks werden nicht überschrieben, damit
- * eigene Änderungen erhalten bleiben.
+ * Lädt die mitgelieferten Decks in die Datenbank und hält sie aktuell.
+ *
+ * Läuft bei jedem Start. Ob ein Wortschatz neu geholt wird, entscheidet die
+ * `version` in der Index-Datei: steht dort eine höhere Zahl als im Browser,
+ * wird die Fassung ersetzt. Wer also eine Lektion ergänzt, zählt die Nummer
+ * hoch und pusht – ohne das bliebe bei allen, die die Seite schon einmal
+ * offen hatten, für immer der alte Stand liegen.
+ *
+ * Selbst importierte Wortschätze bleiben unangetastet, auch wenn sie
+ * zufällig dieselbe Kennung tragen. Der Lernfortschritt hängt nicht am Deck,
+ * sondern liegt in einem eigenen Speicher, und überlebt das Ersetzen.
  */
 export async function ensureBuiltinDecks() {
     let index;
     try {
-        const response = await fetch(BUILTIN_INDEX);
+        // Ohne no-cache liefert der Browser die Index-Datei aus dem Cache und
+        // eine frisch veröffentlichte Version fällt gar nicht erst auf.
+        const response = await fetch(BUILTIN_INDEX, { cache: 'no-cache' });
         if (!response.ok) throw new Error(String(response.status));
         index = await response.json();
     } catch (error) {
@@ -21,12 +31,19 @@ export async function ensureBuiltinDecks() {
     }
 
     for (const entry of index.decks ?? []) {
-        if (await storage.getDeck(entry.id)) continue;
+        const local = await storage.getDeck(entry.id);
+        if (local && !local.builtin) continue;
+        if (local && (local.version ?? 0) >= (entry.version ?? 0)) continue;
+
         try {
-            const response = await fetch(entry.file);
+            const response = await fetch(entry.file, { cache: 'no-cache' });
             if (!response.ok) throw new Error(String(response.status));
             const deck = await response.json();
-            await storage.saveDeck({ ...deck, builtin: true });
+            await storage.saveDeck({
+                ...deck,
+                builtin: true,
+                version: deck.version ?? entry.version ?? 0
+            });
         } catch (error) {
             console.warn(`Wortschatz ${entry.id} konnte nicht geladen werden:`, error);
         }
