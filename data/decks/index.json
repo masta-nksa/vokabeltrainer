@@ -4,6 +4,11 @@
       "id": "en-young-world-2",
       "title": "English – Young World 2",
       "file": "data/decks/en-young-world-2.json"
+    },
+    {
+      "id": "en-doubledecker-3",
+      "title": "English – DoubleDecker 3",
+      "file": "data/decks/en-doubledecker-3.json"
     }
   ]
 }

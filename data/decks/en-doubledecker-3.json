@@ -1,0 +1,170 @@
+{
+  "id": "en-doubledecker-3",
+  "title": "English – DoubleDecker 3",
+  "sourceLang": "de",
+  "targetLang": "en",
+  "builtin": true,
+  "units": [
+    {
+      "id": "3_1",
+      "title": "3_1 Unit 1 – Animals and habitats",
+      "items": [
+        {
+          "id": "3_1-001",
+          "source": "Polarfuchs",
+          "target": "arctic fox"
+        },
+        {
+          "id": "3_1-002",
+          "source": "Schneehase",
+          "target": "arctic hare"
+        },
+        {
+          "id": "3_1-003",
+          "source": "Fennek (Wüstenfuchs)",
+          "target": "fennec fox"
+        },
+        {
+          "id": "3_1-004",
+          "source": "Käfer",
+          "target": "beetle"
+        },
+        {
+          "id": "3_1-005",
+          "source": "Kamel",
+          "target": "camel"
+        },
+        {
+          "id": "3_1-006",
+          "source": "Dorkasgazelle",
+          "target": "Dorcas gazelle"
+        },
+        {
+          "id": "3_1-007",
+          "source": "Eisbär",
+          "target": "polar bear"
+        },
+        {
+          "id": "3_1-008",
+          "source": "Spinne",
+          "target": "spider"
+        },
+        {
+          "id": "3_1-009",
+          "source": "Geier",
+          "target": "vulture"
+        },
+        {
+          "id": "3_1-010",
+          "source": "Arktis",
+          "target": "arctic"
+        },
+        {
+          "id": "3_1-011",
+          "source": "Wüste",
+          "target": "desert"
+        },
+        {
+          "id": "3_1-012",
+          "source": "Grasland",
+          "target": "grassland"
+        },
+        {
+          "id": "3_1-013",
+          "source": "Regenwald",
+          "target": "rainforest"
+        },
+        {
+          "id": "3_1-014",
+          "source": "Savanne",
+          "target": "savannah"
+        },
+        {
+          "id": "3_1-015",
+          "source": "gefährlich",
+          "target": "dangerous"
+        },
+        {
+          "id": "3_1-016",
+          "source": "vom Aussterben bedroht",
+          "target": "endangered"
+        },
+        {
+          "id": "3_1-017",
+          "source": "schnell",
+          "target": "fast"
+        },
+        {
+          "id": "3_1-018",
+          "source": "giftig",
+          "target": "poisonous"
+        },
+        {
+          "id": "3_1-019",
+          "source": "langsam",
+          "target": "slow"
+        },
+        {
+          "id": "3_1-020",
+          "source": "stark",
+          "target": "strong"
+        },
+        {
+          "id": "3_1-021",
+          "source": "es gibt ...",
+          "target": "there is ... / there are ..."
+        },
+        {
+          "id": "3_1-022",
+          "source": "es kann ... / es kann nicht ...",
+          "target": "it can ... / it can't ..."
+        },
+        {
+          "id": "3_1-023",
+          "source": "es hat ...",
+          "target": "it's got ..."
+        },
+        {
+          "id": "3_1-024",
+          "source": "es frisst / isst",
+          "target": "it eats"
+        },
+        {
+          "id": "3_1-025",
+          "source": "es lebt",
+          "target": "it lives"
+        },
+        {
+          "id": "3_1-026",
+          "source": "es wiegt",
+          "target": "it weighs"
+        },
+        {
+          "id": "3_1-027",
+          "source": "ist länger als",
+          "target": "is longer than"
+        },
+        {
+          "id": "3_1-028",
+          "source": "ist kürzer als",
+          "target": "is shorter than"
+        },
+        {
+          "id": "3_1-029",
+          "source": "ist größer als",
+          "target": "is bigger than"
+        },
+        {
+          "id": "3_1-030",
+          "source": "ist schneller als",
+          "target": "is faster than"
+        },
+        {
+          "id": "3_1-031",
+          "source": "ist gefährlicher als",
+          "target": "is more dangerous than"
+        }
+      ]
+    }
+  ]
+}
