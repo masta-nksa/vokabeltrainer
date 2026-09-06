@@ -8,6 +8,10 @@ export const label = 'terms';
 export const description = 'Wort hören und die richtige Übersetzung wählen';
 export const inputKind = 'choice';
 
+// Kein Bild: die vier Optionen sind die Übersetzungen, ein Bild verriete die
+// richtige sofort.
+export const showsImage = false;
+
 // Die Frage wurde bereits vorgelesen, die Antwort ist die Muttersprache.
 // Nach einem Treffer noch etwas vorzulesen bringt nichts und wird von der
 // naechsten Frage ohnehin abgeschnitten.

@@ -8,6 +8,10 @@ export const label = 'spelling';
 export const description = 'Aus vier Schreibweisen die richtige erkennen';
 export const inputKind = 'choice';
 
+// Bild hilft, das Wort zu erkennen; die richtige Schreibweise muss trotzdem
+// erkannt werden.
+export const showsImage = true;
+
 // Hier lohnt es sich: man hoert, wie sich die richtige Schreibweise anhoert.
 export const speakAnswerOnCorrect = true;
 

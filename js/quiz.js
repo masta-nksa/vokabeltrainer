@@ -108,6 +108,10 @@ function nextQuestion() {
     const item = session.items[session.index];
     question = mode.buildQuestion(item, session.pool, session.difficulty);
 
+    // Ein Bild wird nur in Modi gezeigt, die es nicht zu leicht machen – bei
+    // "terms" stünde die Antwort sonst als Bild neben den vier Wörtern.
+    question.image = mode.showsImage ? storage.resolveImage(session.deck, item) : null;
+
     renderQuestion();
     scoreboard.render(session);
 }
@@ -123,6 +127,8 @@ function renderQuestion() {
     const prompt = document.getElementById('quiz-prompt');
     prompt.textContent = question.prompt;
     prompt.lang = langFor(question.promptSide);
+
+    renderFigure(question.image);
 
     document.getElementById('quiz-note').textContent = '';
     document.getElementById('quiz-speak').hidden = !question.speakPrompt;
@@ -156,6 +162,33 @@ function renderQuestion() {
     }
 
     if (question.speakPrompt) speakPrompt();
+}
+
+/**
+ * Zeigt Emoji oder Bild über der Frage, oder blendet die Figur aus.
+ * @param {{kind: 'emoji', text: string} | {kind: 'url', url: string} | null} image
+ */
+function renderFigure(image) {
+    const figure = document.getElementById('quiz-figure');
+    const emoji = document.getElementById('quiz-emoji');
+    const img = document.getElementById('quiz-image');
+
+    emoji.textContent = '';
+    img.hidden = true;
+    img.removeAttribute('src');
+
+    if (!image) {
+        figure.hidden = true;
+        return;
+    }
+
+    if (image.kind === 'emoji') {
+        emoji.textContent = image.text;
+    } else {
+        img.src = image.url;
+        img.hidden = false;
+    }
+    figure.hidden = false;
 }
 
 function speakPrompt() {

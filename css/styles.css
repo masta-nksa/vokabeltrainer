@@ -242,12 +242,33 @@ button.link.danger {
 
 /* ---------------------------------------------------------- Lernrunde */
 
+.quiz-figure {
+    margin: 1.5rem 0 0;
+    text-align: center;
+    line-height: 1;
+}
+
+#quiz-emoji {
+    font-size: clamp(3rem, 16vw, 4.5rem);
+}
+
+#quiz-image {
+    max-width: 9rem;
+    max-height: 9rem;
+    border-radius: var(--radius);
+}
+
 .prompt {
     font-size: clamp(1.6rem, 7vw, 2.4rem);
     font-weight: 600;
     text-align: center;
-    margin: 2rem 0 1rem;
+    margin: 1rem 0;
     overflow-wrap: break-word;
+}
+
+/* Mit Bild darüber rückt die Frage näher heran. */
+.quiz-figure:not([hidden]) + .prompt {
+    margin-top: .5rem;
 }
 
 #quiz-speak {

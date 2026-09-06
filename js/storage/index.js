@@ -13,6 +13,8 @@ import * as db from './db.js';
  * @property {string} source   Wort in der Ausgangssprache
  * @property {string} target   Wort in der Zielsprache
  * @property {string} [hint]
+ * @property {string} [image]  Emoji direkt, oder Dateiname unter
+ *                             img/decks/<deckId>/ – aufgelöst durch resolveImage
  *
  * @typedef {Object} Unit
  * @property {string} id
@@ -71,6 +73,51 @@ export function deleteDeck(id) {
 
 export function countDecks() {
     return db.count('decks');
+}
+
+// ---------------------------------------------------------------- Bilder
+
+/**
+ * Löst das `image`-Feld eines Eintrags in etwas Darstellbares auf.
+ *
+ * Heute zwei Fälle: ein Emoji steht direkt im Feld, oder es ist ein Dateiname
+ * zu einer Bilddatei unter img/decks/<deckId>/. Kommt später ein Bild-Import
+ * dazu, tritt hier ein dritter Zweig hinzu, der den Blob aus dem `images`-Store
+ * liest ({ kind: 'blob', url }) – die Aufrufer (Modi, Quiz) fragen nur nach
+ * `kind` und `text`/`url` und bleiben unverändert.
+ *
+ * @param {Deck} deck
+ * @param {Item} item
+ * @returns {{kind: 'emoji', text: string} | {kind: 'url', url: string} | null}
+ */
+export function resolveImage(deck, item) {
+    const value = item?.image?.trim();
+    if (!value) return null;
+
+    // Ein Dateiname hat eine Endung und keine Bildzeichen. Alles andere wird
+    // als Emoji behandelt.
+    const looksLikeFile = /\.[a-z0-9]{2,4}$/i.test(value) && !/\p{Extended_Pictographic}/u.test(value);
+    if (looksLikeFile) {
+        const version = deck?.version ?? 0;
+        return { kind: 'url', url: `img/decks/${deck.id}/${value}?v=${version}` };
+    }
+
+    return { kind: 'emoji', text: value };
+}
+
+/**
+ * Legt ein importiertes Bild ab. Noch ungenutzt – bereit für den Tag, an dem
+ * eigene Wortschätze Bilder mitbringen dürfen.
+ * @param {{key: string, deckId: string, itemId: string, blob: Blob, w?: number, h?: number}} record
+ */
+export function saveImage(record) {
+    return db.put('images', record);
+}
+
+/** @param {string} key @returns {Promise<Blob | undefined>} */
+export async function getImageBlob(key) {
+    const row = await db.get('images', key);
+    return row?.blob;
 }
 
 // -------------------------------------------------------------- Versuche

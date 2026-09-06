@@ -8,6 +8,9 @@ export const label = 'writing';
 export const description = 'Übersetzung selbst schreiben';
 export const inputKind = 'text';
 
+// Bild als Merkhilfe zum Wort; die Übersetzung wird trotzdem selbst getippt.
+export const showsImage = true;
+
 // Bestaetigt die getippte Form akustisch.
 export const speakAnswerOnCorrect = true;
 

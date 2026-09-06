@@ -28,7 +28,9 @@ js/
   speech/tts.js     Sprachausgabe
   speech/assess.js  Schnittstelle für die spätere Ausspracheprüfung
 data/decks/         Mitgelieferte Wortschätze als JSON
+img/decks/<deck>/   Bilddateien zu einzelnen Wörtern (optional)
 tools/              Entwicklungsskripte, werden nicht ausgeliefert
+tools/voci-import/  Vokabelblatt (PDF/Foto) -> Lektion; Skill /voci-unit
 ```
 
 ## Wortschatz ergänzen
@@ -62,6 +64,36 @@ Speicher – ein Ersetzen kostet niemanden seine Statistik. Selbst importierte
 Wortschätze werden nie überschrieben.
 
 Veröffentlicht wird durch Pushen auf `main`; GitHub Pages baut von selbst.
+
+### Bilder zu Wörtern
+
+Ein Eintrag darf ein `image` tragen. Zwei Formen:
+
+```jsonc
+{ "id": "3_2-005", "source": "Gitarre", "target": "guitar", "image": "🎸" }
+{ "id": "3_2-018", "source": "…", "target": "…", "image": "3_2-018.webp" }
+```
+
+Ein **Emoji** steht direkt im Feld. Ein **Dateiname** verweist auf
+`img/decks/<deckId>/<datei>` – dort als kleines WebP ablegen (Richtwert 160 px).
+`resolveImage` in `js/storage/index.js` unterscheidet die beiden. Gezeigt wird
+das Bild in den Modi `writing` und `spelling`; bei `terms` nicht, dort stünde
+sonst die Antwort als Bild neben den vier Wörtern.
+
+Vorerst **Emoji, wo möglich**. Bilddateien nur aus freien Quellen (CC0 / Public
+Domain / eigene Zeichnung) – Grafik aus Lehrmittelblättern ist lizenziert.
+
+Für importierte Wortschätze ist ein IndexedDB-Store `images` angelegt (leer,
+`db.js` Version 2); dort landen später Bilder, die eine hochgeladene Liste
+mitbringt.
+
+### Vokabelblatt einlesen
+
+`tools/voci-import/` macht aus einem gescannten *Vocabulary Practice Sheet*
+(PDF oder Foto) eine Lektion: Seiten rendern, Wortliste und Test-Einteilung
+erkennen, in einer lokalen Tabelle korrigieren, ins Deck schreiben. Der bequeme
+Weg ist der Skill **`/voci-unit <pfad>`**; Details in
+`tools/voci-import/README.md`.
 
 ## Entwicklung
 

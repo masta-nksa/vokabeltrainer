@@ -1,7 +1,7 @@
 // IndexedDB-Zugriff. Kennt nur Datensätze, keine Anwendungslogik.
 
 const DB_NAME = 'vokabeltrainer';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 /** @type {Promise<IDBDatabase> | null} */
 let dbPromise = null;
@@ -36,6 +36,16 @@ export function openDb() {
 
             if (!db.objectStoreNames.contains('settings')) {
                 db.createObjectStore('settings', { keyPath: 'key' });
+            }
+
+            // Bilder zu einzelnen Wörtern. Vorerst nur für später importierte
+            // Wortschätze gedacht – die mitgelieferten Decks verweisen auf
+            // Dateien unter img/decks/ oder tragen ein Emoji direkt im Eintrag.
+            // Der Store existiert von Anfang an, damit ein Import kein weiteres
+            // Schema-Update braucht. Wert: { key, deckId, itemId, blob, w, h }.
+            if (!db.objectStoreNames.contains('images')) {
+                const images = db.createObjectStore('images', { keyPath: 'key' });
+                images.createIndex('byDeck', 'deckId');
             }
         };
 
