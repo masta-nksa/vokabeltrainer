@@ -4,7 +4,7 @@
   "sourceLang": "de",
   "targetLang": "en",
   "builtin": true,
-  "version": 1,
+  "version": 3,
   "units": [
     {
       "id": "3_1",
@@ -164,6 +164,521 @@
           "id": "3_1-031",
           "source": "ist gefährlicher als",
           "target": "is more dangerous than"
+        }
+      ]
+    },
+    {
+      "id": "3_2-t1",
+      "title": "3_2 Unit 2 – Music · Test 1 (3. Sep)",
+      "test": {
+        "date": "2026-09-03"
+      },
+      "items": [
+        {
+          "id": "3_2-001",
+          "source": "Schlaghölzer",
+          "target": "clapsticks"
+        },
+        {
+          "id": "3_2-002",
+          "source": "Klarinette",
+          "target": "clarinet"
+        },
+        {
+          "id": "3_2-003",
+          "source": "Didgeridoo",
+          "target": "didgeridoo"
+        },
+        {
+          "id": "3_2-004",
+          "source": "Querflöte",
+          "target": "flute",
+          "image": "🪈"
+        },
+        {
+          "id": "3_2-005",
+          "source": "Gitarre",
+          "target": "guitar",
+          "image": "🎸"
+        },
+        {
+          "id": "3_2-006",
+          "source": "Keyboard",
+          "target": "keyboard"
+        },
+        {
+          "id": "3_2-007",
+          "source": "Klavier",
+          "target": "piano",
+          "image": "🎹"
+        },
+        {
+          "id": "3_2-008",
+          "source": "Flöte",
+          "target": "recorder"
+        },
+        {
+          "id": "3_2-009",
+          "source": "Triangel",
+          "target": "triangle"
+        },
+        {
+          "id": "3_2-010",
+          "source": "Saxofon",
+          "target": "saxophone",
+          "image": "🎷"
+        },
+        {
+          "id": "3_2-011",
+          "source": "Tamburin",
+          "target": "tambourine"
+        },
+        {
+          "id": "3_2-012",
+          "source": "Geige",
+          "target": "violin",
+          "image": "🎻"
+        },
+        {
+          "id": "3_2-013",
+          "source": "Blechinstrumente",
+          "target": "brass instruments"
+        },
+        {
+          "id": "3_2-014",
+          "source": "Trompete",
+          "target": "trumpet",
+          "image": "🎺"
+        },
+        {
+          "id": "3_2-015",
+          "source": "Saiteninstrumente",
+          "target": "string instruments"
+        },
+        {
+          "id": "3_2-016",
+          "source": "Blasinstrumente",
+          "target": "woodwind instruments"
+        },
+        {
+          "id": "3_2-017",
+          "source": "ein Instrument spielen",
+          "target": "to play an instrument",
+          "image": "🎶"
+        },
+        {
+          "id": "3_2-018",
+          "source": "Schlaginstrumente / Taktinstrumente",
+          "target": "percussion instruments",
+          "image": "🥁"
+        },
+        {
+          "id": "3_2-019",
+          "source": "schütteln",
+          "target": "to shake"
+        },
+        {
+          "id": "3_2-020",
+          "source": "atmen",
+          "target": "to breathe",
+          "image": "🫁"
+        },
+        {
+          "id": "3_2-021",
+          "source": "reinigen",
+          "target": "to clean",
+          "image": "🧽"
+        },
+        {
+          "id": "3_2-022",
+          "source": "verzieren / dekorieren",
+          "target": "to decorate",
+          "image": "🎨"
+        },
+        {
+          "id": "3_2-023",
+          "source": "malen",
+          "target": "to paint",
+          "image": "🖌️"
+        }
+      ]
+    },
+    {
+      "id": "3_2-t2",
+      "title": "3_2 Unit 2 – Music · Test 2 (17. Sep)",
+      "test": {
+        "date": "2026-09-17"
+      },
+      "items": [
+        {
+          "id": "3_2-024",
+          "source": "auswählen",
+          "target": "to choose"
+        },
+        {
+          "id": "3_2-025",
+          "source": "wie?",
+          "target": "how?"
+        },
+        {
+          "id": "3_2-026",
+          "source": "wo?",
+          "target": "where?"
+        },
+        {
+          "id": "3_2-027",
+          "source": "was?",
+          "target": "what?"
+        },
+        {
+          "id": "3_2-028",
+          "source": "wann?",
+          "target": "when?"
+        },
+        {
+          "id": "3_2-029",
+          "source": "dann",
+          "target": "then"
+        },
+        {
+          "id": "3_2-030",
+          "source": "wer?",
+          "target": "who?"
+        },
+        {
+          "id": "3_2-031",
+          "source": "welches?",
+          "target": "which?"
+        },
+        {
+          "id": "3_2-032",
+          "source": "dieses",
+          "target": "this"
+        },
+        {
+          "id": "3_2-033",
+          "source": "jenes",
+          "target": "that"
+        },
+        {
+          "id": "3_2-034",
+          "source": "diese",
+          "target": "these"
+        },
+        {
+          "id": "3_2-035",
+          "source": "jene",
+          "target": "those"
+        },
+        {
+          "id": "3_2-036",
+          "source": "Ast",
+          "target": "branch"
+        },
+        {
+          "id": "3_2-037",
+          "source": "entdecken",
+          "target": "to discover"
+        },
+        {
+          "id": "3_2-038",
+          "source": "erstens",
+          "target": "first",
+          "image": "🥇"
+        },
+        {
+          "id": "3_2-039",
+          "source": "zweitens",
+          "target": "second",
+          "image": "🥈"
+        },
+        {
+          "id": "3_2-040",
+          "source": "drittens",
+          "target": "third",
+          "image": "🥉"
+        },
+        {
+          "id": "3_2-041",
+          "source": "danach",
+          "target": "after"
+        },
+        {
+          "id": "3_2-042",
+          "source": "Ich spiele gern ...",
+          "target": "I like playing ..."
+        },
+        {
+          "id": "3_2-043",
+          "source": "ich bin einverstanden",
+          "target": "I agree",
+          "image": "👍"
+        },
+        {
+          "id": "3_2-044",
+          "source": "ich bin nicht einverstanden",
+          "target": "I disagree",
+          "image": "👎"
+        },
+        {
+          "id": "3_2-045",
+          "source": "hören",
+          "target": "to hear",
+          "image": "👂"
+        },
+        {
+          "id": "3_2-047",
+          "source": "Lied",
+          "target": "song",
+          "image": "🎵"
+        }
+      ]
+    },
+    {
+      "id": "3_3-t1",
+      "title": "3_3 Unit 3 – Sport · Test 1 (10. Dez)",
+      "test": {
+        "date": "2026-12-10"
+      },
+      "items": [
+        {
+          "id": "3_3-001",
+          "source": "Boxen",
+          "target": "boxing",
+          "image": "🥊"
+        },
+        {
+          "id": "3_3-002",
+          "source": "Geräteturnen",
+          "target": "gymnastics",
+          "image": "🤸"
+        },
+        {
+          "id": "3_3-003",
+          "source": "Speerwurf",
+          "target": "javelin"
+        },
+        {
+          "id": "3_3-004",
+          "source": "Weitsprung",
+          "target": "long jump"
+        },
+        {
+          "id": "3_3-005",
+          "source": "Marathon",
+          "target": "marathon",
+          "image": "🏃"
+        },
+        {
+          "id": "3_3-006",
+          "source": "Schwimmen",
+          "target": "swimming",
+          "image": "🏊"
+        },
+        {
+          "id": "3_3-007",
+          "source": "Ringkampf",
+          "target": "wrestling",
+          "image": "🤼"
+        },
+        {
+          "id": "3_3-008",
+          "source": "Training",
+          "target": "training"
+        },
+        {
+          "id": "3_3-009",
+          "source": "Sieger",
+          "target": "winner",
+          "image": "🏆"
+        },
+        {
+          "id": "3_3-010",
+          "source": "Meister",
+          "target": "champion"
+        },
+        {
+          "id": "3_3-011",
+          "source": "Sportler:in",
+          "target": "athlete"
+        },
+        {
+          "id": "3_3-012",
+          "source": "Trainer:in",
+          "target": "coach"
+        },
+        {
+          "id": "3_3-013",
+          "source": "Kapitän / Team-Chef:in",
+          "target": "captain"
+        },
+        {
+          "id": "3_3-014",
+          "source": "beweglich",
+          "target": "flexible"
+        },
+        {
+          "id": "3_3-015",
+          "source": "Helm",
+          "target": "helmet"
+        },
+        {
+          "id": "3_3-016",
+          "source": "Handschuhe",
+          "target": "gloves",
+          "image": "🧤"
+        },
+        {
+          "id": "3_3-017",
+          "source": "Polster",
+          "target": "pads"
+        },
+        {
+          "id": "3_3-018",
+          "source": "mein Punktestand",
+          "target": "my score"
+        },
+        {
+          "id": "3_3-019",
+          "source": "Punkte gewinnen",
+          "target": "to score"
+        },
+        {
+          "id": "3_3-020",
+          "source": "erster",
+          "target": "first",
+          "image": "🥇"
+        }
+      ]
+    },
+    {
+      "id": "3_3-t2",
+      "title": "3_3 Unit 3 – Sport · Test 2 (14. Jan)",
+      "test": {
+        "date": "2027-01-14"
+      },
+      "items": [
+        {
+          "id": "3_3-021",
+          "source": "zweiter",
+          "target": "second",
+          "image": "🥈"
+        },
+        {
+          "id": "3_3-022",
+          "source": "dritter",
+          "target": "third",
+          "image": "🥉"
+        },
+        {
+          "id": "3_3-023",
+          "source": "Du musst ...",
+          "target": "You need to ..."
+        },
+        {
+          "id": "3_3-024",
+          "source": "beliebt",
+          "target": "popular"
+        },
+        {
+          "id": "3_3-025",
+          "source": "einmal pro Woche",
+          "target": "once a week"
+        },
+        {
+          "id": "3_3-026",
+          "source": "zweimal pro Woche",
+          "target": "twice a week"
+        },
+        {
+          "id": "3_3-027",
+          "source": "am Wettkampf teilnehmen",
+          "target": "to compete"
+        },
+        {
+          "id": "3_3-028",
+          "source": "schützen",
+          "target": "to protect"
+        },
+        {
+          "id": "3_3-029",
+          "source": "bekommen",
+          "target": "to receive"
+        },
+        {
+          "id": "3_3-030",
+          "source": "die Vergangenheit",
+          "target": "the past"
+        },
+        {
+          "id": "3_3-031",
+          "source": "die Gegenwart",
+          "target": "the present"
+        },
+        {
+          "id": "3_3-032",
+          "source": "die Zukunft",
+          "target": "the future"
+        },
+        {
+          "id": "3_3-033",
+          "source": "ich bin",
+          "target": "I am"
+        },
+        {
+          "id": "3_3-034",
+          "source": "es ist",
+          "target": "it is"
+        },
+        {
+          "id": "3_3-035",
+          "source": "du bist",
+          "target": "you are"
+        },
+        {
+          "id": "3_3-036",
+          "source": "sie sind",
+          "target": "they are"
+        },
+        {
+          "id": "3_3-037",
+          "source": "ich war",
+          "target": "I was"
+        },
+        {
+          "id": "3_3-038",
+          "source": "es war",
+          "target": "it was"
+        },
+        {
+          "id": "3_3-039",
+          "source": "du warst",
+          "target": "you were"
+        },
+        {
+          "id": "3_3-040",
+          "source": "sie waren",
+          "target": "they were"
+        },
+        {
+          "id": "3_3-041",
+          "source": "ich tue",
+          "target": "I do"
+        },
+        {
+          "id": "3_3-042",
+          "source": "ich tue nicht",
+          "target": "I don't"
+        },
+        {
+          "id": "3_3-043",
+          "source": "ich tat",
+          "target": "I did"
+        },
+        {
+          "id": "3_3-044",
+          "source": "ich tat nicht",
+          "target": "I didn't"
         }
       ]
     }
