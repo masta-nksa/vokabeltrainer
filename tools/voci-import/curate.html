@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Voci-Import – kuratieren</title>
+    <style>
+        :root {
+            --bg: #f4f7fb; --surface: #fff; --ink: #1c2430; --ink-soft: #5a6675;
+            --accent: #2f6db5; --line: #d8e0ea; --wrong: #c0392b; --ok: #2e8b57;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #161a1f; --surface: #1e242b; --ink: #e8edf3; --ink-soft: #9aa7b5;
+                --accent: #5a9fe0; --line: #2e3844; --wrong: #e06a5c; --ok: #4caf7d;
+            }
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 1.5rem; background: var(--bg); color: var(--ink);
+            font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        main { max-width: 60rem; margin: 0 auto; }
+        h1 { font-size: 1.3rem; margin: 0 0 .25rem; }
+        h2 { font-size: 1rem; margin: 1.5rem 0 .5rem; }
+        .sub { color: var(--ink-soft); margin: 0 0 1rem; }
+        .card {
+            background: var(--surface); border: 1px solid var(--line);
+            border-radius: 10px; padding: 1rem; margin-bottom: 1rem;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid var(--line); padding: .35rem .5rem; text-align: left; vertical-align: middle; }
+        th { font-size: .8rem; color: var(--ink-soft); position: sticky; top: 0; background: var(--surface); }
+        td.nr { text-align: right; color: var(--ink-soft); width: 2.5rem; font-variant-numeric: tabular-nums; }
+        td.hint { color: var(--ink-soft); font-size: .85rem; width: 12rem; }
+        input[type="text"] {
+            width: 100%; padding: .35rem .5rem; font: inherit; color: var(--ink);
+            background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+        }
+        input.emoji { width: 4rem; text-align: center; font-size: 1.1rem; }
+        tr.dropped td:not(.keep) { opacity: .4; }
+        button {
+            font: inherit; padding: .4rem .8rem; border: 1px solid var(--line);
+            border-radius: 7px; background: var(--surface); color: var(--ink); cursor: pointer;
+        }
+        button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+        button.row-del { padding: .2rem .5rem; color: var(--wrong); }
+        .bar {
+            position: sticky; bottom: 0; display: flex; gap: .75rem; align-items: center;
+            background: var(--bg); padding: .75rem 0; margin-top: 1rem; border-top: 1px solid var(--line);
+        }
+        .status { color: var(--ink-soft); }
+        .status.dirty { color: var(--wrong); }
+        .status.saved { color: var(--ok); }
+        .palette button { padding: .2rem .4rem; font-size: 1.1rem; line-height: 1; }
+        .palette { display: flex; flex-wrap: wrap; gap: .2rem; margin-top: .5rem; }
+        .tests td { border: none; padding: .25rem .4rem .25rem 0; }
+        .tests input[type="text"] { width: auto; min-width: 8rem; }
+        details summary { cursor: pointer; font-weight: 600; }
+        .pages img { max-width: 100%; border: 1px solid var(--line); border-radius: 6px; margin-top: .5rem; }
+        .err { color: var(--wrong); white-space: pre-wrap; }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1 id="title">Voci-Import</h1>
+        <p class="sub" id="subtitle"></p>
+        <p class="err" id="error" hidden></p>
+
+        <div class="card">
+            <h2>Tests</h2>
+            <p class="sub">Ein Test wird eine eigene Lektion. Der Wortbereich läuft vom ersten
+                bis zum letzten Begriff (englische Spalte, genau wie in der Tabelle geschrieben).
+                Ohne Tests entsteht eine einzige Lektion für die ganze Unit.</p>
+            <table class="tests"><tbody id="tests"></tbody></table>
+            <button type="button" id="add-test">Test hinzufügen</button>
+        </div>
+
+        <div class="card">
+            <h2>Wortschatz</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="nr">#</th>
+                        <th>Original (Hinweis)</th>
+                        <th>English</th>
+                        <th>Deutsch</th>
+                        <th>Bild</th>
+                        <th class="keep">dabei</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+            <div class="palette" id="palette"></div>
+            <p class="sub">Bild: ein Emoji (Klick oben fügt es ins zuletzt gewählte Feld ein) oder
+                ein Dateiname aus <code>img/decks/&lt;deck&gt;/</code>. Leer lassen heisst: kein Bild.
+                Keine Grafik aus dem Original übernehmen.</p>
+            <button type="button" id="add-row">Zeile anhängen</button>
+        </div>
+
+        <details class="card" id="pages-box" hidden>
+            <summary>Blattseiten ansehen</summary>
+            <div class="pages" id="pages"></div>
+        </details>
+
+        <div class="bar">
+            <button type="button" class="primary" id="save">Speichern</button>
+            <span class="status" id="status">geladen</span>
+        </div>
+    </main>
+
+    <script>
+        const EMOJI = ['🎸', '🎹', '🎺', '🥁', '🎻', '🎷', '🪗', '🪘', '🎵', '🎶', '🎤', '🎧',
+            '🔔', '📯', '🪈', '👏', '🫁', '🧽', '🎨', '🖌️', '✂️', '🏠', '☀️', '🌙',
+            '🐫', '🦊', '🐇', '🐻‍❄️', '🕷️', '🦎', '🐐', '🦅', '🏜️', '🌵', '🌾', '🌳'];
+
+        let draft = null;
+        let dirty = false;
+        let lastEmojiField = null;
+
+        const $ = id => document.getElementById(id);
+        const showError = msg => { const e = $('error'); e.hidden = !msg; e.textContent = msg || ''; };
+
+        function setDirty(on) {
+            dirty = on;
+            const s = $('status');
+            s.textContent = on ? 'ungespeicherte Änderungen' : 'gespeichert';
+            s.className = 'status ' + (on ? 'dirty' : 'saved');
+        }
+
+        function mark() { setDirty(true); }
+
+        function textCell(value, onInput, extraClass) {
+            const td = document.createElement('td');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = value ?? '';
+            if (extraClass) input.className = extraClass;
+            input.addEventListener('input', () => { onInput(input.value); mark(); });
+            if (extraClass === 'emoji') input.addEventListener('focus', () => { lastEmojiField = input; });
+            td.append(input);
+            return td;
+        }
+
+        function renderTests() {
+            const tbody = $('tests');
+            tbody.replaceChildren();
+            (draft.tests || []).forEach((test, i) => {
+                const tr = document.createElement('tr');
+
+                const label = document.createElement('td');
+                const li = document.createElement('input');
+                li.type = 'text'; li.value = test.label || `Test ${i + 1}`; li.placeholder = 'Bezeichnung';
+                li.addEventListener('input', () => { test.label = li.value; mark(); });
+                label.append(li);
+
+                const date = document.createElement('td');
+                const di = document.createElement('input');
+                di.type = 'date'; di.value = test.date || '';
+                di.addEventListener('input', () => { test.date = di.value; mark(); });
+                date.append(di);
+
+                const from = document.createElement('td');
+                const fi = document.createElement('input');
+                fi.type = 'text'; fi.value = test.fromTerm || ''; fi.placeholder = 'von Begriff';
+                fi.addEventListener('input', () => { test.fromTerm = fi.value; mark(); });
+                from.append(fi);
+
+                const to = document.createElement('td');
+                const ti = document.createElement('input');
+                ti.type = 'text'; ti.value = test.toTerm || ''; ti.placeholder = 'bis Begriff';
+                ti.addEventListener('input', () => { test.toTerm = ti.value; mark(); });
+                to.append(ti);
+
+                const del = document.createElement('td');
+                const db = document.createElement('button');
+                db.type = 'button'; db.className = 'row-del'; db.textContent = 'entfernen';
+                db.addEventListener('click', () => { draft.tests.splice(i, 1); renderTests(); mark(); });
+                del.append(db);
+
+                tr.append(label, date, from, to, del);
+                tbody.append(tr);
+            });
+        }
+
+        function renderRows() {
+            const tbody = $('rows');
+            tbody.replaceChildren();
+            draft.rows.forEach((row, i) => {
+                const tr = document.createElement('tr');
+                if (row.keep === false) tr.className = 'dropped';
+
+                const nr = document.createElement('td');
+                nr.className = 'nr'; nr.textContent = row.nr ?? (i + 1);
+
+                const hint = document.createElement('td');
+                hint.className = 'hint'; hint.textContent = row.imageHint || '';
+
+                tr.append(
+                    nr,
+                    hint,
+                    textCell(row.en, v => row.en = v),
+                    textCell(row.de, v => row.de = v),
+                    textCell(row.image, v => row.image = v, 'emoji')
+                );
+
+                const keep = document.createElement('td');
+                keep.className = 'keep';
+                const kb = document.createElement('input');
+                kb.type = 'checkbox'; kb.checked = row.keep !== false;
+                kb.addEventListener('change', () => {
+                    row.keep = kb.checked;
+                    tr.className = kb.checked ? '' : 'dropped';
+                    mark();
+                });
+                keep.append(kb);
+
+                const del = document.createElement('td');
+                const db = document.createElement('button');
+                db.type = 'button'; db.className = 'row-del'; db.textContent = '✕';
+                db.addEventListener('click', () => { draft.rows.splice(i, 1); renderRows(); mark(); });
+                del.append(db);
+
+                tr.append(keep, del);
+                tbody.append(tr);
+            });
+        }
+
+        function renderPages() {
+            const list = draft.pages || [];
+            if (list.length === 0) return;
+            $('pages-box').hidden = false;
+            const box = $('pages');
+            box.replaceChildren();
+            for (const name of list) {
+                const img = document.createElement('img');
+                img.src = `pages/${name}`; img.alt = name; img.loading = 'lazy';
+                box.append(img);
+            }
+        }
+
+        function renderPalette() {
+            const box = $('palette');
+            for (const e of EMOJI) {
+                const b = document.createElement('button');
+                b.type = 'button'; b.textContent = e;
+                b.addEventListener('click', () => {
+                    if (!lastEmojiField) return;
+                    lastEmojiField.value = e;
+                    lastEmojiField.dispatchEvent(new Event('input'));
+                });
+                box.append(b);
+            }
+        }
+
+        function nextNr() {
+            return draft.rows.reduce((m, r) => Math.max(m, Number(r.nr) || 0), 0) + 1;
+        }
+
+        async function load() {
+            try {
+                const res = await fetch('draft.json');
+                if (!res.ok) throw new Error(`draft.json: HTTP ${res.status}`);
+                draft = await res.json();
+            } catch (err) {
+                showError(`Entwurf konnte nicht geladen werden.\n${err.message}`);
+                return;
+            }
+            draft.rows = draft.rows || [];
+            draft.tests = draft.tests || [];
+            const u = draft.unit || {};
+            $('title').textContent = `${u.title || 'Unit'} – kuratieren`;
+            $('subtitle').textContent =
+                `${draft.deckTitle || draft.deckId || ''} · Code ${u.code || '?'} · ${draft.rows.length} Zeilen erkannt`;
+            renderTests();
+            renderRows();
+            renderPalette();
+            renderPages();
+            setDirty(false);
+        }
+
+        async function save() {
+            showError('');
+            try {
+                const res = await fetch('draft.json', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(draft, null, 2)
+                });
+                if (!res.ok) throw new Error(await res.text());
+                setDirty(false);
+            } catch (err) {
+                showError(`Speichern fehlgeschlagen.\n${err.message}`);
+            }
+        }
+
+        $('save').addEventListener('click', save);
+        $('add-test').addEventListener('click', () => {
+            draft.tests.push({ id: `t${draft.tests.length + 1}`, label: `Test ${draft.tests.length + 1}`, date: '', fromTerm: '', toTerm: '' });
+            renderTests(); mark();
+        });
+        $('add-row').addEventListener('click', () => {
+            draft.rows.push({ nr: nextNr(), en: '', de: '', image: '', imageHint: '', keep: true });
+            renderRows(); mark();
+        });
+        window.addEventListener('beforeunload', e => {
+            if (dirty) { e.preventDefault(); e.returnValue = ''; }
+        });
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); save(); }
+        });
+
+        load();
+    </script>
+</body>
+
+</html>

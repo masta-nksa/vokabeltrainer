@@ -3,3 +3,11 @@ node_modules/
 .env.local
 .DS_Store
 *.log
+__pycache__/
+.claude/settings.local.json
+
+# Lehrmittel-Scans: Arbeitsmaterial fürs Authoring, nicht ins öffentliche Repo
+fotomaterial/
+
+# Zwischenstand des Voci-Imports (gerenderte Seiten, Entwurf)
+tools/voci-import/draft/
