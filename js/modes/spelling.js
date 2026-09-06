@@ -1,11 +1,11 @@
-// Modus "spelling": Das Wort in der Ausgangssprache erscheint, aus vier
+// Modus "spelling": Das Wort in der Ausgangssprache erscheint, aus mehreren
 // Schreibweisen des Zielworts ist die korrekte zu wählen.
 
-import { shuffle, normalize, misspellings } from '../util.js';
+import { shuffle, normalize, misspellings, optionCount } from '../util.js';
 
 export const id = 'spelling';
 export const label = 'spelling';
-export const description = 'Aus vier Schreibweisen die richtige erkennen';
+export const description = 'Aus mehreren Schreibweisen die richtige erkennen';
 export const inputKind = 'choice';
 
 // Bild hilft, das Wort zu erkennen; die richtige Schreibweise muss trotzdem
@@ -33,6 +33,9 @@ const DIFFICULTY = {
 export function buildQuestion(item, pool, difficulty = 'medium') {
     const settings = DIFFICULTY[difficulty] ?? DIFFICULTY.medium;
 
+    // Mehr Optionen bei höherer Stufe (einfach 4, mittel 6, schwer 8).
+    const wanted = optionCount(difficulty) - 1;
+
     // Jede Option muss sich von der richtigen Schreibweise und von jeder
     // anderen Option unterscheiden – sonst stehen zwei Buttons mit
     // identischem (und beide Male korrektem) Text zur Auswahl. Der Vergleich
@@ -41,23 +44,23 @@ export function buildQuestion(item, pool, difficulty = 'medium') {
     const seen = new Set([normalize(item.target)]);
     const variants = [];
 
-    for (const candidate of misspellings(item.target, 6, settings)) {
+    for (const candidate of misspellings(item.target, wanted + 4, settings)) {
         const key = normalize(candidate);
         if (seen.has(key)) continue;
         seen.add(key);
         variants.push(candidate);
-        if (variants.length === 3) break;
+        if (variants.length === wanted) break;
     }
 
     // Bei sehr kurzen Wörtern lassen sich kaum Varianten bilden. Dann treten
     // andere Wörter aus der Lektion als Ablenker an.
-    if (variants.length < 3) {
+    if (variants.length < wanted) {
         for (const text of shuffle(pool.map(entry => entry.target))) {
             const key = normalize(text);
             if (seen.has(key)) continue;
             seen.add(key);
             variants.push(text);
-            if (variants.length === 3) break;
+            if (variants.length === wanted) break;
         }
     }
 

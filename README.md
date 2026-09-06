@@ -7,13 +7,20 @@ auf GitHub Pages – kein Build-Schritt, keine Abhängigkeiten.
 
 | Modus | Ablauf |
 |---|---|
-| **terms** | Zielsprache wird angezeigt und vorgelesen, aus vier Übersetzungen die richtige wählen |
-| **spelling** | Ausgangssprache wird angezeigt, aus vier Schreibweisen die korrekte wählen |
+| **terms** | Zielsprache wird angezeigt und vorgelesen, aus mehreren Übersetzungen die richtige wählen |
+| **spelling** | Ausgangssprache wird angezeigt, aus mehreren Schreibweisen die korrekte wählen |
 | **writing** | Ausgangssprache wird angezeigt, Übersetzung eintippen |
+
+Die Stufe **einfach / mittel / schwer** wirkt je Modus: bei *terms* auf die
+Ähnlichkeit der Ablenker, bei *spelling* auf Art und Zahl der Fehler in den
+Varianten, bei *writing* auf die Akzent-Strenge. Zusätzlich steigt die Zahl
+der Antwortmöglichkeiten in den Auswahl-Modi (einfach 4, mittel 6, schwer 8),
+soweit die gewählten Lektionen genug Wörter hergeben.
 
 Dazu **Anwenden**: kleine Übungen zu einer Unit (Grammatik, Sachwissen), die
 in der Auswahl unter den Modus-Knöpfen erscheinen, sobald eine passende
-Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen).
+Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Die Stufe
+wirkt hier nicht.
 
 ## Aufbau
 

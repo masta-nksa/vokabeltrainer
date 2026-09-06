@@ -31,6 +31,17 @@ export function stripDiacritics(text) {
 }
 
 /**
+ * Wie viele Antwortmöglichkeiten ein Auswahl-Modus anbietet. Mehr Optionen
+ * heisst mehr zu lesen und weniger Ratewahrscheinlichkeit – darum steigt die
+ * Zahl mit der Stufe. Fehlt es an Kandidaten, zeigen die Modi entsprechend
+ * weniger an.
+ * @param {string} difficulty easy | medium | hard
+ */
+export function optionCount(difficulty) {
+    return { easy: 4, medium: 6, hard: 8 }[difficulty] ?? 4;
+}
+
+/**
  * Vereinheitlicht eine Antwort für den Vergleich: Kleinschreibung,
  * zusammengefasste Leerzeichen, kein Satzzeichen am Ende.
  */
@@ -126,7 +137,8 @@ export function misspellings(word, count = 3, { edits = 1, simpleOnly = false } 
     const found = new Set();
 
     // Grosszügig oft versuchen: manche Operationen greifen bei kurzen Wörtern nicht.
-    for (let attempt = 0; attempt < 60 && found.size < count; attempt++) {
+    const maxAttempts = Math.max(60, count * 12);
+    for (let attempt = 0; attempt < maxAttempts && found.size < count; attempt++) {
         let variant = word;
         for (let step = 0; step < edits; step++) {
             const next = pick(operations)(variant);
