@@ -14,17 +14,42 @@ export const inputKind = 'choice';
 export const speakAnswerOnCorrect = false;
 
 /**
+ * Wählt drei Ablenker aus den Kandidaten. Die Stufe steuert, wie ähnlich sie
+ * der richtigen Antwort in der Länge sind: "easy" hebt sich deutlich ab,
+ * "hard" liegt nahe dran und ist dadurch schwerer auszuschliessen. "medium"
+ * bleibt rein zufällig – im Schnitt mehr Variation als bei "easy".
+ * @param {string[]} candidates
+ * @param {string} answer
+ * @param {string} difficulty
+ */
+function pickDistractors(candidates, answer, difficulty) {
+    if (difficulty !== 'easy' && difficulty !== 'hard') return sample(candidates, 3);
+
+    const byCloseness = [...candidates].sort((a, b) => {
+        const diffA = Math.abs(a.length - answer.length);
+        const diffB = Math.abs(b.length - answer.length);
+        return difficulty === 'hard' ? diffA - diffB : diffB - diffA;
+    });
+
+    // Nicht immer strikt die extremsten nehmen, sonst wiederholt sich die
+    // Auswahl bei jeder Frage – daher aus einem grosszügigen Vorlauf ziehen.
+    const shortlist = byCloseness.slice(0, Math.max(3, Math.ceil(candidates.length / 2)));
+    return sample(shortlist, 3);
+}
+
+/**
  * @param {import('../storage/index.js').Item} item
  * @param {import('../storage/index.js').Item[]} pool Nur die gewählten Lektionen
+ * @param {string} [difficulty]
  */
-export function buildQuestion(item, pool) {
+export function buildQuestion(item, pool, difficulty = 'medium') {
     // Ablenker kommen aus den gewählten Lektionen. Sie stammen bewusst nicht
     // aus dem ganzen Wortschatz, sonst sind sie zu leicht auszuschliessen.
     const candidates = [...new Set(
         pool.map(entry => entry.source).filter(text => normalize(text) !== normalize(item.source))
     )];
 
-    const options = shuffle([item.source, ...sample(candidates, 3)]);
+    const options = shuffle([item.source, ...pickDistractors(candidates, item.source, difficulty)]);
 
     return {
         prompt: item.target,

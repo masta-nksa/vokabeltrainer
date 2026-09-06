@@ -63,7 +63,7 @@ export function init(config) {
  */
 export function start(modeId, deck, items) {
     mode = getMode(modeId);
-    startSession({ deck, items: shuffle(items), pool: items, mode: modeId });
+    startSession({ deck, items: shuffle(items), pool: items, mode: modeId, difficulty: state.difficulty });
 
     document.getElementById('quiz-title').textContent = mode.label;
     document.getElementById('quiz-subtitle').textContent = mode.description;
@@ -106,7 +106,7 @@ function nextQuestion() {
 
     session.tries = 0;
     const item = session.items[session.index];
-    question = mode.buildQuestion(item, session.pool);
+    question = mode.buildQuestion(item, session.pool, session.difficulty);
 
     renderQuestion();
     scoreboard.render(session);
@@ -177,7 +177,7 @@ function answer(given, button) {
     const session = state.session;
     if (!session || !question) return;
 
-    const result = mode.check(question, given);
+    const result = mode.check(question, given, session.difficulty);
     const note = document.getElementById('quiz-note');
 
     if (result.correct) {

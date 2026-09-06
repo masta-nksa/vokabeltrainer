@@ -206,6 +206,14 @@ function renderVoicePicker(force = false) {
 function initSelection() {
     lessonSelect.init(onSelectionChange);
 
+    for (const radio of document.querySelectorAll('input[name="difficulty"]')) {
+        radio.addEventListener('change', () => {
+            if (!radio.checked) return;
+            state.difficulty = radio.value;
+            storage.setSetting('difficulty', radio.value);
+        });
+    }
+
     for (const button of document.querySelectorAll('[data-mode]')) {
         button.addEventListener('click', () => {
             const items = selectedItems();
@@ -317,6 +325,11 @@ async function main() {
 
     state.learnerName = name;
     state.hero = hero;
+
+    const difficulty = await storage.getSetting('difficulty', 'medium');
+    state.difficulty = difficulty;
+    const difficultyRadio = document.querySelector(`input[name="difficulty"][value="${difficulty}"]`);
+    if (difficultyRadio) difficultyRadio.checked = true;
 
     screens.show('screen-start');
     onSelectionChange();

@@ -23,17 +23,21 @@ export function buildQuestion(item) {
 }
 
 /**
- * Gross- und Kleinschreibung sowie Satzzeichen am Ende werden verziehen,
- * Akzente nicht. Fehlt nur ein Akzent, gibt es dafür einen gezielten Hinweis
- * statt einer wortlosen Ablehnung.
+ * Gross- und Kleinschreibung sowie Satzzeichen am Ende werden immer verziehen.
+ * Fehlende Akzente zählen ab "medium" als Fehler (mit gezieltem Hinweis statt
+ * wortloser Ablehnung); im leichten Modus werden sie noch als richtig
+ * gewertet, damit die Einstiegsstufe wirklich leicht bleibt.
  */
-export function check(question, given) {
+export function check(question, given, difficulty = 'medium') {
     const expected = normalize(question.answer);
     const actual = normalize(given);
 
     if (actual === expected) return { correct: true };
 
     if (stripDiacritics(actual) === stripDiacritics(expected)) {
+        if (difficulty === 'easy') {
+            return { correct: true, note: 'Richtig! Achte beim nächsten Mal auch auf die Akzente.' };
+        }
         return { correct: false, note: 'Fast! Achte auf die Akzente.' };
     }
 

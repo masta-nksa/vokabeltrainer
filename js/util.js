@@ -42,68 +42,97 @@ export function normalize(text) {
         .replace(/[.!?;:]+$/, '');
 }
 
+function letterPositions(text) {
+    return [...text]
+        .map((char, index) => (/\p{L}/u.test(char) ? index : -1))
+        .filter(index => index >= 0);
+}
+
+const pick = list => list[Math.floor(Math.random() * list.length)];
+
+// Jede Operation arbeitet auf dem aktuellen Zwischenstand, nicht auf dem
+// Original – so lassen sich mehrere Fehler nacheinander anwenden (schwerer
+// Modus). Liefert null, wenn die Operation auf diesem Text nicht greift.
+const OPERATIONS = [
+    // Zwei benachbarte Buchstaben vertauschen
+    text => {
+        const letters = [...text];
+        const positions = letterPositions(text);
+        const candidates = positions.filter((p, i) =>
+            i < positions.length - 1 &&
+            positions[i + 1] === p + 1 &&
+            letters[p] !== letters[p + 1]);
+        if (candidates.length === 0) return null;
+        const p = pick(candidates);
+        const copy = [...letters];
+        [copy[p], copy[p + 1]] = [copy[p + 1], copy[p]];
+        return copy.join('');
+    },
+    // Einen Buchstaben weglassen
+    text => {
+        const positions = letterPositions(text);
+        if (positions.length === 0) return null;
+        const p = pick(positions);
+        return text.slice(0, p) + text.slice(p + 1);
+    },
+    // Einen Buchstaben verdoppeln
+    text => {
+        const positions = letterPositions(text);
+        if (positions.length === 0) return null;
+        const p = pick(positions);
+        return text.slice(0, p) + text[p] + text.slice(p);
+    },
+    // Einen Akzent verschlucken, der klassische Fehler im Französischen
+    text => {
+        const plain = stripDiacritics(text);
+        return plain === text ? null : plain;
+    },
+    // Einen Buchstaben durch einen anderen ersetzen
+    text => {
+        const positions = letterPositions(text);
+        if (positions.length === 0) return null;
+        const p = pick(positions);
+        const letters = [...text];
+        const alphabet = 'abcdefghijklmnopqrstuvwxyz'.replace(letters[p].toLowerCase(), '');
+        return text.slice(0, p) + pick([...alphabet]) + text.slice(p + 1);
+    }
+];
+
+// Im leichten Modus nur die offensichtlichen Fehler: fehlender oder
+// doppelter Buchstabe. Vertauschung, Akzent- und Ersetzungsfehler sind
+// subtiler und bleiben den höheren Stufen vorbehalten.
+const SIMPLE_OPERATIONS = [OPERATIONS[1], OPERATIONS[2]];
+
 /**
  * Erzeugt falsche Schreibweisen eines Wortes für den Modus "spelling".
  *
- * Jede Variante wird gegen das Original und gegen die bereits erzeugten
- * geprüft. Sonst steht im Quiz zweimal dieselbe oder gar die richtige
- * Antwort zur Auswahl.
+ * Der Aufrufer prüft die Ergebnisse zusätzlich gegen das Original und gegen
+ * bereits vergebene Optionen (z.B. andere Wörter der Lektion) – hier wird
+ * nur dafür gesorgt, dass innerhalb einer Charge keine Wiederholungen
+ * entstehen.
  *
  * @param {string} word
  * @param {number} count
+ * @param {{edits?: number, simpleOnly?: boolean}} [difficulty]
+ *   `edits`: wie viele Fehler pro Variante kombiniert werden (schwerer Modus
+ *   kombiniert mehrere). `simpleOnly`: nur offensichtliche Fehlerarten
+ *   verwenden (leichter Modus).
  * @returns {string[]}
  */
-export function misspellings(word, count = 3) {
-    const letters = [...word];
-    const positions = letters
-        .map((char, index) => (/\p{L}/u.test(char) ? index : -1))
-        .filter(index => index >= 0);
+export function misspellings(word, count = 3, { edits = 1, simpleOnly = false } = {}) {
+    if (letterPositions(word).length < 2) return [];
 
-    if (positions.length < 2) return [];
-
-    const pick = list => list[Math.floor(Math.random() * list.length)];
-
-    const operations = [
-        // Zwei benachbarte Buchstaben vertauschen
-        () => {
-            const candidates = positions.filter((p, i) =>
-                i < positions.length - 1 &&
-                positions[i + 1] === p + 1 &&
-                letters[p] !== letters[p + 1]);
-            if (candidates.length === 0) return null;
-            const p = pick(candidates);
-            const copy = [...letters];
-            [copy[p], copy[p + 1]] = [copy[p + 1], copy[p]];
-            return copy.join('');
-        },
-        // Einen Buchstaben weglassen
-        () => {
-            const p = pick(positions);
-            return word.slice(0, p) + word.slice(p + 1);
-        },
-        // Einen Buchstaben verdoppeln
-        () => {
-            const p = pick(positions);
-            return word.slice(0, p) + letters[p] + word.slice(p);
-        },
-        // Einen Akzent verschlucken, der klassische Fehler im Französischen
-        () => {
-            const plain = stripDiacritics(word);
-            return plain === word ? null : plain;
-        },
-        // Einen Buchstaben durch einen anderen ersetzen
-        () => {
-            const p = pick(positions);
-            const alphabet = 'abcdefghijklmnopqrstuvwxyz'.replace(letters[p].toLowerCase(), '');
-            return word.slice(0, p) + pick([...alphabet]) + word.slice(p + 1);
-        }
-    ];
-
+    const operations = simpleOnly ? SIMPLE_OPERATIONS : OPERATIONS;
     const found = new Set();
+
     // Grosszügig oft versuchen: manche Operationen greifen bei kurzen Wörtern nicht.
-    for (let attempt = 0; attempt < 40 && found.size < count; attempt++) {
-        const variant = operations[attempt % operations.length]();
-        if (variant && variant !== word && variant.length > 0) found.add(variant);
+    for (let attempt = 0; attempt < 60 && found.size < count; attempt++) {
+        let variant = word;
+        for (let step = 0; step < edits; step++) {
+            const next = pick(operations)(variant);
+            if (next && next.length > 0) variant = next;
+        }
+        if (variant !== word) found.add(variant);
     }
 
     return [...found].slice(0, count);
