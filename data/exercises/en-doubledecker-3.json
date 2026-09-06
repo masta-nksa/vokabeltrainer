@@ -1,0 +1,118 @@
+{
+  "deckId": "en-doubledecker-3",
+  "version": 1,
+  "sets": [
+    {
+      "id": "3_2-plurals",
+      "unitId": "3_2",
+      "title": "Unit 2 – Plural-Formen",
+      "intro": "Schreib die Mehrzahl. Nach -s, -x, -ss, -sh, -ch kommt -es, sonst nur -s.",
+      "tasks": [
+        { "type": "gap", "text": "one cat  →  two ___", "answer": "cats" },
+        { "type": "gap", "text": "one frog  →  two ___", "answer": "frogs" },
+        { "type": "gap", "text": "one snail  →  two ___", "answer": "snails" },
+        { "type": "gap", "text": "one hat  →  two ___", "answer": "hats" },
+        { "type": "gap", "text": "one sock  →  two ___", "answer": "socks" },
+        { "type": "gap", "text": "one song  →  two ___", "answer": "songs" },
+        { "type": "gap", "text": "one dress  →  two ___", "answer": "dresses", "note": "endet auf -ss  →  -es" },
+        { "type": "gap", "text": "one glass  →  two ___", "answer": "glasses", "note": "endet auf -ss  →  -es" },
+        { "type": "gap", "text": "one box  →  two ___", "answer": "boxes", "note": "endet auf -x  →  -es" },
+        { "type": "gap", "text": "one tax  →  two ___", "answer": "taxes", "note": "endet auf -x  →  -es" },
+        { "type": "gap", "text": "one bus  →  two ___", "answer": "buses", "note": "endet auf -s  →  -es" },
+        { "type": "gap", "text": "one watch  →  two ___", "answer": "watches", "note": "endet auf -ch  →  -es" },
+        { "type": "gap", "text": "one brush  →  two ___", "answer": "brushes", "note": "endet auf -sh  →  -es" }
+      ]
+    },
+    {
+      "id": "3_2-ed-sheeran",
+      "unitId": "3_2",
+      "title": "Unit 2 – Ed Sheeran (Leseverstehen)",
+      "intro": "Schau dir die Ed-Sheeran-Doppelseite im Buch an, dann beantworte die Fragen.",
+      "tasks": [
+        { "type": "mc", "text": "Which instrument does Ed Sheeran play?", "options": ["the flute", "the drums", "the guitar"], "answer": "the guitar" },
+        { "type": "mc", "text": "In which month was Ed Sheeran born?", "options": ["January", "February", "June"], "answer": "February" },
+        { "type": "mc", "text": "What was his first single called?", "options": ["The A Team", "The B Team", "The Last Team"], "answer": "The A Team" },
+        { "type": "mc", "text": "What was his first album called?", "options": ["+", "x", "÷"], "answer": "+" },
+        { "type": "mc", "text": "What did Queen Elizabeth II give him?", "options": ["a crown", "an MBE", "a knighthood"], "answer": "an MBE" }
+      ]
+    },
+    {
+      "id": "3_3-past-regular",
+      "unitId": "3_3",
+      "title": "Unit 3 – Simple Past: regelmässige Verben",
+      "intro": "Bilde die einfache Vergangenheit. Grundregel -ed; auf -e nur -d; Konsonant + -y wird -ied; kurzes Verb aus Vokal + Konsonant verdoppelt den Konsonanten.",
+      "tasks": [
+        { "type": "gap", "text": "look  →  ___", "answer": "looked" },
+        { "type": "gap", "text": "watch  →  ___", "answer": "watched" },
+        { "type": "gap", "text": "want  →  ___", "answer": "wanted" },
+        { "type": "gap", "text": "help  →  ___", "answer": "helped" },
+        { "type": "gap", "text": "play  →  ___", "answer": "played" },
+        { "type": "gap", "text": "practise  →  ___", "answer": "practised", "note": "endet auf -e  →  nur -d" },
+        { "type": "gap", "text": "live  →  ___", "answer": "lived", "note": "endet auf -e  →  nur -d" },
+        { "type": "gap", "text": "arrive  →  ___", "answer": "arrived", "note": "endet auf -e  →  nur -d" },
+        { "type": "gap", "text": "travel  →  ___", "answer": "travelled", "note": "-l wird verdoppelt" },
+        { "type": "gap", "text": "marry  →  ___", "answer": "married", "note": "Konsonant + -y  →  -ied" },
+        { "type": "gap", "text": "study  →  ___", "answer": "studied", "note": "Konsonant + -y  →  -ied" },
+        { "type": "gap", "text": "carry  →  ___", "answer": "carried", "note": "Konsonant + -y  →  -ied" },
+        { "type": "gap", "text": "plan  →  ___", "answer": "planned", "note": "Vokal + Konsonant  →  verdoppeln" },
+        { "type": "gap", "text": "stop  →  ___", "answer": "stopped", "note": "Vokal + Konsonant  →  verdoppeln" }
+      ]
+    },
+    {
+      "id": "3_3-past-irregular",
+      "unitId": "3_3",
+      "title": "Unit 3 – Simple Past: unregelmässige Verben",
+      "intro": "Diese Verben musst du auswendig können.",
+      "tasks": [
+        { "type": "gap", "text": "go  →  ___", "answer": "went" },
+        { "type": "gap", "text": "see  →  ___", "answer": "saw" },
+        { "type": "gap", "text": "give  →  ___", "answer": "gave" },
+        { "type": "gap", "text": "have  →  ___", "answer": "had" },
+        { "type": "gap", "text": "come  →  ___", "answer": "came" },
+        { "type": "gap", "text": "take  →  ___", "answer": "took" },
+        { "type": "gap", "text": "find  →  ___", "answer": "found" },
+        { "type": "gap", "text": "make  →  ___", "answer": "made" },
+        { "type": "gap", "text": "get  →  ___", "answer": "got" },
+        { "type": "gap", "text": "become  →  ___", "answer": "became" },
+        { "type": "gap", "text": "win  →  ___", "answer": "won" },
+        { "type": "gap", "text": "I am  →  I ___", "answer": "was" },
+        { "type": "gap", "text": "it is  →  it ___", "answer": "was" },
+        { "type": "gap", "text": "you are  →  you ___", "answer": "were" },
+        { "type": "gap", "text": "they are  →  they ___", "answer": "were" }
+      ]
+    },
+    {
+      "id": "3_3-past-sentences",
+      "unitId": "3_3",
+      "title": "Unit 3 – Simple Past im Satz",
+      "intro": "Setz das Verb in Klammern in die einfache Vergangenheit.",
+      "tasks": [
+        { "type": "gap", "text": "Yesterday I ___ (play) football with my friends.", "answer": "played" },
+        { "type": "gap", "text": "She ___ (go) to the swimming pool last week.", "answer": "went" },
+        { "type": "gap", "text": "We ___ (watch) the marathon on TV.", "answer": "watched" },
+        { "type": "gap", "text": "He ___ (be) the winner of the race.", "answer": "was" },
+        { "type": "gap", "text": "They ___ (be) very tired after training.", "answer": "were" },
+        { "type": "gap", "text": "The team ___ (win) the game.", "answer": "won" },
+        { "type": "gap", "text": "My coach ___ (give) me good advice.", "answer": "gave" },
+        { "type": "gap", "text": "I ___ (not / be) at the gym yesterday.", "answer": ["was not", "wasn't"], "note": "not + be  →  was not / wasn't" },
+        { "type": "gap", "text": "She ___ (not / come) to practice.", "answer": ["did not come", "didn't come"], "note": "not + Vollverb  →  didn't + Grundform" },
+        { "type": "gap", "text": "___ you (see) the champion yesterday?", "answer": "Did", "note": "Frage  →  Did + Person + Grundform" }
+      ]
+    },
+    {
+      "id": "3_3-olympics",
+      "unitId": "3_3",
+      "title": "Unit 3 – Olympische Spiele: früher und heute",
+      "intro": "AOG = Ancient Olympic Games (die antiken Spiele), MOG = Modern Olympic Games (heute).",
+      "tasks": [
+        { "type": "mc", "text": "The Ancient Olympic Games took place in ...", "options": ["Athens", "Olympia", "Sparta"], "answer": "Olympia" },
+        { "type": "mc", "text": "The Ancient Games lasted ...", "options": ["5 days", "10 days", "16 days"], "answer": "5 days" },
+        { "type": "mc", "text": "Who could compete in the Ancient Games?", "options": ["only men", "only women", "men and women"], "answer": "only men" },
+        { "type": "mc", "text": "The prize in the Ancient Games was ...", "options": ["a gold medal", "a crown of olive leaves", "money"], "answer": "a crown of olive leaves" },
+        { "type": "mc", "text": "The Modern Games last about ...", "options": ["5 days", "16 days", "one month"], "answer": "16 days" },
+        { "type": "mc", "text": "The prize in the Modern Games is ...", "options": ["a gold medal", "a crown of olive leaves", "a cup"], "answer": "a gold medal" },
+        { "type": "mc", "text": "In the Modern Games, who competes?", "options": ["only men", "men and women", "only women"], "answer": "men and women" }
+      ]
+    }
+  ]
+}

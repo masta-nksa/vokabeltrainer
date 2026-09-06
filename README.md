@@ -11,6 +11,10 @@ auf GitHub Pages – kein Build-Schritt, keine Abhängigkeiten.
 | **spelling** | Ausgangssprache wird angezeigt, aus vier Schreibweisen die korrekte wählen |
 | **writing** | Ausgangssprache wird angezeigt, Übersetzung eintippen |
 
+Dazu **Anwenden**: kleine Übungen zu einer Unit (Grammatik, Sachwissen), die
+in der Auswahl unter den Modus-Knöpfen erscheinen, sobald eine passende
+Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen).
+
 ## Aufbau
 
 ```
@@ -23,11 +27,13 @@ js/
   storage/index.js  Storage-Schnittstelle – später gegen Server austauschbar
   data/csv.js       CSV-Import und -Export
   data/decks.js     Deck-Verwaltung
-  modes/            Die drei Lernmodi
+  data/exercises.js Anwendungsübungen laden und auswählen
+  modes/            Lernmodi (terms, spelling, writing) und exercise
   ui/               Screens, Lektionsauswahl, Scoreboard, Druck, Belohnung
   speech/tts.js     Sprachausgabe
   speech/assess.js  Schnittstelle für die spätere Ausspracheprüfung
 data/decks/         Mitgelieferte Wortschätze als JSON
+data/exercises/     Anwendungsübungen je Deck als JSON
 img/decks/<deck>/   Bilddateien zu einzelnen Wörtern (optional)
 tools/              Entwicklungsskripte, werden nicht ausgeliefert
 tools/voci-import/  Vokabelblatt (PDF/Foto) -> Lektion; Skill /voci-unit
@@ -94,6 +100,45 @@ mitbringt.
 erkennen, in einer lokalen Tabelle korrigieren, ins Deck schreiben. Der bequeme
 Weg ist der Skill **`/voci-unit <pfad>`**; Details in
 `tools/voci-import/README.md`.
+
+## Anwendungsübungen
+
+Neben dem Wortschatz stehen je Unit kleine Übungen zum Anwenden – Grammatik
+(Plural, Simple Past) und Sachwissen (Leseverstehen, Olympische Spiele). Sie
+liegen in `data/exercises/<deckId>.json` und werden **nicht** gespeichert; die
+App holt sie bei Bedarf frisch. Ein Deck ohne Datei hat einfach keine Übungen.
+
+```jsonc
+{
+  "deckId": "en-doubledecker-3",
+  "sets": [
+    {
+      "id": "3_3-past-regular",
+      "unitId": "3_3",                        // haengt an dieser Unit
+      "title": "Unit 3 – Simple Past: regelmaessige Verben",
+      "intro": "…",                           // erscheint als Untertitel
+      "tasks": [
+        { "type": "gap", "text": "look  →  ___", "answer": "looked" },
+        { "type": "gap", "text": "carry  →  ___", "answer": "carried",
+          "note": "Konsonant + -y  →  -ied" },  // Hinweis nach einem Fehler
+        { "type": "mc",  "text": "…?", "options": ["a", "b", "c"], "answer": "b" }
+      ]
+    }
+  ]
+}
+```
+
+- **`unitId`** ist die Unit ohne Test-Zusatz (`3_3`). Ein Set erscheint in der
+  Auswahl, sobald eine Lektion dieser Unit gewaehlt ist (`3_3-t1`, `3_3-t2`, …).
+- **`type: "gap"`** – Luecke `___` im `text`, `answer` ist ein String oder eine
+  Liste erlaubter Formen. Gross-/Kleinschreibung und Randzeichen sind egal.
+- **`type: "mc"`** – `options` als Knoepfe, `answer` ist genau einer der Texte.
+- **`note`** erscheint nach dem ersten Fehlversuch als Hilfe.
+- Task-IDs werden beim Laden vergeben (`<setId>-01` …); Uebungs-Versuche landen
+  mit `mode: "exercise"` und `exerciseId` im selben Fortschrittsspeicher wie
+  der Wortschatz.
+
+Kein Text aus dem Lehrmittel abschreiben – eigene Saetze; Fakten sind frei.
 
 ## Entwicklung
 

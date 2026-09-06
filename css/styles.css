@@ -202,6 +202,16 @@ button.link.danger {
     flex: 1 1 8rem;
 }
 
+#exercise-block {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+}
+
+#exercise-block .hint {
+    margin-top: .5rem;
+}
+
 /* ------------------------------------------------------------ Lektionen */
 
 .unit-list {

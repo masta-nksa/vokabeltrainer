@@ -4,6 +4,7 @@ import * as storage from './storage/index.js';
 import { ensureBuiltinDecks, itemsFrom, languageName } from './data/decks.js';
 import * as tts from './speech/tts.js';
 import { readTextFile, deckFromCsv } from './data/csv.js';
+import { exercisesFor, setsForUnits } from './data/exercises.js';
 import { state } from './state.js';
 import { stripDiacritics } from './util.js';
 import * as screens from './ui/screens.js';
@@ -93,11 +94,52 @@ function onSelectionChange() {
         : `${count} Wörter ausgewählt`;
 
     renderVoicePicker();
+    refreshExercises().catch(error => console.warn('Übungen nicht geladen:', error));
 }
 
 function selectedItems() {
     if (!state.deck) return [];
     return itemsFrom(state.deck, state.selectedUnits);
+}
+
+// ------------------------------------------------------------ Anwenden
+
+/** Für welches Deck die Übungssets zuletzt geholt wurden. */
+let exerciseCache = { deckId: null, sets: [] };
+
+/**
+ * Zeigt unter den Modus-Knöpfen die Anwendungsübungen, die zu mindestens
+ * einer gewählten Lektion passen. Nichts Passendes: der Block bleibt weg.
+ */
+async function refreshExercises() {
+    const deck = state.deck;
+    const block = document.getElementById('exercise-block');
+    const list = document.getElementById('exercise-list');
+
+    if (!deck) {
+        block.hidden = true;
+        return;
+    }
+
+    if (exerciseCache.deckId !== deck.id) {
+        exerciseCache = { deckId: deck.id, sets: await exercisesFor(deck.id) };
+    }
+
+    // Zwischenzeitlicher Deckwechsel: Ergebnis gehört nicht mehr hierher.
+    if (state.deck?.id !== deck.id) return;
+
+    const available = setsForUnits(exerciseCache.sets, state.selectedUnits);
+    list.replaceChildren();
+
+    for (const set of available) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = set.title.replace(/^Unit\s*\d+\s*[–-]\s*/, '');
+        button.addEventListener('click', () => quiz.startExercise(deck, set));
+        list.append(button);
+    }
+
+    block.hidden = available.length === 0;
 }
 
 // ------------------------------------------------------------ Stimmenwahl

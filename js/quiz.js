@@ -60,23 +60,39 @@ export function init(config) {
  * @param {string} modeId
  * @param {import('./storage/index.js').Deck} deck
  * @param {import('./storage/index.js').Item[]} items
+ * @param {import('./state.js').Session['context']} [context]
+ *   Kopfzeile und Herkunft, wenn sie nicht vom Modus kommen (Übungssets).
  */
-export function start(modeId, deck, items) {
+export function start(modeId, deck, items, context = null) {
     mode = getMode(modeId);
-    startSession({ deck, items: shuffle(items), pool: items, mode: modeId, difficulty: state.difficulty });
+    startSession({ deck, items: shuffle(items), pool: items, mode: modeId, difficulty: state.difficulty, context });
 
-    document.getElementById('quiz-title').textContent = mode.label;
-    document.getElementById('quiz-subtitle').textContent = mode.description;
+    document.getElementById('quiz-title').textContent = context?.title ?? mode.label;
+    document.getElementById('quiz-subtitle').textContent = context?.subtitle ?? mode.description;
 
     reward.reset();
     screens.show('screen-quiz');
     nextQuestion();
 }
 
+/**
+ * Startet eine Anwendungsübung.
+ * @param {import('./storage/index.js').Deck} deck
+ * @param {import('./data/exercises.js').ExerciseSet} set
+ */
+export function startExercise(deck, set) {
+    const tasks = set.tasks.map(task => ({ ...task }));
+    start('exercise', deck, tasks, {
+        title: set.title,
+        subtitle: set.intro ?? '',
+        exerciseId: set.id
+    });
+}
+
 function restart(items) {
     const session = state.session;
     if (!session || items.length === 0) return;
-    start(session.mode, session.deck, items);
+    start(session.mode, session.deck, items, session.context);
 }
 
 function missedItems() {
@@ -109,8 +125,11 @@ function nextQuestion() {
     question = mode.buildQuestion(item, session.pool, session.difficulty);
 
     // Ein Bild wird nur in Modi gezeigt, die es nicht zu leicht machen – bei
-    // "terms" stünde die Antwort sonst als Bild neben den vier Wörtern.
-    question.image = mode.showsImage ? storage.resolveImage(session.deck, item) : null;
+    // "terms" stünde die Antwort sonst als Bild neben den vier Wörtern. Nur
+    // Wortschatz-Einträge haben eins, Übungsaufgaben nicht.
+    question.image = (mode.showsImage && item.image !== undefined)
+        ? storage.resolveImage(session.deck, item)
+        : null;
 
     renderQuestion();
     scoreboard.render(session);
@@ -139,7 +158,11 @@ function renderQuestion() {
 
     optionsBox.replaceChildren();
 
-    if (mode.inputKind === 'choice') {
+    // Bei Übungen entscheidet die einzelne Aufgabe, ob geklickt oder getippt
+    // wird; die Wortschatz-Modi haben eine feste Eingabeart.
+    const inputKind = question.inputKind ?? mode.inputKind;
+
+    if (inputKind === 'choice') {
         form.hidden = true;
         optionsBox.hidden = false;
 
@@ -157,6 +180,7 @@ function renderQuestion() {
         form.hidden = false;
         field.value = '';
         field.lang = langFor(question.answerSide);
+        field.placeholder = mode.id === 'exercise' ? 'Antwort eintippen' : 'Übersetzung eintippen';
         field.classList.remove('wrong');
         field.focus();
     }
@@ -271,6 +295,7 @@ function resolveItem() {
         deckId: session.deck.id,
         itemId: item.id,
         mode: session.mode,
+        ...(session.context?.exerciseId ? { exerciseId: session.context.exerciseId } : {}),
         correct: clean,
         tries: session.tries
     }).catch(error => console.warn('Versuch konnte nicht gespeichert werden:', error));
@@ -300,13 +325,21 @@ function finish() {
     for (const item of missed) {
         const row = document.createElement('li');
 
+        // Wortschatz-Eintrag: Zielwort – Ausgangswort. Übungsaufgabe: Lösung –
+        // Aufgabenstellung.
+        const isTask = item.text !== undefined;
+        const primary = isTask
+            ? (Array.isArray(item.answer) ? item.answer[0] : item.answer)
+            : item.target;
+        const secondary = isTask ? item.text : item.source;
+
         const target = document.createElement('strong');
-        target.textContent = item.target;
+        target.textContent = primary;
         target.lang = session.deck.targetLang;
 
         const source = document.createElement('span');
-        source.textContent = ` – ${item.source}`;
-        source.lang = session.deck.sourceLang;
+        source.textContent = ` – ${secondary}`;
+        source.lang = isTask ? session.deck.targetLang : session.deck.sourceLang;
 
         row.append(target, source);
         list.append(row);

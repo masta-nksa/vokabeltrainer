@@ -33,8 +33,9 @@ import * as db from './db.js';
  * @property {string} id
  * @property {string} userId    Vorerst immer "local"
  * @property {string} deckId
- * @property {string} itemId
- * @property {string} mode      terms | spelling | writing
+ * @property {string} itemId    Wort-ID, bei Übungen die Aufgaben-ID
+ * @property {string} mode      terms | spelling | writing | exercise
+ * @property {string} [exerciseId]  nur bei mode "exercise": welches Übungsset
  * @property {boolean} correct  Auf Anhieb gewusst
  * @property {number} tries     Fehlversuche vor der Lösung
  * @property {number} ts        Zeitstempel in ms

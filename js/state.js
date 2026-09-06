@@ -7,6 +7,9 @@
  * @property {import('./storage/index.js').Item[]} pool    Auswahlgrundlage für Ablenker
  * @property {string} mode
  * @property {string} difficulty easy | medium | hard
+ * @property {{title: string, subtitle: string, exerciseId?: string} | null} context
+ *   Kopfzeile und Herkunft einer Runde, wenn sie nicht vom Modus selbst kommt
+ *   (Anwendungsübungen). Sonst null.
  * @property {number} index
  * @property {number} correct
  * @property {number} wrong
@@ -31,12 +34,12 @@ export const state = {
 
 /**
  * Startet eine neue Runde.
- * @param {{deck: import('./storage/index.js').Deck, items: import('./storage/index.js').Item[], pool: import('./storage/index.js').Item[], mode: string, difficulty: string}} config
+ * @param {{deck: import('./storage/index.js').Deck, items: import('./storage/index.js').Item[], pool: import('./storage/index.js').Item[], mode: string, difficulty: string, context?: Session['context']}} config
  * @returns {Session}
  */
-export function startSession({ deck, items, pool, mode, difficulty }) {
+export function startSession({ deck, items, pool, mode, difficulty, context = null }) {
     state.session = {
-        deck, items, pool, mode, difficulty,
+        deck, items, pool, mode, difficulty, context,
         index: 0, correct: 0, wrong: 0, tries: 0, missed: []
     };
     return state.session;
