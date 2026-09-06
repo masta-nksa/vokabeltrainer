@@ -4,174 +4,230 @@
   "sourceLang": "de",
   "targetLang": "en",
   "builtin": true,
-  "version": 3,
+  "version": 4,
   "units": [
     {
-      "id": "3_1",
-      "title": "3_1 Unit 1 – Animals and habitats",
+      "id": "3_1-t1",
+      "title": "3_1 Unit 1 – Amazing Animals · Test 1 (3. Sep)",
+      "test": {
+        "date": "2026-09-03"
+      },
       "items": [
         {
           "id": "3_1-001",
-          "source": "Polarfuchs",
-          "target": "arctic fox"
+          "source": "der Schneefuchs",
+          "target": "arctic fox",
+          "image": "🦊"
         },
         {
           "id": "3_1-002",
-          "source": "Schneehase",
-          "target": "arctic hare"
+          "source": "der Schneehase",
+          "target": "arctic hare",
+          "image": "🐇"
         },
         {
           "id": "3_1-003",
-          "source": "Fennek (Wüstenfuchs)",
+          "source": "der Wüstenfuchs",
           "target": "fennec fox"
         },
         {
           "id": "3_1-004",
-          "source": "Käfer",
-          "target": "beetle"
+          "source": "der Käfer",
+          "target": "beetle",
+          "image": "🪲"
         },
         {
           "id": "3_1-005",
-          "source": "Kamel",
-          "target": "camel"
+          "source": "das Kamel",
+          "target": "camel",
+          "image": "🐫"
         },
         {
           "id": "3_1-006",
-          "source": "Dorkasgazelle",
-          "target": "Dorcas gazelle"
+          "source": "die Gazelle",
+          "target": "gazelle"
         },
         {
           "id": "3_1-007",
-          "source": "Eisbär",
-          "target": "polar bear"
+          "source": "der Eisbär",
+          "target": "polar bear",
+          "image": "🐻‍❄️"
         },
         {
           "id": "3_1-008",
-          "source": "Spinne",
-          "target": "spider"
+          "source": "die Spinne",
+          "target": "spider",
+          "image": "🕷️"
         },
         {
           "id": "3_1-009",
-          "source": "Geier",
-          "target": "vulture"
+          "source": "der Strauss",
+          "target": "ostrich"
         },
         {
           "id": "3_1-010",
-          "source": "Arktis",
-          "target": "arctic"
+          "source": "das Nilpferd",
+          "target": "hippo",
+          "image": "🦛"
         },
         {
           "id": "3_1-011",
-          "source": "Wüste",
-          "target": "desert"
+          "source": "die Eidechse",
+          "target": "lizard",
+          "image": "🦎"
         },
         {
           "id": "3_1-012",
-          "source": "Grasland",
-          "target": "grassland"
+          "source": "die Ziege",
+          "target": "goat",
+          "image": "🐐"
         },
         {
           "id": "3_1-013",
-          "source": "Regenwald",
-          "target": "rainforest"
+          "source": "der Geier",
+          "target": "vulture"
         },
         {
           "id": "3_1-014",
-          "source": "Savanne",
-          "target": "savannah"
+          "source": "die Arktis",
+          "target": "arctic",
+          "image": "❄️"
         },
         {
           "id": "3_1-015",
-          "source": "gefährlich",
-          "target": "dangerous"
+          "source": "die Wüste",
+          "target": "desert",
+          "image": "🏜️"
         },
         {
           "id": "3_1-016",
-          "source": "vom Aussterben bedroht",
-          "target": "endangered"
+          "source": "Grasland",
+          "target": "grassland",
+          "image": "🌾"
         },
         {
           "id": "3_1-017",
-          "source": "schnell",
-          "target": "fast"
+          "source": "der Wald",
+          "target": "forest",
+          "image": "🌳"
         },
         {
           "id": "3_1-018",
-          "source": "giftig",
-          "target": "poisonous"
+          "source": "die Savanne / Steppe",
+          "target": "savannah"
         },
         {
           "id": "3_1-019",
-          "source": "langsam",
-          "target": "slow"
+          "source": "Zelt",
+          "target": "tent",
+          "image": "⛺"
         },
         {
           "id": "3_1-020",
-          "source": "stark",
-          "target": "strong"
+          "source": "Sanddüne",
+          "target": "sand dune"
         },
         {
           "id": "3_1-021",
-          "source": "es gibt ...",
-          "target": "there is ... / there are ..."
-        },
+          "source": "das Eis",
+          "target": "ice",
+          "image": "🧊"
+        }
+      ]
+    },
+    {
+      "id": "3_1-t2",
+      "title": "3_1 Unit 1 – Amazing Animals · Test 2 (17. Sep)",
+      "test": {
+        "date": "2026-09-17"
+      },
+      "items": [
         {
           "id": "3_1-022",
-          "source": "es kann ... / es kann nicht ...",
-          "target": "it can ... / it can't ..."
+          "source": "ohne Wasser",
+          "target": "without water"
         },
         {
           "id": "3_1-023",
-          "source": "es hat ...",
-          "target": "it's got ..."
+          "source": "das ist giftig",
+          "target": "this is poisonous",
+          "image": "☠️"
         },
         {
           "id": "3_1-024",
-          "source": "es frisst / isst",
-          "target": "it eats"
+          "source": "während dem Tag / tagsüber",
+          "target": "during the day",
+          "image": "☀️"
         },
         {
           "id": "3_1-025",
-          "source": "es lebt",
-          "target": "it lives"
+          "source": "während der Nacht",
+          "target": "during the night",
+          "image": "🌙"
         },
         {
           "id": "3_1-026",
-          "source": "es wiegt",
-          "target": "it weighs"
+          "source": "nachtaktiv",
+          "target": "nocturnal",
+          "image": "🦉"
         },
         {
           "id": "3_1-027",
-          "source": "ist länger als",
-          "target": "is longer than"
+          "source": "vom Aussterben bedrohte Tierart",
+          "target": "endangered species"
         },
         {
           "id": "3_1-028",
-          "source": "ist kürzer als",
-          "target": "is shorter than"
+          "source": "warm halten / haben",
+          "target": "keep warm"
         },
         {
           "id": "3_1-029",
-          "source": "ist größer als",
-          "target": "is bigger than"
+          "source": "kühl halten / haben",
+          "target": "keep cool"
         },
         {
           "id": "3_1-030",
-          "source": "ist schneller als",
-          "target": "is faster than"
+          "source": "gross, grösser (Höhe)",
+          "target": "tall, taller"
         },
         {
           "id": "3_1-031",
-          "source": "ist gefährlicher als",
-          "target": "is more dangerous than"
+          "source": "gross, grösser (allgemein)",
+          "target": "big, bigger"
+        },
+        {
+          "id": "3_1-032",
+          "source": "schnell, schneller",
+          "target": "fast, faster"
+        },
+        {
+          "id": "3_1-033",
+          "source": "langsam, langsamer",
+          "target": "slow, slower"
+        },
+        {
+          "id": "3_1-034",
+          "source": "heiss, heisser",
+          "target": "hot, hotter"
+        },
+        {
+          "id": "3_1-035",
+          "source": "dumm, dümmer",
+          "target": "stupid, more stupid"
+        },
+        {
+          "id": "3_1-036",
+          "source": "gefährlich, gefährlicher",
+          "target": "dangerous, more dangerous"
         }
       ]
     },
     {
       "id": "3_2-t1",
-      "title": "3_2 Unit 2 – Music · Test 1 (3. Sep)",
+      "title": "3_2 Unit 2 – Music · Test 1 (29. Okt)",
       "test": {
-        "date": "2026-09-03"
+        "date": "2026-10-29"
       },
       "items": [
         {
@@ -305,9 +361,9 @@
     },
     {
       "id": "3_2-t2",
-      "title": "3_2 Unit 2 – Music · Test 2 (17. Sep)",
+      "title": "3_2 Unit 2 – Music · Test 2 (12. Nov)",
       "test": {
-        "date": "2026-09-17"
+        "date": "2026-11-12"
       },
       "items": [
         {
