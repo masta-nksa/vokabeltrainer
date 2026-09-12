@@ -128,10 +128,10 @@ function printListWindow() {
     win.close();
 }
 
-// Kreditkarten-/Visitenkartenformat (ca. 85 x 55 mm) statt DIN A7 – deutlich
-// handlicher, und dafür gibt es überall günstige Laminierfolien im Handel.
-const CARD_WIDTH_MM = 85;
-const CARD_HEIGHT_MM = 55;
+// DIN A8 quer (74 x 52 mm) – 2 Spalten x 4 Zeilen pro A4-Blatt. Quer, weil
+// die Karte nach dem Schneiden im Querformat in der Hand gehalten wird.
+const CARD_WIDTH_MM = 74;
+const CARD_HEIGHT_MM = 52;
 const CARD_GAP_MM = 4;
 const CARDS_PER_PAGE = 8; // 2 Spalten x 4 Zeilen
 
@@ -142,20 +142,44 @@ function cardLines(item) {
     return [item.target, item.source];
 }
 
+function isDuplex() {
+    const checkbox = document.getElementById('print-duplex');
+    return !!(checkbox && checkbox.checked);
+}
+
+function cardHtml(text, isBack) {
+    const cls = isBack ? 'card back' : 'card';
+    return '<div class="' + cls + '"><span class="line-main">' + escapeHtml(text) + '</span></div>';
+}
+
+function cardPageHtml(pageItems, isBack) {
+    const cardsHtml = pageItems.map(item => {
+        const [main, sub] = cardLines(item);
+        const subHtml = sub ? '<span class="line-sub">' + escapeHtml(sub) + '</span>' : '';
+        const cls = isBack ? 'card back' : 'card';
+        return '<div class="' + cls + '"><span class="line-main">' + escapeHtml(main) + '</span>' + subHtml + '</div>';
+    }).join('');
+    return '<section class="card-page">' + cardsHtml + '</section>';
+}
+
 function printCardsWindow() {
     const win = openPrintWindow();
     if (!win) return;
 
     const title = deck ? deck.title : 'Wortschatz';
+    const duplex = isDuplex();
     const pagesHtml = [];
+
     for (let i = 0; i < rows.length; i += CARDS_PER_PAGE) {
         const pageItems = rows.slice(i, i + CARDS_PER_PAGE);
-        const cardsHtml = pageItems.map(item => {
-            const [main, sub] = cardLines(item);
-            const subHtml = sub ? '<span class="line-sub">' + escapeHtml(sub) + '</span>' : '';
-            return '<div class="card"><span class="line-main">' + escapeHtml(main) + '</span>' + subHtml + '</div>';
-        }).join('');
-        pagesHtml.push('<section class="card-page">' + cardsHtml + '</section>');
+        if (duplex) {
+            const frontHtml = pageItems.map(item => cardHtml(item.target, false)).join('');
+            const backHtml = pageItems.map(item => cardHtml(item.source, true)).join('');
+            pagesHtml.push('<section class="card-page">' + frontHtml + '</section>');
+            pagesHtml.push('<section class="card-page">' + backHtml + '</section>');
+        } else {
+            pagesHtml.push(cardPageHtml(pageItems, false));
+        }
     }
 
     win.document.write(
@@ -171,6 +195,11 @@ function printCardsWindow() {
         '.card-page:last-child{page-break-after:auto}' +
         '.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3em;' +
         'border:1px dashed #999;padding:.4em;text-align:center;overflow:hidden}' +
+        // Rückseite um 180° gedreht: der Drucker wendet das Blatt an der
+        // langen (vertikalen) Kante, die Nutzerin dreht die fertige Karte
+        // aber um ihre eigene lange (horizontale) Kante – zwei um 90°
+        // versetzte Wendeachsen ergeben in Summe eine halbe Drehung.
+        '.card.back{transform:rotate(180deg)}' +
         '.line-main{font-size:clamp(.9rem,3.2vw,1.3rem);font-weight:600;overflow-wrap:break-word}' +
         '.line-sub{font-size:clamp(.7rem,2.2vw,.95rem);color:#555;overflow-wrap:break-word}' +
         '</style></head><body>' + pagesHtml.join('') + '</body></html>'

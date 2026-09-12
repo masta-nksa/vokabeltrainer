@@ -102,9 +102,16 @@
                     <label><input type="radio" name="print-layout" value="list" checked> Liste</label>
                     <label><input type="radio" name="print-layout" value="cards"> Karteikarten</label>
                 </fieldset>
+                <label class="check">
+                    <input type="checkbox" id="print-duplex">
+                    doppelseitig (Zielsprache vorne, Ausgangssprache hinten)
+                </label>
                 <p class="hint">
-                    Karteikarten: ca. 85 × 55 mm (Kreditkarten-/Visitenkartenformat),
-                    8 pro Blatt – zum Ausschneiden und Laminieren als Lernkärtchen.
+                    Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt – zum
+                    Ausschneiden und Laminieren als Lernkärtchen. Doppelseitig:
+                    im Druckdialog beidseitiges Drucken mit Wendung an der
+                    langen Kante wählen; die Karte danach zum Umdrehen ebenfalls
+                    um ihre lange Kante drehen.
                 </p>
                 <button type="button" id="print-open">Vorschau öffnen</button>
             </details>
