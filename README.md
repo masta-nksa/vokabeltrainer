@@ -22,6 +22,19 @@ in der Auswahl unter den Modus-Knöpfen erscheinen, sobald eine passende
 Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Die Stufe
 wirkt hier nicht.
 
+## Drucken
+
+In der Lektionsauswahl unter **Drucken**: die gewählten Wörter entweder als
+**Liste** (Tabelle, wahlweise mit Lücke zum Ausfüllen) oder als
+**Karteikarten** ausgeben.
+
+Karteikarten sind DIN A8 quer (74 × 52 mm), 8 pro A4-Blatt – zum Ausschneiden
+und Laminieren als Lernkärtchen. Mit der Option **doppelseitig** entstehen
+abwechselnd Vorder- und Rückseiten (Zielsprache vorne, Ausgangssprache
+hinten) für den Duplex-Druck; die Rückseite ist gedreht für einen Drucker,
+der an der langen Kante wendet, und für eine Karte, die man selbst an ihrer
+langen Kante umdreht.
+
 ## Aufbau
 
 ```
@@ -55,8 +68,9 @@ Lektion;Ausgangssprache;Zielsprache
 2_0 Welcome back!;eine Uhr;a clock
 ```
 
-Über den Import-Knopf in der Lektionsauswahl einlesen. Der Wortschatz bleibt
-danach im Browser gespeichert.
+Über *eigenen Wortschatz laden* (dezenter Link unter der Wortschatz-Auswahl
+in der Lektionsauswahl) einlesen. Der Wortschatz bleibt danach im Browser
+gespeichert.
 
 Lektionen mit gleichem ersten Wort – etwa "Lernziel 1" und "Lernziel 2" –
 bleiben getrennt und einzeln wählbar.
