@@ -45,6 +45,11 @@ function printMode() {
     return checked ? checked.value : 'both';
 }
 
+function printLayout() {
+    const checked = document.querySelector('input[name="print-layout"]:checked');
+    return checked ? checked.value : 'list';
+}
+
 function headings() {
     if (!deck) return ['', ''];
     const source = languageName(deck.sourceLang);
@@ -91,18 +96,22 @@ function renderTable() {
  * samt allen Ereignisbindungen.
  */
 function printWindow() {
-    const table = document.getElementById('print-table');
-    const win = window.open('', '_blank', 'width=800,height=600');
-
-    if (!win) {
-        alert('Der Browser hat das Druckfenster blockiert. Bitte Pop-ups für diese Seite erlauben.');
-        return;
+    if (printLayout() === 'cards') {
+        printCardsWindow();
+    } else {
+        printListWindow();
     }
+}
+
+function printListWindow() {
+    const table = document.getElementById('print-table');
+    const win = openPrintWindow();
+    if (!win) return;
 
     const title = deck ? deck.title : 'Wortschatz';
     win.document.write(
         '<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">' +
-        '<title>' + title.replace(/[<>&]/g, '') + '</title><style>' +
+        '<title>' + escapeHtml(title) + '</title><style>' +
         'body{font-family:system-ui,sans-serif;margin:2rem}' +
         'h1{font-size:1.2rem}' +
         'table{width:100%;border-collapse:collapse;margin-top:1rem}' +
@@ -117,4 +126,71 @@ function printWindow() {
     win.focus();
     win.print();
     win.close();
+}
+
+// Kreditkarten-/Visitenkartenformat (ca. 85 x 55 mm) statt DIN A7 – deutlich
+// handlicher, und dafür gibt es überall günstige Laminierfolien im Handel.
+const CARD_WIDTH_MM = 85;
+const CARD_HEIGHT_MM = 55;
+const CARD_GAP_MM = 4;
+const CARDS_PER_PAGE = 8; // 2 Spalten x 4 Zeilen
+
+function cardLines(item) {
+    const mode = printMode();
+    if (mode === 'target') return [item.target];
+    if (mode === 'source') return [item.source];
+    return [item.target, item.source];
+}
+
+function printCardsWindow() {
+    const win = openPrintWindow();
+    if (!win) return;
+
+    const title = deck ? deck.title : 'Wortschatz';
+    const pagesHtml = [];
+    for (let i = 0; i < rows.length; i += CARDS_PER_PAGE) {
+        const pageItems = rows.slice(i, i + CARDS_PER_PAGE);
+        const cardsHtml = pageItems.map(item => {
+            const [main, sub] = cardLines(item);
+            const subHtml = sub ? '<span class="line-sub">' + escapeHtml(sub) + '</span>' : '';
+            return '<div class="card"><span class="line-main">' + escapeHtml(main) + '</span>' + subHtml + '</div>';
+        }).join('');
+        pagesHtml.push('<section class="card-page">' + cardsHtml + '</section>');
+    }
+
+    win.document.write(
+        '<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">' +
+        '<title>' + escapeHtml(title) + '</title><style>' +
+        '@page{size:A4;margin:8mm}' +
+        '*{box-sizing:border-box}' +
+        'body{margin:0;font-family:system-ui,sans-serif}' +
+        '.card-page{display:grid;grid-template-columns:repeat(2,' + CARD_WIDTH_MM + 'mm);' +
+        'grid-template-rows:repeat(4,' + CARD_HEIGHT_MM + 'mm);gap:' + CARD_GAP_MM + 'mm;' +
+        'justify-content:center;align-content:center;' +
+        'width:100%;height:100vh;page-break-after:always}' +
+        '.card-page:last-child{page-break-after:auto}' +
+        '.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3em;' +
+        'border:1px dashed #999;padding:.4em;text-align:center;overflow:hidden}' +
+        '.line-main{font-size:clamp(.9rem,3.2vw,1.3rem);font-weight:600;overflow-wrap:break-word}' +
+        '.line-sub{font-size:clamp(.7rem,2.2vw,.95rem);color:#555;overflow-wrap:break-word}' +
+        '</style></head><body>' + pagesHtml.join('') + '</body></html>'
+    );
+    win.document.close();
+
+    win.focus();
+    win.print();
+    win.close();
+}
+
+function openPrintWindow() {
+    const win = window.open('', '_blank', 'width=800,height=600');
+    if (!win) {
+        alert('Der Browser hat das Druckfenster blockiert. Bitte Pop-ups für diese Seite erlauben.');
+        return null;
+    }
+    return win;
+}
+
+function escapeHtml(text) {
+    return String(text).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]);
 }
