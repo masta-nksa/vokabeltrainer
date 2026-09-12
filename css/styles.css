@@ -212,6 +212,35 @@ button.link.danger {
     margin-top: .5rem;
 }
 
+.inline-toggle {
+    margin: -.25rem 0 .9rem;
+}
+
+.inline-toggle > summary {
+    cursor: pointer;
+    font-size: .85rem;
+    color: var(--accent);
+    list-style: none;
+}
+
+.inline-toggle > summary::-webkit-details-marker {
+    display: none;
+}
+
+.inline-toggle > summary::before {
+    content: '+ ';
+}
+
+.inline-toggle[open] > summary::before {
+    content: '– ';
+}
+
+.inline-toggle form,
+.inline-toggle > .hint,
+.inline-toggle > button {
+    margin-top: .6rem;
+}
+
 /* ------------------------------------------------------------ Lektionen */
 
 .unit-list {

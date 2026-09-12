@@ -41,6 +41,59 @@
                 <label for="deck-select">Wortschatz</label>
                 <select id="deck-select"></select>
 
+                <details class="inline-toggle">
+                    <summary>eigenen Wortschatz laden</summary>
+                    <form id="import-form">
+                        <label for="import-file">CSV-Datei</label>
+                        <input type="file" id="import-file" accept=".csv,text/csv">
+
+                        <label for="import-title">Bezeichnung</label>
+                        <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
+
+                        <div class="row">
+                            <span>
+                                <label for="import-source">Ausgangssprache</label>
+                                <select id="import-source">
+                                    <option value="de" selected>Deutsch</option>
+                                    <option value="en">Englisch</option>
+                                    <option value="fr">Französisch</option>
+                                    <option value="it">Italienisch</option>
+                                    <option value="es">Spanisch</option>
+                                    <option value="la">Latein</option>
+                                </select>
+                            </span>
+                            <span>
+                                <label for="import-target">Zielsprache</label>
+                                <select id="import-target">
+                                    <option value="en" selected>Englisch</option>
+                                    <option value="fr">Französisch</option>
+                                    <option value="it">Italienisch</option>
+                                    <option value="es">Spanisch</option>
+                                    <option value="la">Latein</option>
+                                    <option value="de">Deutsch</option>
+                                </select>
+                            </span>
+                        </div>
+
+                        <label class="check">
+                            <input type="checkbox" id="import-target-first" checked>
+                            Spalte 2 enthält die Zielsprache
+                        </label>
+
+                        <button type="submit">Importieren</button>
+                        <p id="import-message" class="hint"></p>
+                    </form>
+
+                    <p class="hint">
+                        Erwartet werden drei Spalten, getrennt durch Semikolon:
+                        <code>Lektion;Zielsprache;Ausgangssprache</code>
+                    </p>
+
+                    <button type="button" id="deck-delete" class="link danger">
+                        Diesen Wortschatz löschen
+                    </button>
+                </details>
+
                 <div class="row spread">
                     <span class="label">Lektionen</span>
                     <span>
@@ -116,58 +169,6 @@
                 <button type="button" id="print-open">Vorschau öffnen</button>
             </details>
 
-            <details class="card">
-                <summary>Eigenen Wortschatz laden</summary>
-                <form id="import-form">
-                    <label for="import-file">CSV-Datei</label>
-                    <input type="file" id="import-file" accept=".csv,text/csv">
-
-                    <label for="import-title">Bezeichnung</label>
-                    <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
-
-                    <div class="row">
-                        <span>
-                            <label for="import-source">Ausgangssprache</label>
-                            <select id="import-source">
-                                <option value="de" selected>Deutsch</option>
-                                <option value="en">Englisch</option>
-                                <option value="fr">Französisch</option>
-                                <option value="it">Italienisch</option>
-                                <option value="es">Spanisch</option>
-                                <option value="la">Latein</option>
-                            </select>
-                        </span>
-                        <span>
-                            <label for="import-target">Zielsprache</label>
-                            <select id="import-target">
-                                <option value="en" selected>Englisch</option>
-                                <option value="fr">Französisch</option>
-                                <option value="it">Italienisch</option>
-                                <option value="es">Spanisch</option>
-                                <option value="la">Latein</option>
-                                <option value="de">Deutsch</option>
-                            </select>
-                        </span>
-                    </div>
-
-                    <label class="check">
-                        <input type="checkbox" id="import-target-first" checked>
-                        Spalte 2 enthält die Zielsprache
-                    </label>
-
-                    <button type="submit">Importieren</button>
-                    <p id="import-message" class="hint"></p>
-                </form>
-
-                <p class="hint">
-                    Erwartet werden drei Spalten, getrennt durch Semikolon:
-                    <code>Lektion;Zielsprache;Ausgangssprache</code>
-                </p>
-
-                <button type="button" id="deck-delete" class="link danger">
-                    Diesen Wortschatz löschen
-                </button>
-            </details>
         </section>
 
         <!-- Lernrunde -->
