@@ -7,6 +7,7 @@ export const id = 'terms';
 export const label = 'terms';
 export const description = 'Wort hören und die richtige Übersetzung wählen';
 export const inputKind = 'choice';
+export const skill = 'recognize';
 
 // Kein Bild: die Optionen sind die Übersetzungen, ein Bild verriete die
 // richtige sofort.
@@ -17,23 +18,30 @@ export const showsImage = false;
 // naechsten Frage ohnehin abgeschnitten.
 export const speakAnswerOnCorrect = false;
 
+// Wie ähnlich die Ablenker der richtigen Antwort in der Länge sind:
+// "distant" hebt sich deutlich ab, "close" liegt nahe dran und ist dadurch
+// schwerer auszuschliessen, "random" mischt – im Schnitt mehr Variation als
+// "distant".
+const LEVELS = {
+    basis: { distractors: 'distant' },
+    erweitert: { distractors: 'random' },
+    expert: { distractors: 'close' }
+};
+
 /**
- * Wählt `count` Ablenker aus den Kandidaten. Die Stufe steuert, wie ähnlich sie
- * der richtigen Antwort in der Länge sind: "easy" hebt sich deutlich ab,
- * "hard" liegt nahe dran und ist dadurch schwerer auszuschliessen. "medium"
- * bleibt rein zufällig – im Schnitt mehr Variation als bei "easy".
+ * Wählt `count` Ablenker aus den Kandidaten.
  * @param {string[]} candidates
  * @param {string} answer
- * @param {string} difficulty
+ * @param {'distant' | 'random' | 'close'} closeness
  * @param {number} count
  */
-function pickDistractors(candidates, answer, difficulty, count) {
-    if (difficulty !== 'easy' && difficulty !== 'hard') return sample(candidates, count);
+function pickDistractors(candidates, answer, closeness, count) {
+    if (closeness === 'random') return sample(candidates, count);
 
     const byCloseness = [...candidates].sort((a, b) => {
         const diffA = Math.abs(a.length - answer.length);
         const diffB = Math.abs(b.length - answer.length);
-        return difficulty === 'hard' ? diffA - diffB : diffB - diffA;
+        return closeness === 'close' ? diffA - diffB : diffB - diffA;
     });
 
     // Nicht immer strikt die extremsten nehmen, sonst wiederholt sich die
@@ -45,18 +53,20 @@ function pickDistractors(candidates, answer, difficulty, count) {
 /**
  * @param {import('../storage/index.js').Item} item
  * @param {import('../storage/index.js').Item[]} pool Nur die gewählten Lektionen
- * @param {string} [difficulty]
+ * @param {import('../learning/levels.js').Level} [level]
  */
-export function buildQuestion(item, pool, difficulty = 'medium') {
+export function buildQuestion(item, pool, level = 'erweitert') {
+    const settings = LEVELS[level] ?? LEVELS.erweitert;
+
     // Ablenker kommen aus den gewählten Lektionen. Sie stammen bewusst nicht
     // aus dem ganzen Wortschatz, sonst sind sie zu leicht auszuschliessen.
     const candidates = [...new Set(
         pool.map(entry => entry.source).filter(text => normalize(text) !== normalize(item.source))
     )];
 
-    // Mehr Optionen bei höherer Stufe (einfach 4, mittel 6, schwer 8), begrenzt
-    // durch das, was die gewählten Lektionen hergeben.
-    const distractors = pickDistractors(candidates, item.source, difficulty, optionCount(difficulty) - 1);
+    // Mehr Optionen bei höherem Niveau (Basis 4, Erweitert 6, Expert 8),
+    // begrenzt durch das, was die gewählten Lektionen hergeben.
+    const distractors = pickDistractors(candidates, item.source, settings.distractors, optionCount(level) - 1);
     const options = shuffle([item.source, ...distractors]);
 
     return {

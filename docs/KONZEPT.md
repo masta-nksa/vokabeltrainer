@@ -195,7 +195,7 @@ und `tries` – **was** falsch eingegeben wurde, geht verloren.
   "deckId": "fr-disdonc-1", "contentVersion": 5,
   "itemId": "grand-mere",            // oder Drill-/Generator-ID
   "grammarId": "fr.possessif",       // falls Grammatik-Aufgabe
-  "skill": "produce",                // recognize | spell | produce | grammar
+  "skill": "produce",                // recognize | spell | produce | apply
   "source": "quiz",                  // quiz | drill | game | challenge | battle
   "level": "erweitert",              // Niveau, auf dem geübt wurde
   "game": null,                      // z. B. "crossword"
@@ -596,13 +596,13 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 
 1. ~~**Apostroph-Normalisierung** in `normalize()`~~ – erledigt, auf `main`
    (81462d3).
-2. **Niveau-Schalter Basis / Erweitert / Expert** statt einfach/mittel/schwer,
-   alte Einstellung übernehmen, Tabelle der Startwerte für die bestehenden
-   Modi. Klein und sofort sichtbar.
-3. **Fehlerspeicher:** `errors[]`, `skill`, `source`, `durationMs` im Event;
-   Klassifizierer `js/learning/errors.js`; *spelling*-Optionen tragen ihre
-   Operation mit. IndexedDB Version 3 mit Index `byUserItem`. Ab hier sammeln
-   sich Daten, auch wenn noch nichts sie anzeigt.
+2. ~~**Niveau-Schalter Basis / Erweitert / Expert**~~ – erledigt auf `v2`.
+   Alte Einstellung wird übernommen; Startwerte als `LEVELS` je Modus.
+3. ~~**Fehlerspeicher**~~ – erledigt auf `v2`: `errors[]`, `skill`, `source`,
+   `level`, `durationMs`, `contentVersion` im Event; Klassifizierer
+   `js/learning/errors.js`; *spelling*-Optionen tragen ihre Operation mit;
+   IndexedDB Version 3 mit Index `byUserItem`. Selbsttest
+   `node tools/test-learning.mjs`.
 4. **Inhaltsmodell v2:** Course/Unit/Section, stabile IDs mit `aliases`,
    Felder `lemma`/`gender`/`number`/`pos`/`level`/`tags`; Migrationsskript für die
    drei bestehenden Decks; `/voci-unit` und `curate.html` um die neuen Felder

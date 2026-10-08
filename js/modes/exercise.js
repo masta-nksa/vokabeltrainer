@@ -11,6 +11,7 @@ export const id = 'exercise';
 export const label = 'Anwenden';
 export const description = '';
 export const inputKind = 'text'; // Rückfall, falls eine Aufgabe nichts sagt
+export const skill = 'apply';
 export const showsImage = false;
 export const speakAnswerOnCorrect = false;
 

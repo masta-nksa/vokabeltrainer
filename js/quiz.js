@@ -9,6 +9,7 @@ import * as reward from './ui/reward.js';
 import * as scoreboard from './ui/scoreboard.js';
 import * as screens from './ui/screens.js';
 import { shuffle } from './util.js';
+import { classify } from './learning/errors.js';
 
 const MAX_TRIES = 2;
 
@@ -65,7 +66,7 @@ export function init(config) {
  */
 export function start(modeId, deck, items, context = null) {
     mode = getMode(modeId);
-    startSession({ deck, items: shuffle(items), pool: items, mode: modeId, difficulty: state.difficulty, context });
+    startSession({ deck, items: shuffle(items), pool: items, mode: modeId, level: state.level, context });
 
     document.getElementById('quiz-title').textContent = context?.title ?? mode.label;
     document.getElementById('quiz-subtitle').textContent = context?.subtitle ?? mode.description;
@@ -121,8 +122,10 @@ function nextQuestion() {
     }
 
     session.tries = 0;
+    session.errors = [];
+    session.shownAt = Date.now();
     const item = session.items[session.index];
-    question = mode.buildQuestion(item, session.pool, session.difficulty);
+    question = mode.buildQuestion(item, session.pool, session.level, session.deck);
 
     // Ein Bild wird nur in Modi gezeigt, die es nicht zu leicht machen – bei
     // "terms" stünde die Antwort sonst als Bild neben den vier Wörtern. Nur
@@ -155,6 +158,7 @@ function renderQuestion() {
     const optionsBox = document.getElementById('quiz-options');
     const form = document.getElementById('answer-form');
     const field = document.getElementById('answer-input');
+    const prefix = document.getElementById('answer-prefix');
 
     optionsBox.replaceChildren();
 
@@ -180,6 +184,12 @@ function renderQuestion() {
         form.hidden = false;
         field.value = '';
         field.lang = langFor(question.answerSide);
+
+        // Auf Niveau Basis steht der Artikel schon da: "la ___".
+        prefix.textContent = question.prefix ?? '';
+        prefix.lang = field.lang;
+        prefix.hidden = !question.prefix;
+
         field.placeholder = mode.id === 'exercise' ? 'Antwort eintippen' : 'Übersetzung eintippen';
         field.classList.remove('wrong');
         field.focus();
@@ -234,10 +244,18 @@ function answer(given, button) {
     const session = state.session;
     if (!session || !question) return;
 
-    const result = mode.check(question, given, session.difficulty);
+    const result = mode.check(question, given, session.level);
     const note = document.getElementById('quiz-note');
+    note.classList.toggle('ok', result.correct);
 
     if (result.correct) {
+        // Als richtig gewertet, aber nicht ganz – auf Basis etwa ein fehlender
+        // Akzent. Fürs Schwächenprofil trotzdem notieren.
+        if (result.tolerated) {
+            const full = mode.completeAnswer ? mode.completeAnswer(question, given) : given;
+            session.errors.push({ given: trimGiven(full), type: result.tolerated, tolerated: true });
+        }
+
         session.correct++;
         reward.better();
         button?.classList.add('right');
@@ -246,12 +264,17 @@ function answer(given, button) {
         }
         resolveItem();
         scoreboard.render(session);
-        window.setTimeout(nextQuestion, button ? 550 : 300);
+
+        // Ein Hinweis zur richtigen Antwort braucht Zeit zum Lesen.
+        note.textContent = result.note ?? '';
+        const pause = result.note ? 1800 : button ? 550 : 300;
+        window.setTimeout(nextQuestion, pause);
         return;
     }
 
     session.wrong++;
     session.tries++;
+    session.errors.push(describeError(given));
     reward.worse();
     note.textContent = result.note ?? '';
     scoreboard.render(session);
@@ -268,7 +291,7 @@ function answer(given, button) {
     window.setTimeout(() => field.classList.remove('wrong'), 400);
 
     if (session.tries >= MAX_TRIES) {
-        field.value = question.answer;
+        field.value = question.fieldAnswer ?? question.answer;
         note.textContent = `Richtig wäre: ${question.answer}`;
         tts.speak(question.answer, langFor(question.answerSide));
         resolveItem();
@@ -276,11 +299,51 @@ function answer(given, button) {
     }
 }
 
+// Eingaben werden gekürzt gespeichert – ein versehentlich eingefügter Text
+// soll das Protokoll nicht aufblähen.
+const MAX_GIVEN = 120;
+
+function trimGiven(given) {
+    return given.trim().slice(0, MAX_GIVEN);
+}
+
+/**
+ * Hält fest, was falsch war und welcher Art der Fehler ist.
+ * @param {string} given
+ * @returns {import('./learning/errors.js').ErrorEntry}
+ */
+function describeError(given) {
+    const session = state.session;
+
+    // Bei "spelling" ist zu jeder falschen Option bekannt, wie sie entstand.
+    const known = question.optionErrors?.[given];
+    if (known) return { given: trimGiven(given), ...known };
+
+    // Mit vorgegebenem Artikel wird nur der Rest getippt – klassifiziert wird
+    // die ganze Antwort, sonst sähe jeder Fehler wie ein fehlender Artikel aus.
+    const full = mode.completeAnswer ? mode.completeAnswer(question, given) : given;
+
+    // Andere Einträge der Runde, als Text auf der Antwortseite: Trifft die
+    // Eingabe einen davon, wurden zwei Wörter verwechselt. Übungsaufgaben
+    // haben kein source/target und fallen hier heraus.
+    const current = session.items[session.index];
+    const side = question.answerSide === 'source' ? 'source' : 'target';
+    const others = session.pool
+        .filter(entry => entry.id !== current.id && typeof entry[side] === 'string')
+        .map(entry => ({ id: entry.id, text: entry[side] }));
+
+    return {
+        given: trimGiven(full),
+        ...classify({ given: full, expected: question.answer, lang: langFor(question.answerSide), others })
+    };
+}
+
 /**
  * Schliesst den aktuellen Eintrag ab: protokollieren und weiterzählen.
  *
  * Protokolliert wird ein Datensatz pro Wort, nicht pro Tastendruck. `correct`
- * heisst hier: auf Anhieb gewusst.
+ * heisst hier: auf Anhieb gewusst. Die einzelnen Fehlversuche stehen mit
+ * Eingabe und Fehlerklasse in `errors`.
  */
 function resolveItem() {
     const session = state.session;
@@ -291,13 +354,21 @@ function resolveItem() {
 
     if (!clean && !session.missed.includes(item.id)) session.missed.push(item.id);
 
+    const exerciseId = session.context?.exerciseId;
+
     storage.logAttempt({
         deckId: session.deck.id,
+        contentVersion: session.deck.version ?? 0,
         itemId: item.id,
         mode: session.mode,
-        ...(session.context?.exerciseId ? { exerciseId: session.context.exerciseId } : {}),
+        ...(exerciseId ? { exerciseId } : {}),
+        skill: mode.skill,
+        source: exerciseId ? 'drill' : 'quiz',
+        level: session.level,
         correct: clean,
-        tries: session.tries
+        tries: session.tries,
+        errors: session.errors,
+        durationMs: Date.now() - session.shownAt
     }).catch(error => console.warn('Versuch konnte nicht gespeichert werden:', error));
 
     session.index++;

@@ -6,7 +6,7 @@
  * @property {import('./storage/index.js').Item[]} items   Fragen dieser Runde
  * @property {import('./storage/index.js').Item[]} pool    Auswahlgrundlage für Ablenker
  * @property {string} mode
- * @property {string} difficulty easy | medium | hard
+ * @property {import('./learning/levels.js').Level} level
  * @property {{title: string, subtitle: string, exerciseId?: string} | null} context
  *   Kopfzeile und Herkunft einer Runde, wenn sie nicht vom Modus selbst kommt
  *   (Anwendungsübungen). Sonst null.
@@ -14,6 +14,9 @@
  * @property {number} correct
  * @property {number} wrong
  * @property {number} tries      Fehlversuche bei der aktuellen Frage
+ * @property {import('./learning/errors.js').ErrorEntry[]} errors
+ *   Fehler bei der aktuellen Frage, mit Eingabe und Fehlerklasse
+ * @property {number} shownAt    Zeitpunkt, an dem die aktuelle Frage erschien
  * @property {string[]} missed   Einträge, die falsch beantwortet wurden
  */
 
@@ -26,21 +29,21 @@ export const state = {
     deck: null,
     /** @type {string[]} */
     selectedUnits: [],
-    /** @type {string} easy | medium | hard */
-    difficulty: 'medium',
+    /** @type {import('./learning/levels.js').Level} */
+    level: 'erweitert',
     /** @type {Session | null} */
     session: null
 };
 
 /**
  * Startet eine neue Runde.
- * @param {{deck: import('./storage/index.js').Deck, items: import('./storage/index.js').Item[], pool: import('./storage/index.js').Item[], mode: string, difficulty: string, context?: Session['context']}} config
+ * @param {{deck: import('./storage/index.js').Deck, items: import('./storage/index.js').Item[], pool: import('./storage/index.js').Item[], mode: string, level: import('./learning/levels.js').Level, context?: Session['context']}} config
  * @returns {Session}
  */
-export function startSession({ deck, items, pool, mode, difficulty, context = null }) {
+export function startSession({ deck, items, pool, mode, level, context = null }) {
     state.session = {
-        deck, items, pool, mode, difficulty, context,
-        index: 0, correct: 0, wrong: 0, tries: 0, missed: []
+        deck, items, pool, mode, level, context,
+        index: 0, correct: 0, wrong: 0, tries: 0, errors: [], shownAt: 0, missed: []
     };
     return state.session;
 }

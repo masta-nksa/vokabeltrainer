@@ -33,12 +33,48 @@ export function stripDiacritics(text) {
 /**
  * Wie viele Antwortmöglichkeiten ein Auswahl-Modus anbietet. Mehr Optionen
  * heisst mehr zu lesen und weniger Ratewahrscheinlichkeit – darum steigt die
- * Zahl mit der Stufe. Fehlt es an Kandidaten, zeigen die Modi entsprechend
+ * Zahl mit dem Niveau. Fehlt es an Kandidaten, zeigen die Modi entsprechend
  * weniger an.
- * @param {string} difficulty easy | medium | hard
+ * @param {import('./learning/levels.js').Level} level
  */
-export function optionCount(difficulty) {
-    return { easy: 4, medium: 6, hard: 8 }[difficulty] ?? 4;
+export function optionCount(level) {
+    return { basis: 4, erweitert: 6, expert: 8 }[level] ?? 4;
+}
+
+// Artikel, die am Anfang eines Eintrags stehen können. Kommt später in ein
+// Sprachprofil (docs/KONZEPT.md, Abschnitt 6); bis dahin genügt diese Liste.
+const ARTICLES = {
+    fr: ['le', 'la', 'les', 'un', 'une', 'des'],
+    en: ['a', 'an', 'the']
+};
+
+/**
+ * Trennt einen führenden Artikel ab: "la grand-mère" → la + grand-mère,
+ * "l'acteur" → l' + acteur. Ganze Sätze, lange Wendungen und Einträge mit
+ * mehreren Formen ("les maths, les mathématiques (f pl)", "un/une enfant")
+ * bleiben unberührt – dort ist das erste Wort nicht einfach der Artikel eines
+ * Nomens.
+ * @param {string} text
+ * @param {string} lang BCP-47, nur der Sprachteil zählt
+ * @returns {{article: string, rest: string, joiner: string} | null}
+ */
+export function splitArticle(text, lang) {
+    const trimmed = text.trim();
+    if (/[.!?]$/.test(trimmed) || /[,()/;]/.test(trimmed) || trimmed.split(/\s+/).length > 4) return null;
+
+    const code = (lang ?? '').slice(0, 2).toLowerCase();
+
+    if (code === 'fr') {
+        const elided = trimmed.match(/^([lL]['’])(\S.*)$/);
+        if (elided) return { article: elided[1], rest: elided[2], joiner: '' };
+    }
+
+    const words = ARTICLES[code];
+    if (!words) return null;
+
+    const match = trimmed.match(/^(\S+)\s+(.+)$/);
+    if (!match || !words.includes(match[1].toLowerCase())) return null;
+    return { article: match[1], rest: match[2], joiner: ' ' };
 }
 
 /**
@@ -67,57 +103,69 @@ function letterPositions(text) {
 const pick = list => list[Math.floor(Math.random() * list.length)];
 
 // Jede Operation arbeitet auf dem aktuellen Zwischenstand, nicht auf dem
-// Original – so lassen sich mehrere Fehler nacheinander anwenden (schwerer
-// Modus). Liefert null, wenn die Operation auf diesem Text nicht greift.
+// Original – so lassen sich mehrere Fehler nacheinander anwenden (Niveau
+// Expert). `apply` liefert null, wenn die Operation auf diesem Text nicht
+// greift. Der Name landet im Fehlerprotokoll: wer eine Variante wählt, hat
+// genau diesen Fehler übersehen (siehe js/learning/errors.js).
 const OPERATIONS = [
-    // Zwei benachbarte Buchstaben vertauschen
-    text => {
-        const letters = [...text];
-        const positions = letterPositions(text);
-        const candidates = positions.filter((p, i) =>
-            i < positions.length - 1 &&
-            positions[i + 1] === p + 1 &&
-            letters[p] !== letters[p + 1]);
-        if (candidates.length === 0) return null;
-        const p = pick(candidates);
-        const copy = [...letters];
-        [copy[p], copy[p + 1]] = [copy[p + 1], copy[p]];
-        return copy.join('');
+    {
+        name: 'swap', // zwei benachbarte Buchstaben vertauschen
+        apply(text) {
+            const letters = [...text];
+            const positions = letterPositions(text);
+            const candidates = positions.filter((p, i) =>
+                i < positions.length - 1 &&
+                positions[i + 1] === p + 1 &&
+                letters[p] !== letters[p + 1]);
+            if (candidates.length === 0) return null;
+            const p = pick(candidates);
+            const copy = [...letters];
+            [copy[p], copy[p + 1]] = [copy[p + 1], copy[p]];
+            return copy.join('');
+        }
     },
-    // Einen Buchstaben weglassen
-    text => {
-        const positions = letterPositions(text);
-        if (positions.length === 0) return null;
-        const p = pick(positions);
-        return text.slice(0, p) + text.slice(p + 1);
+    {
+        name: 'missing', // einen Buchstaben weglassen
+        apply(text) {
+            const positions = letterPositions(text);
+            if (positions.length === 0) return null;
+            const p = pick(positions);
+            return text.slice(0, p) + text.slice(p + 1);
+        }
     },
-    // Einen Buchstaben verdoppeln
-    text => {
-        const positions = letterPositions(text);
-        if (positions.length === 0) return null;
-        const p = pick(positions);
-        return text.slice(0, p) + text[p] + text.slice(p);
+    {
+        name: 'double', // einen Buchstaben verdoppeln
+        apply(text) {
+            const positions = letterPositions(text);
+            if (positions.length === 0) return null;
+            const p = pick(positions);
+            return text.slice(0, p) + text[p] + text.slice(p);
+        }
     },
-    // Einen Akzent verschlucken, der klassische Fehler im Französischen
-    text => {
-        const plain = stripDiacritics(text);
-        return plain === text ? null : plain;
+    {
+        name: 'accent', // Akzente verschlucken, der klassische Fehler im Französischen
+        apply(text) {
+            const plain = stripDiacritics(text);
+            return plain === text ? null : plain;
+        }
     },
-    // Einen Buchstaben durch einen anderen ersetzen
-    text => {
-        const positions = letterPositions(text);
-        if (positions.length === 0) return null;
-        const p = pick(positions);
-        const letters = [...text];
-        const alphabet = 'abcdefghijklmnopqrstuvwxyz'.replace(letters[p].toLowerCase(), '');
-        return text.slice(0, p) + pick([...alphabet]) + text.slice(p + 1);
+    {
+        name: 'replace', // einen Buchstaben durch einen anderen ersetzen
+        apply(text) {
+            const positions = letterPositions(text);
+            if (positions.length === 0) return null;
+            const p = pick(positions);
+            const letters = [...text];
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz'.replace(letters[p].toLowerCase(), '');
+            return text.slice(0, p) + pick([...alphabet]) + text.slice(p + 1);
+        }
     }
 ];
 
-// Im leichten Modus nur die offensichtlichen Fehler: fehlender oder
+// Auf Niveau Basis nur die offensichtlichen Fehler: fehlender oder
 // doppelter Buchstabe. Vertauschung, Akzent- und Ersetzungsfehler sind
-// subtiler und bleiben den höheren Stufen vorbehalten.
-const SIMPLE_OPERATIONS = [OPERATIONS[1], OPERATIONS[2]];
+// subtiler und bleiben den höheren Niveaus vorbehalten.
+const SIMPLE_OPERATIONS = OPERATIONS.filter(op => op.name === 'missing' || op.name === 'double');
 
 /**
  * Erzeugt falsche Schreibweisen eines Wortes für den Modus "spelling".
@@ -129,28 +177,35 @@ const SIMPLE_OPERATIONS = [OPERATIONS[1], OPERATIONS[2]];
  *
  * @param {string} word
  * @param {number} count
- * @param {{edits?: number, simpleOnly?: boolean}} [difficulty]
- *   `edits`: wie viele Fehler pro Variante kombiniert werden (schwerer Modus
+ * @param {{edits?: number, simpleOnly?: boolean}} [settings]
+ *   `edits`: wie viele Fehler pro Variante kombiniert werden (Expert
  *   kombiniert mehrere). `simpleOnly`: nur offensichtliche Fehlerarten
- *   verwenden (leichter Modus).
- * @returns {string[]}
+ *   verwenden (Basis).
+ * @returns {{text: string, ops: string[]}[]} Variante und die Namen der
+ *   Operationen, die sie erzeugt haben
  */
 export function misspellings(word, count = 3, { edits = 1, simpleOnly = false } = {}) {
     if (letterPositions(word).length < 2) return [];
 
     const operations = simpleOnly ? SIMPLE_OPERATIONS : OPERATIONS;
-    const found = new Set();
+    /** @type {Map<string, string[]>} */
+    const found = new Map();
 
     // Grosszügig oft versuchen: manche Operationen greifen bei kurzen Wörtern nicht.
     const maxAttempts = Math.max(60, count * 12);
     for (let attempt = 0; attempt < maxAttempts && found.size < count; attempt++) {
         let variant = word;
+        const ops = [];
         for (let step = 0; step < edits; step++) {
-            const next = pick(operations)(variant);
-            if (next && next.length > 0) variant = next;
+            const op = pick(operations);
+            const next = op.apply(variant);
+            if (next && next.length > 0) {
+                variant = next;
+                ops.push(op.name);
+            }
         }
-        if (variant !== word) found.add(variant);
+        if (variant !== word && !found.has(variant)) found.set(variant, ops);
     }
 
-    return [...found].slice(0, count);
+    return [...found].slice(0, count).map(([text, ops]) => ({ text, ops }));
 }

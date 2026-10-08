@@ -349,8 +349,8 @@ button.option.wrong {
 }
 
 #answer-input {
-    flex: 1 1 16rem;
-    max-width: 22rem;
+    flex: 1 1 auto;
+    min-width: 0;
     margin: 0;
     text-align: center;
     font-size: 1.15rem;
@@ -365,6 +365,25 @@ button.option.wrong {
     text-align: center;
     min-height: 1.5rem;
     color: var(--wrong);
+}
+
+/* Hinweis zu einer Antwort, die als richtig zählt (z.B. Akzent auf Basis). */
+.note.ok {
+    color: var(--right);
+}
+
+/* Eingabe mit vorgegebenem Artikel: "la [        ]". */
+.answer-field {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex: 1 1 16rem;
+    max-width: 22rem;
+}
+
+.answer-prefix {
+    font-size: 1.15rem;
+    font-weight: 600;
 }
 
 .scoreboard {

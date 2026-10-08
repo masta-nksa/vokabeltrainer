@@ -7,6 +7,7 @@ import { readTextFile, deckFromCsv } from './data/csv.js';
 import { exercisesFor, setsForUnits } from './data/exercises.js';
 import { state } from './state.js';
 import { stripDiacritics } from './util.js';
+import { toLevel } from './learning/levels.js';
 import * as screens from './ui/screens.js';
 import * as lessonSelect from './ui/lessonSelect.js';
 import * as print from './ui/print.js';
@@ -248,11 +249,11 @@ function renderVoicePicker(force = false) {
 function initSelection() {
     lessonSelect.init(onSelectionChange);
 
-    for (const radio of document.querySelectorAll('input[name="difficulty"]')) {
+    for (const radio of document.querySelectorAll('input[name="level"]')) {
         radio.addEventListener('change', () => {
             if (!radio.checked) return;
-            state.difficulty = radio.value;
-            storage.setSetting('difficulty', radio.value);
+            state.level = toLevel(radio.value);
+            storage.setSetting('level', state.level);
         });
     }
 
@@ -368,10 +369,11 @@ async function main() {
     state.learnerName = name;
     state.hero = hero;
 
-    const difficulty = await storage.getSetting('difficulty', 'medium');
-    state.difficulty = difficulty;
-    const difficultyRadio = document.querySelector(`input[name="difficulty"][value="${difficulty}"]`);
-    if (difficultyRadio) difficultyRadio.checked = true;
+    // Ohne gespeichertes Niveau gilt die frühere Stufe (einfach/mittel/schwer).
+    state.level = toLevel(await storage.getSetting('level', null)
+        ?? await storage.getSetting('difficulty', null));
+    const levelRadio = document.querySelector(`input[name="level"][value="${state.level}"]`);
+    if (levelRadio) levelRadio.checked = true;
 
     screens.show('screen-start');
     onSelectionChange();

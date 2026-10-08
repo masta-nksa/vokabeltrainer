@@ -11,16 +11,27 @@ auf GitHub Pages – kein Build-Schritt, keine Abhängigkeiten.
 | **spelling** | Ausgangssprache wird angezeigt, aus mehreren Schreibweisen die korrekte wählen |
 | **writing** | Ausgangssprache wird angezeigt, Übersetzung eintippen |
 
-Die Stufe **einfach / mittel / schwer** wirkt je Modus: bei *terms* auf die
-Ähnlichkeit der Ablenker, bei *spelling* auf Art und Zahl der Fehler in den
-Varianten, bei *writing* auf die Akzent-Strenge. Zusätzlich steigt die Zahl
-der Antwortmöglichkeiten in den Auswahl-Modi (einfach 4, mittel 6, schwer 8),
-soweit die gewählten Lektionen genug Wörter hergeben.
+Das **Niveau Basis / Erweitert / Expert** wirkt je Modus:
+
+| Modus | Basis | Erweitert | Expert |
+|---|---|---|---|
+| *terms* | 4 Optionen, Ablenker deutlich anders lang | 6 Optionen, zufällige Ablenker | 8 Optionen, Ablenker ähnlich lang |
+| *spelling* | 4 Optionen, nur fehlender oder doppelter Buchstabe | 6 Optionen, alle Fehlerarten | 8 Optionen, zwei Fehler kombiniert |
+| *writing* | Artikel steht vor dem Feld (*la ___*), fehlender Akzent zählt als richtig mit Hinweis | Artikel selbst schreiben, Akzente zählen, Hinweis nach Akzentfehler | wie Erweitert, ohne Hinweis |
+
+Die Zahl der Optionen ist begrenzt durch das, was die gewählten Lektionen
+hergeben. Die Werte stehen als kleine Tabelle `LEVELS` im jeweiligen Modus
+(`js/modes/`) und `optionCount()` in `js/util.js`. Wer die App schon mit
+einfach/mittel/schwer benutzt hat, behält seine Wahl (`js/learning/levels.js`).
+
+Den Artikel vorzugeben klappt bei Einträgen, die mit *le/la/les/l'/un/une/des*
+bzw. *a/an/the* beginnen. Sätze, lange Wendungen und Einträge mit mehreren
+Formen (*les maths, les mathématiques*) bleiben ganz.
 
 Dazu **Anwenden**: kleine Übungen zu einer Unit (Grammatik, Sachwissen), die
 in der Auswahl unter den Modus-Knöpfen erscheinen, sobald eine passende
-Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Die Stufe
-wirkt hier nicht.
+Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Das
+Niveau wirkt hier noch nicht.
 
 ## Drucken
 
@@ -51,6 +62,7 @@ js/
   data/decks.js     Deck-Verwaltung
   data/exercises.js Anwendungsübungen laden und auswählen
   modes/            Lernmodi (terms, spelling, writing) und exercise
+  learning/         Niveaus und Fehlerklassen
   ui/               Screens, Lektionsauswahl, Scoreboard, Druck, Belohnung
   speech/tts.js     Sprachausgabe
   speech/assess.js  Schnittstelle für die spätere Ausspracheprüfung
@@ -185,6 +197,12 @@ Selbsttest des CSV-Imports:
 node tools/test-csv.mjs
 ```
 
+Selbsttest für Niveaus, Artikel-Erkennung und Fehlerklassen:
+
+```
+node tools/test-learning.mjs
+```
+
 Wortschatz aus einer CSV in ein Deck umwandeln:
 
 ```
@@ -201,6 +219,15 @@ dazu, tritt die echte Kennung an diese Stelle, und die Auswertung ist eine
 Abfrage auf bereits vorhandenen Daten. Der gesamte Datenzugriff läuft über
 `js/storage/index.js`; ein Server wird dort angeschlossen, nicht verstreut
 in der App.
+
+**Fehler.** Seit Oktober 2026 hält jeder Datensatz auch fest, *was* falsch
+war: jeder Fehlversuch mit Eingabe und Fehlerklasse (`errors`), dazu Niveau,
+Fertigkeit (`skill`), Dauer und Deck-Version. Die Fehlerklassen – Akzent,
+Genus, Zahl, Elision, Buchstabenfehler, Verwechslung mit einem anderen Wort
+der Runde – bestimmt `js/learning/errors.js`. Auf Basis tolerierte Akzente
+stehen als `tolerated` mit drin. Angezeigt wird davon noch nichts; die Daten
+sind die Grundlage für die «Für dich»-Runde und das Schwächenprofil
+(docs/KONZEPT.md, Abschnitt 3).
 
 Das ist zugleich die Antwort auf die Frage nach einer Statistik. Entschieden
 (1. September 2026): **gemessen wird der Lernfortschritt, nicht der

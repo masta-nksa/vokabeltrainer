@@ -1,7 +1,7 @@
 // IndexedDB-Zugriff. Kennt nur Datensätze, keine Anwendungslogik.
 
 const DB_NAME = 'vokabeltrainer';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 /** @type {Promise<IDBDatabase> | null} */
 let dbPromise = null;
@@ -32,6 +32,13 @@ export function openDb() {
                 attempts.createIndex('byDeck', 'deckId');
                 attempts.createIndex('byUser', 'userId');
                 attempts.createIndex('byTime', 'ts');
+            }
+
+            // Version 3: Lernstand pro Person und Wort – Grundlage für das
+            // Schwächenprofil. Bestehende Datensätze bleiben unverändert.
+            const attempts = request.transaction.objectStore('attempts');
+            if (!attempts.indexNames.contains('byUserItem')) {
+                attempts.createIndex('byUserItem', ['userId', 'itemId']);
             }
 
             if (!db.objectStoreNames.contains('settings')) {

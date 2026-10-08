@@ -2,11 +2,13 @@
 // Schreibweisen des Zielworts ist die korrekte zu wählen.
 
 import { shuffle, normalize, misspellings, optionCount } from '../util.js';
+import { fromOperations } from '../learning/errors.js';
 
 export const id = 'spelling';
 export const label = 'spelling';
 export const description = 'Aus mehreren Schreibweisen die richtige erkennen';
 export const inputKind = 'choice';
+export const skill = 'spell';
 
 // Bild hilft, das Wort zu erkennen; die richtige Schreibweise muss trotzdem
 // erkannt werden.
@@ -16,25 +18,25 @@ export const showsImage = true;
 export const speakAnswerOnCorrect = true;
 
 // Wie viele Fehler pro Variante kombiniert werden und aus welchem
-// Operationsumfang sie stammen. "medium" nutzt bereits alle Fehlerarten,
-// "hard" kombiniert zwei davon – dadurch bietet jede Stufe mehr Variation
-// als die vorherige.
-const DIFFICULTY = {
-    easy: { edits: 1, simpleOnly: true },
-    medium: { edits: 1, simpleOnly: false },
-    hard: { edits: 2, simpleOnly: false }
+// Operationsumfang sie stammen. "erweitert" nutzt bereits alle Fehlerarten,
+// "expert" kombiniert zwei davon – dadurch bietet jedes Niveau mehr Variation
+// als das vorherige.
+const LEVELS = {
+    basis: { edits: 1, simpleOnly: true },
+    erweitert: { edits: 1, simpleOnly: false },
+    expert: { edits: 2, simpleOnly: false }
 };
 
 /**
  * @param {import('../storage/index.js').Item} item
  * @param {import('../storage/index.js').Item[]} pool
- * @param {string} [difficulty]
+ * @param {import('../learning/levels.js').Level} [level]
  */
-export function buildQuestion(item, pool, difficulty = 'medium') {
-    const settings = DIFFICULTY[difficulty] ?? DIFFICULTY.medium;
+export function buildQuestion(item, pool, level = 'erweitert') {
+    const settings = LEVELS[level] ?? LEVELS.erweitert;
 
-    // Mehr Optionen bei höherer Stufe (einfach 4, mittel 6, schwer 8).
-    const wanted = optionCount(difficulty) - 1;
+    // Mehr Optionen bei höherem Niveau (Basis 4, Erweitert 6, Expert 8).
+    const wanted = optionCount(level) - 1;
 
     // Jede Option muss sich von der richtigen Schreibweise und von jeder
     // anderen Option unterscheiden – sonst stehen zwei Buttons mit
@@ -44,22 +46,29 @@ export function buildQuestion(item, pool, difficulty = 'medium') {
     const seen = new Set([normalize(item.target)]);
     const variants = [];
 
+    // Zu jeder falschen Option ist bekannt, welcher Fehler in ihr steckt.
+    // Wird sie gewählt, landet genau dieser Fehler im Protokoll.
+    /** @type {Record<string, Omit<import('../learning/errors.js').ErrorEntry, 'given'>>} */
+    const optionErrors = {};
+
     for (const candidate of misspellings(item.target, wanted + 4, settings)) {
-        const key = normalize(candidate);
+        const key = normalize(candidate.text);
         if (seen.has(key)) continue;
         seen.add(key);
-        variants.push(candidate);
+        variants.push(candidate.text);
+        optionErrors[candidate.text] = fromOperations(candidate.ops);
         if (variants.length === wanted) break;
     }
 
     // Bei sehr kurzen Wörtern lassen sich kaum Varianten bilden. Dann treten
     // andere Wörter aus der Lektion als Ablenker an.
     if (variants.length < wanted) {
-        for (const text of shuffle(pool.map(entry => entry.target))) {
-            const key = normalize(text);
+        for (const entry of shuffle(pool)) {
+            const key = normalize(entry.target);
             if (seen.has(key)) continue;
             seen.add(key);
-            variants.push(text);
+            variants.push(entry.target);
+            optionErrors[entry.target] = { type: 'confusion', confusedWith: entry.id };
             if (variants.length === wanted) break;
         }
     }
@@ -69,6 +78,7 @@ export function buildQuestion(item, pool, difficulty = 'medium') {
         promptSide: 'source',
         speakPrompt: false,
         options: shuffle([item.target, ...variants]),
+        optionErrors,
         answer: item.target,
         answerSide: 'target'
     };

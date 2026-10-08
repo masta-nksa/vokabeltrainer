@@ -33,12 +33,23 @@ import * as db from './db.js';
  * @property {string} id
  * @property {string} userId    Vorerst immer "local"
  * @property {string} deckId
+ * @property {number} [contentVersion]  Deck-Version zum Zeitpunkt der Antwort
  * @property {string} itemId    Wort-ID, bei Übungen die Aufgaben-ID
  * @property {string} mode      terms | spelling | writing | exercise
  * @property {string} [exerciseId]  nur bei mode "exercise": welches Übungsset
+ * @property {string} [skill]   recognize | spell | produce | apply
+ * @property {string} [source]  quiz | drill (später game, challenge, battle)
+ * @property {import('../learning/levels.js').Level} [level]
  * @property {boolean} correct  Auf Anhieb gewusst
  * @property {number} tries     Fehlversuche vor der Lösung
+ * @property {import('../learning/errors.js').ErrorEntry[]} [errors]
+ *   Jeder Fehlversuch mit Eingabe und Fehlerklasse; auch tolerierte Fehler
+ *   bei einer richtigen Antwort
+ * @property {number} [durationMs]  Zeit von der Frage bis zur Lösung
  * @property {number} ts        Zeitstempel in ms
+ *
+ * Felder in eckigen Klammern gibt es erst seit Oktober 2026 (Konzept v2) –
+ * ältere Datensätze haben sie nicht.
  */
 
 /**
@@ -144,6 +155,15 @@ export function attemptsForDeck(deckId) {
 /** @returns {Promise<Attempt[]>} */
 export function attemptsForItem(itemId) {
     return db.getAllByIndex('attempts', 'byItem', itemId);
+}
+
+/**
+ * Alle Antworten der aktuellen Person zu einem Eintrag – Grundlage für
+ * Lernstand und Schwächenprofil.
+ * @returns {Promise<Attempt[]>}
+ */
+export function attemptsForUserItem(itemId) {
+    return db.getAllByIndex('attempts', 'byUserItem', [currentUserId(), itemId]);
 }
 
 /** @returns {Promise<Attempt[]>} */
