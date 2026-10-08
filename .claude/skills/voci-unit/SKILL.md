@@ -69,12 +69,28 @@ Zeile für Zeile ablesen:
   ausschneiden oder einbetten.
 - `keep` – `true`, ausser die Zeile ist offensichtlich kein Lernwort.
 
+Besonderheiten, die bei DoubleDecker 3 vorkamen:
+
+- Steht in einer Zelle ein Wortpaar über zwei Zeilen (Adjektiv + Steigerung,
+  „tall," / „taller"), bleibt es **ein** Eintrag: `en: "tall, taller"`.
+- Unter der Tabelle kann ein **Grammatikkasten** stehen („Verb «to be»"). Endet
+  der Testbereich der Fusszeile dort („… – I didnt"), gehören seine Zeilen als
+  weitere `rows` mit fortlaufender Nummer dazu.
+- Nummern und Begriffe der Fusszeile widersprechen sich gelegentlich („22–36"
+  gegen „Second – I didnt"). Massgebend sind die **Begriffe**.
+
 Die **Fusszeile** des Blatts nennt meist die Tests mit Datum und Wortbereich
 („Test 1  1-23 (Clapsticks – paint)  Thursday 3rd of September"). Daraus die
 `tests` füllen: `fromTerm`/`toTerm` als ersten/letzten **englischen Begriff**
-(nicht die Nummer), `date` als ISO-Datum. Jahr aus dem Kontext (Schuljahr);
-im Zweifel den Nutzer fragen. Findet sich keine Test-Einteilung, `tests: []`
-lassen – dann wird eine einzige Lektion gebaut.
+(nicht die Nummer), `date` als ISO-Datum. Findet sich keine Test-Einteilung,
+`tests: []` lassen – dann wird eine einzige Lektion gebaut.
+
+**Die Daten der Fusszeile nie ungeprüft übernehmen.** Sie ist teils aus der
+vorigen Unit kopiert (das Unit-2-Blatt nannte die Termine von Unit 1). Verbindlich
+ist die Terminliste „Homework and English Tests (Dates)" auf Seite 1 des
+Unit-1-PDFs – dort die Voci-Tests der Unit nachschlagen. Das Jahr ergibt sich
+aus dem Schuljahr (Schuljahr 26/27: September bis Dezember 2026, Januar bis
+Juni 2027); im Zweifel den Nutzer fragen.
 
 Ergebnis nach `tools/voci-import/draft/draft.json` schreiben, Schema siehe
 `tools/voci-import/README.md`. `pages` mit den Dateinamen der gerenderten
@@ -90,6 +106,11 @@ im Hintergrund starten, dann die Browser-Ansicht auf `http://localhost:5511`
 öffnen. Dem Nutzer sagen: Tabelle prüfen (besonders `en`/`de`-Schreibweise und
 die Test-Bereiche), Emoji setzen wo gewünscht, **Speichern**. Warten, bis der
 Nutzer „fertig" o. ä. sagt. Server danach stoppen.
+
+Meldet Node `EADDRINUSE`, läuft auf 5511 bereits ein Server – oft ein vom
+Nutzer selbst gestarteter. Er liest `draft.json` bei jeder Anfrage frisch, also
+einfach weiterverwenden und den Nutzer die Seite neu laden lassen. Nicht
+abschiessen, ohne zu fragen.
 
 ### 5. Bauen
 
@@ -120,3 +141,9 @@ in den Modi `writing` und `spelling` an; `resolveImage` in
 `js/storage/index.js` löst den Wert auf. Neue Bilddateien kommen als WebP nach
 `img/decks/<deckId>/<itemId>.webp` und werden im Entwurf mit dem Dateinamen
 eingetragen.
+
+Anwendungsübungen (Grammatik, Sachwissen) gehören **nicht** zu diesem Skill:
+sie stehen von Hand in `data/exercises/<deckId>.json`, ein Set hängt über
+`unitId` an der Unit (`3_3`, ohne `-t1`/`-t2`). Nach dem Import einer neuen Unit
+kurz anbieten, dafür ein paar Sets zu schreiben – mit eigenen Sätzen, nicht mit
+Texten aus dem Lehrmittel. Aufbau: README, Abschnitt *Anwendungsübungen*.

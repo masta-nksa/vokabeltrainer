@@ -33,7 +33,9 @@ und Laminieren als Lernkärtchen. Mit der Option **doppelseitig** entstehen
 abwechselnd Vorder- und Rückseiten (Zielsprache vorne, Ausgangssprache
 hinten) für den Duplex-Druck; die Rückseite ist gedreht für einen Drucker,
 der an der langen Kante wendet, und für eine Karte, die man selbst an ihrer
-langen Kante umdreht.
+langen Kante umdreht. Beim doppelseitigen Druck steht immer die Zielsprache
+vorne und die Ausgangssprache hinten – die Wahl *Was soll auf dem Blatt
+stehen?* gilt dann nicht.
 
 ## Aufbau
 
@@ -135,8 +137,8 @@ App holt sie bei Bedarf frisch. Ein Deck ohne Datei hat einfach keine Übungen.
   "sets": [
     {
       "id": "3_3-past-regular",
-      "unitId": "3_3",                        // haengt an dieser Unit
-      "title": "Unit 3 – Simple Past: regelmaessige Verben",
+      "unitId": "3_3",                        // hängt an dieser Unit
+      "title": "Unit 3 – Simple Past: regelmässige Verben",
       "intro": "…",                           // erscheint als Untertitel
       "tasks": [
         { "type": "gap", "text": "look  →  ___", "answer": "looked" },
@@ -150,16 +152,16 @@ App holt sie bei Bedarf frisch. Ein Deck ohne Datei hat einfach keine Übungen.
 ```
 
 - **`unitId`** ist die Unit ohne Test-Zusatz (`3_3`). Ein Set erscheint in der
-  Auswahl, sobald eine Lektion dieser Unit gewaehlt ist (`3_3-t1`, `3_3-t2`, …).
-- **`type: "gap"`** – Luecke `___` im `text`, `answer` ist ein String oder eine
+  Auswahl, sobald eine Lektion dieser Unit gewählt ist (`3_3-t1`, `3_3-t2`, …).
+- **`type: "gap"`** – Lücke `___` im `text`, `answer` ist ein String oder eine
   Liste erlaubter Formen. Gross-/Kleinschreibung und Randzeichen sind egal.
-- **`type: "mc"`** – `options` als Knoepfe, `answer` ist genau einer der Texte.
+- **`type: "mc"`** – `options` als Knöpfe, `answer` ist genau einer der Texte.
 - **`note`** erscheint nach dem ersten Fehlversuch als Hilfe.
-- Task-IDs werden beim Laden vergeben (`<setId>-01` …); Uebungs-Versuche landen
+- Task-IDs werden beim Laden vergeben (`<setId>-01` …); Übungs-Versuche landen
   mit `mode: "exercise"` und `exerciseId` im selben Fortschrittsspeicher wie
   der Wortschatz.
 
-Kein Text aus dem Lehrmittel abschreiben – eigene Saetze; Fakten sind frei.
+Kein Text aus dem Lehrmittel abschreiben – eigene Sätze; Fakten sind frei.
 
 ## Entwicklung
 
@@ -169,6 +171,13 @@ ES-Module und `fetch` unter `file://` nicht laufen:
 ```
 python -m http.server 5510
 ```
+
+Der Server schickt keine Cache-Header, deshalb liefert der Browser geänderte
+Module und Stylesheets nach dem Speichern mitunter noch aus dem Cache. Wirkt
+eine Änderung nicht, hart neu laden (Strg+F5).
+
+Alle Befehle in dieser README – auch die der Werkzeuge unter `tools/` – gelten
+für den Ordner `vokabeltrainer/` als Arbeitsverzeichnis.
 
 Selbsttest des CSV-Imports:
 

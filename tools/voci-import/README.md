@@ -17,6 +17,9 @@ vor; im Deck landen nur Emoji oder selbst beschaffte Bilder (siehe unten).
 
 ## Ablauf von Hand
 
+Alle Befehle im Ordner `vokabeltrainer/` ausführen – aus dem übergeordneten
+Ordner findet Node die Skripte nicht (`MODULE_NOT_FOUND`).
+
 ```bash
 # 1. Seiten rendern (nur die Blattseiten, 1-basiert)
 python tools/voci-import/rasterize.py fotomaterial/english/Unit2_DD3.pdf \
@@ -32,8 +35,12 @@ node tools/voci-import/serve.mjs
 node tools/voci-import/build.mjs
 
 # 5. prüfen und committen
-git -C vokabeltrainer diff
+git diff
 ```
+
+Meldet Node bei Schritt 3 `EADDRINUSE`, läuft noch ein früherer Server auf
+Port 5511. Der liest den Entwurf bei jeder Anfrage frisch von der Platte – die
+Seite einfach neu laden, ein zweiter Start ist unnötig.
 
 ## draft.json
 
@@ -47,9 +54,9 @@ git -C vokabeltrainer diff
   "unit": { "code": "3_2", "number": 2, "title": "Unit 2 – Music" },
   "pages": ["page-02.png", "page-03.png", "page-04.png"],
   "tests": [
-    { "id": "t1", "label": "Test 1", "date": "2026-09-03",
+    { "id": "t1", "label": "Test 1", "date": "2026-10-29",
       "fromTerm": "clapsticks", "toTerm": "to paint" },
-    { "id": "t2", "label": "Test 2", "date": "2026-09-17",
+    { "id": "t2", "label": "Test 2", "date": "2026-11-12",
       "fromTerm": "to choose", "toTerm": "song" }
   ],
   "rows": [
@@ -65,11 +72,18 @@ git -C vokabeltrainer diff
 - **`tests`** – je Eintrag eine Lektion. `fromTerm`/`toTerm` sind der erste und
   letzte englische Begriff des Testbereichs, exakt wie in der Tabelle. Bereiche
   dürfen sich überschneiden (dann steht ein Wort in beiden Lektionen; der
-  Lernfortschritt zählt es über die gemeinsame Item-ID zusammen).
+  Lernfortschritt zählt es über die gemeinsame Item-ID zusammen). Endet der
+  Bereich in einem Grammatikkasten unter der Tabelle (Unit 3: `I didn't`),
+  gehören dessen Zeilen als weitere `rows` dazu.
+- **Testdaten nicht der Fusszeile allein glauben.** Sie ist teils aus der
+  vorigen Unit kopiert (Unit 2 nannte die Termine von Unit 1). Verbindlich ist
+  die Terminliste auf Seite 1 des Unit-1-PDFs.
 - **`rows[].image`** – ein Emoji oder ein Dateiname aus
   `img/decks/<deckId>/`. Leer = kein Bild. `imageHint` ist nur eine Notiz aus
   der Erkennung und hilft beim Aussuchen; sie wandert nicht ins Deck.
 - **`keep: false`** lässt eine Zeile beim Bauen weg.
+- **`notes`** (optional, oberste Ebene) – freie Notiz aus der Erkennung, etwa
+  Auffälligkeiten des Blatts. Wird nicht ins Deck übernommen.
 
 ## Bilder
 
