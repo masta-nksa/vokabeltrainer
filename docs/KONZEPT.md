@@ -350,9 +350,74 @@ Oberflächensprache (Deutsch) bleibt getrennt von Ausgangs- und Zielsprache.
 
 ## 7. Login, Sync, KI – was das Modell dafür vorbereitet
 
-- **Login:** `userId` steht schon in jedem Event. Beim ersten Login wird
-  `local` auf die echte Kennung umgeschrieben; der Stand vor dem Login bleibt.
-  Pseudonyme Konten ohne Klarnamen.
+### Login mit Zugangskarte (unabhängig von der Schul-IT)
+
+Kein Microsoft-Login: Dafür müsste die Schul-IT die App im Schulkonto
+freigeben. Stattdessen ein eigener, einfacher Login nach dem Vorbild von
+*Anton* – Spitzname plus Zugangskarte mit QR-Code, E-Mail nur optional.
+
+**Ablauf für SuS**
+
+1. **Ohne Konto loslegen.** Wie heute: alles läuft lokal, nichts wird
+   verlangt.
+2. **«Fortschritt sichern».** Spitzname wählen (kein voller Name), optional
+   Klassencode eingeben. Die App zeigt die **Zugangskarte**: QR-Code plus
+   kurzer Code zum Abtippen (`KATZE-7Q4M-X2PL`). Karte drucken, als Bild
+   speichern oder abfotografieren. Der bisherige Lernstand wandert ins Konto.
+3. **Auf einem anderen Gerät** den QR-Code mit der normalen Kamera scannen –
+   er enthält einen Link (`…/#login=<geheimnis>`), der direkt eingeloggt
+   öffnet. Oder den kurzen Code eintippen. Das Gerät bleibt danach angemeldet.
+4. **Optional E-Mail** (eigene oder die der Eltern) hinterlegen. Wer die Karte
+   verliert, bekommt per Mail einen Link und damit eine neue Karte; die alte
+   wird ungültig.
+
+**Ablauf für die Lehrperson**
+
+- Klasse anlegen → Klassencode. Oder umgekehrt: Spitznamen der Klasse
+  eintragen, die App legt die Konten an und druckt **alle Zugangskarten auf
+  einmal** – im selben A8-Format wie die Karteikarten (`js/ui/print.js`).
+- Verlorene Karte: in der Klassenliste «neue Karte» – die alte wird gesperrt.
+  So braucht in einer Klasse niemand eine E-Mail-Adresse.
+- Die Lehrperson sieht nur Spitznamen; die Zuordnung zu echten Namen führt
+  sie selbst, ausserhalb der App.
+
+**Sicherheit**
+
+- Der QR-Code trägt ein langes Zufallsgeheimnis (128 Bit) – er ist das
+  Passwort. Gespeichert wird auf dem Server nur ein Hash davon.
+- Der kurze Abtipp-Code ist kürzer und darum mit Versuchsbegrenzung
+  geschützt (wenige Fehlversuche pro Minute).
+- Das Geheimnis steht im `#`-Teil des Links. Der geht nie an einen Server und
+  in kein Server-Log; die App entfernt ihn nach dem Login sofort aus der
+  Adresszeile.
+- Jede Karte lässt sich sperren und ersetzen. Unter «Meine Geräte» sieht man,
+  wo man angemeldet ist, und kann Geräte abmelden.
+- Restrisiko: Wer eine Karte abfotografiert, kann sich anmelden – wie bei
+  Anton. Für Lernstand und Spielstände vertretbar; darum keine weiteren
+  Personendaten im Konto.
+
+**Technik (Firebase)**
+
+- Erster Start: anonymes Firebase-Konto (`signInAnonymously`), damit
+  Sync von Anfang an eine feste Kennung hat.
+- Zugangskarte: eine Serverfunktion speichert den Hash des Geheimnisses zur
+  Kennung. Beim Scannen prüft sie den Hash und gibt ein Firebase-Login-Token
+  für **dieselbe** Kennung aus (`createCustomToken` → `signInWithCustomToken`).
+- E-Mail-Wiederherstellung: Firebase-Login per E-Mail-Link, an das Konto
+  gekoppelt; keine Passwörter.
+- Firebase-Konten liegen nicht in der Schweiz; dort steht darum nur die
+  Kennung und die optionale E-Mail. Lernstand und Spitzname liegen in
+  Firestore in Zürich (`europe-west6`).
+- Ohne Microsoft-Login wäre auch Cloudflare (Workers + D1) gleich einfach
+  möglich – dann aber E-Mail-Versand und Login-Sicherheit selbst gebaut.
+  Firebase bleibt der Vorschlag, weil anonyme Konten und E-Mail-Links
+  fertig und erprobt sind.
+
+### Weitere Vorbereitung
+
+- **Lernstand übernehmen:** `userId` steht schon in jedem Event. Beim Sichern
+  wird `local` auf die echte Kennung umgeschrieben; der Stand vor dem Login
+  bleibt.
 - **Sync:** Events werden nur angehängt und tragen eine UUID. Sync heisst:
   noch nicht hochgeladene IDs schicken. Keine Konflikte, offline geht weiter.
   Der Lernstand wird auf jedem Gerät aus den Events berechnet.
@@ -387,5 +452,6 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 6. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
 7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
 8. **Challenge-Links** (Stufe A).
-9. Login, Sync, Klassenansicht, Challenges Stufe B.
+9. Login mit Zugangskarte, Sync, Klassenansicht mit Kartendruck,
+   Challenges Stufe B.
 10. KI-Agent.
