@@ -11,9 +11,11 @@ Unit wird nur übernommen, was dem Spracherwerb im engeren Sinn dient. Lesetexte
 Plakat, Steckbrief, Lied und Sprachfamilien bleiben im Buch.
 
 Sie ist ein **freiwilliges Angebot neben dem Unterricht**, nicht ein Werkzeug
-für die ganze Klasse. Wer sie nutzt, tut es für sich. Daraus folgt: keine
-Klassenverwaltung, keine Zuweisungen, keine Auswertung einzelner SuS durch
-die Lehrperson. Alles muss ohne Anleitung im Unterricht verständlich sein.
+für die ganze Klasse. Wer sie nutzt, tut es für sich. Daraus folgt: vorerst
+keine Klassenverwaltung, keine Zuweisungen, keine Auswertung einzelner SuS
+durch die Lehrperson. Alles muss ohne Anleitung im Unterricht verständlich
+sein. Klassen kommen vielleicht später; das Modell hält dafür Platz frei
+(Abschnitt 7, «Später: Klassen»).
 
 Vier Dinge machen den Unterschied zu einer Wortliste:
 
@@ -442,6 +444,39 @@ muss jede Person selbst wieder hineinkommen können:
   werden). Anfragen nur über einen eigenen Proxy, keine Personendaten ans
   Modell.
 
+### Später: Klassen (vorgesehen, nicht umgesetzt)
+
+Falls die App eines Tages doch mit einer ganzen Klasse genutzt wird, kommt
+eine Klassenebene **dazu** – das Einzelkonto bleibt, wie es ist.
+
+**Was dann möglich wird**
+
+- Lehrperson legt eine Klasse an und bekommt einen **Klassencode**; SuS treten
+  mit dem Code bei (oder verlassen die Klasse wieder).
+- Alternativ trägt die Lehrperson Spitznamen ein und **druckt alle
+  Zugangskarten auf einmal** (A8 wie die Karteikarten).
+- Verlorene Karte: Lehrperson stellt in der Klassenliste eine neue aus –
+  Wiederherstellung ohne E-Mail.
+- **Zuweisung** von Sections mit Testtermin an die Klasse.
+- **Klassenansicht**: Schwächenprofil der Klasse (Fehlerklassen, schwierige
+  Wörter); Einzelansicht nur mit Spitznamen.
+- **Klassen-Challenge** und Bestenliste der Klasse, von der Lehrperson
+  eingeschaltet.
+
+**Was das Modell schon jetzt dafür freihält**
+
+| Vorkehrung | warum |
+|---|---|
+| Events tragen nur `userId`, keine Klassen-ID | Die Mitgliedschaft ist eine eigene Beziehung (`membership: userId × classId × seit/bis`). Tritt jemand später einer Klasse bei, zählt der bisherige Lernstand automatisch dazu; ein Klassenwechsel verfälscht nichts. |
+| Konto mit Feld `roles` (vorerst nur `learner`) | `teacher` kommt dazu, ohne das Konto umzubauen. |
+| Testtermin als Feld der Section, nicht nur im Titel | Eine spätere Zuweisung überschreibt ihn pro Klasse; ohne Klasse gilt der Wert aus dem Inhalt. |
+| Bestenlisten mit `scope` (`friends`, `global`) | `class` ist ein weiterer Wert, keine neue Funktion. |
+| Kartendruck baut auf `js/ui/print.js` | Einzelkarte jetzt, Klassensatz später mit demselben Layout. |
+| Zugangskarte unabhängig von der Klasse | Eine Karte bleibt gültig, auch wenn jemand die Klasse verlässt. |
+
+Nichts davon wird jetzt gebaut. Es geht nur darum, keine Entscheidung zu
+treffen, die das später verbaut.
+
 ## 8. Umsetzung in Schritten
 
 Jeder Schritt ist für sich nutzbar und veröffentlichbar.
@@ -467,3 +502,5 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik, Challenges
    Stufe B.
 10. KI-Agent.
+11. *Vielleicht später:* Klassen mit Klassencode, Kartendruck, Zuweisung,
+    Klassenansicht.
