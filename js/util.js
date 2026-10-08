@@ -43,12 +43,17 @@ export function optionCount(difficulty) {
 
 /**
  * Vereinheitlicht eine Antwort für den Vergleich: Kleinschreibung,
- * zusammengefasste Leerzeichen, kein Satzzeichen am Ende.
+ * zusammengefasste Leerzeichen, kein Satzzeichen am Ende, ein einziges
+ * Apostroph-Zeichen.
+ *
+ * iPads und Macs ersetzen das getippte ' standardmässig durch ’ – ohne die
+ * Vereinheitlichung wäre "c’est" gegen "c'est" falsch.
  */
 export function normalize(text) {
     return text
         .trim()
         .toLowerCase()
+        .replace(/[’‘ʼ´`]/g, "'")
         .replace(/\s+/g, ' ')
         .replace(/[.!?;:]+$/, '');
 }
