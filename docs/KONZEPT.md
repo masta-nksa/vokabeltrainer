@@ -196,7 +196,7 @@ und `tries` – **was** falsch eingegeben wurde, geht verloren.
   "itemId": "grand-mere",            // oder Drill-/Generator-ID
   "grammarId": "fr.possessif",       // falls Grammatik-Aufgabe
   "skill": "produce",                // recognize | spell | produce | grammar
-  "source": "quiz",                  // quiz | drill | game | challenge
+  "source": "quiz",                  // quiz | drill | game | challenge | battle
   "level": "erweitert",              // Niveau, auf dem geübt wurde
   "game": null,                      // z. B. "crossword"
   "correct": false,                  // auf Anhieb gewusst
@@ -293,7 +293,7 @@ Genus-Sortierer (die einzige Grammatik als Spiel), dann Speed-Runde.
 - Aufbau des Gitters: gieriges Platzieren mit Kreuzungen, dichtestes von ein
   paar Versuchen gewinnt. Mit festem Seed kommt immer dasselbe Gitter heraus.
 
-## 5. Challenges zwischen SuS
+## 5. Challenges, Freunde und Battles
 
 Eine Challenge ist **dieselbe Partie für zwei oder mehr Personen**. Das geht
 ohne Server, wenn eine Partie vollständig durch ihre Parameter bestimmt ist:
@@ -316,11 +316,97 @@ Technisch braucht das nur einen Zufallsgenerator mit Seed (z. B. mulberry32)
 statt `Math.random()` bei der Partie-Erzeugung und eine Warnung, wenn die
 Deck-Version im Link nicht mehr zum Stand passt.
 
-**Stufe B – mit Login.**
-- **Freunde:** über einen Freundescode verbinden; danach Herausforderungen
-  direkt in der App statt per Link, Ergebnisse bleiben sichtbar.
-- **Challenge der Woche:** ein Rätsel pro Unit und Niveau für alle, die die App
-  nutzen – Bestenliste mit Spitznamen.
+**Stufe B – mit Login: Freunde, Eingang, Live-Battle.**
+
+Alles Folgende braucht ein Konto (Abschnitt 7) und eine Verbindung. Üben
+bleibt offline möglich; nur Freunde und Battles sind online-Funktionen.
+
+#### Freunde per Code
+
+- Jedes Konto hat einen **Freundescode** (`FUCHS-4821`), zu finden unter
+  «Freunde». Code der Freundin eintippen oder ihren QR scannen → Anfrage →
+  sie bestätigt → befreundet.
+- **Keine Suche nach Namen**, keine Vorschläge, keine öffentlichen Profile.
+  Wer befreundet ist, hat den Code persönlich bekommen. So kommen keine
+  Fremden dazu.
+- Freunde sehen voneinander nur: Spitzname, Online-Status, Ergebnisse
+  gemeinsamer Challenges. **Nie** den Lernstand oder die Fehler.
+- Freund entfernen und blockieren jederzeit, ohne dass die andere Person
+  benachrichtigt wird. Freundescode lässt sich neu erzeugen, der alte gilt
+  dann nicht mehr.
+
+#### Wer ist gerade online
+
+Die Freundesliste zeigt pro Person einen von drei Zuständen:
+
+| Zustand | Anzeige | Bedeutung |
+|---|---|---|
+| offline | grau | App nicht offen |
+| am Lernen | grün | App offen |
+| bereit zum Battle | grün mit ⚔️ | hat «Battle-bereit» eingeschaltet |
+
+- Der Zustand verschwindet von selbst, wenn die App geschlossen wird oder die
+  Verbindung abreisst – niemand bleibt fälschlich «online».
+- Schalter **«unsichtbar»**: man erscheint offline und bekommt keine
+  Live-Einladungen, nur Challenges im Eingang.
+- Was jemand gerade übt, wird nicht angezeigt – nur *dass* er online ist.
+
+#### Eingang «Herausforderungen»
+
+Ein Glocken-Symbol mit Zähler in der Kopfzeile. Darin:
+
+- **Neue Challenges**: Freundin hat ein Kreuzworträtsel gespielt und
+  fordert dich heraus → «Annehmen» startet dieselbe Partie (gleicher Seed,
+  gleiches Niveau).
+- **Ergebnisse**: Wer hat gewonnen, mit Zeit und Fehlerzahl, «Revanche».
+- **Verpasste Battle-Einladungen** werden zu normalen Challenges: man spielt
+  später und vergleicht dann.
+- Offene Challenges verfallen nach 7 Tagen, damit der Eingang nicht vollläuft.
+
+Die Challenge-Links aus Stufe A gehen weiter – wer ein Konto hat und einen
+Link öffnet, sieht die Challenge danach auch im Eingang.
+
+#### Live-Battle
+
+Wenn zwei Freunde gleichzeitig online sind:
+
+1. In der Freundesliste bei einer grünen Person **«Battle»** → Spiel, Unit
+   und Niveau wählen (Vorschlag: was man zuletzt geübt hat).
+2. Die Freundin bekommt die Einladung sofort als Hinweis in der App, 60
+   Sekunden Zeit zum Annehmen. Lehnt sie ab oder reagiert nicht, wird daraus
+   eine Challenge im Eingang.
+3. Beide sehen einen Countdown 3-2-1 und spielen **dieselbe Partie
+   gleichzeitig**: gleiche Fragen in gleicher Reihenfolge (gemeinsamer Seed).
+4. Während des Spiels sieht man den **Fortschritt der anderen Person live** –
+   ein Balken mit gelösten Aufgaben und Punkten, nicht ihre Antworten.
+5. Ende: Ergebnis beider, die Wörter, die einer von beiden falsch hatte,
+   zum Nachlernen, Knopf «Revanche».
+
+Geeignete Spiele für Live-Battles – kurze, gleichzeitige Partien:
+
+| Battle | Ablauf | Sieg |
+|---|---|---|
+| **Wort-Duell** | 10 Fragen *terms* oder *writing*, gleiche Reihenfolge | mehr richtig; bei Gleichstand schneller |
+| **Kreuzwort-Rennen** | dasselbe Gitter | zuerst fertig, Fehler geben Zeitstrafe |
+| **Genus-Duell** | dieselben Wörter fallen bei beiden | mehr richtig sortiert |
+
+Battle-Antworten werden wie jede Übung als Events gespeichert
+(`source: "battle"`) und fliessen ins eigene Fehlerprofil – Battles sind also
+auch Lernen.
+
+#### Schutz
+
+- **Kein Chat, keine freien Texte** zwischen SuS. Nur feste Reaktionen nach
+  einem Battle (👍, 😮, «Revanche?»). Freitext würde Moderation verlangen und
+  öffnet die Tür für Mobbing.
+- Einladungen begrenzt: höchstens eine offene Live-Einladung pro Person, ein
+  paar Challenges pro Freund und Tag – kein Zuspammen.
+- Blockierte Personen können weder einladen noch den Online-Status sehen.
+
+#### Challenge der Woche
+
+Ein Rätsel pro Unit und Niveau für alle, die die App nutzen; Bestenliste mit
+Spitznamen (Geltungsbereich `global`, siehe Klassen-Vorkehrungen).
 
 **Pädagogische Leitplanken**
 - Standard ist «gegen die eigene Bestzeit». In Bestenlisten erscheint nur,
@@ -419,10 +505,37 @@ muss jede Person selbst wieder hineinkommen können:
 - Firebase-Konten liegen nicht in der Schweiz; dort steht darum nur die
   Kennung und die optionale E-Mail. Lernstand und Spitzname liegen in
   Firestore in Zürich (`europe-west6`).
-- Ohne Microsoft-Login wäre auch Cloudflare (Workers + D1) gleich einfach
-  möglich – dann aber E-Mail-Versand und Login-Sicherheit selbst gebaut.
-  Firebase bleibt der Vorschlag, weil anonyme Konten und E-Mail-Links
-  fertig und erprobt sind.
+- **Online-Status und Live-Battle** über die Firebase *Realtime Database*:
+  Sie kann einen Eintrag automatisch löschen, wenn die Verbindung abreisst
+  (`onDisconnect`) – genau das, was ein ehrlicher Online-Status braucht – und
+  verteilt Battle-Fortschritt in Bruchteilen einer Sekunde an beide Geräte.
+  Sie steht nicht in Zürich, sondern in Belgien (`europe-west1`); dort liegen
+  nur kurzlebige Daten (online ja/nein, laufender Battle), die nach dem
+  Battle gelöscht werden.
+- Freunde, Challenges und Ergebnisse liegen dauerhaft in Firestore Zürich.
+- Ohne Microsoft-Login wäre auch Cloudflare (Workers + D1, Live-Teil mit
+  Durable Objects) möglich – dann aber E-Mail-Versand, Login-Sicherheit und
+  Online-Status selbst gebaut. Mit den Live-Funktionen spricht noch mehr für
+  Firebase: anonyme Konten, E-Mail-Links und Online-Status sind fertig und
+  erprobt.
+
+**Datenablage**
+
+```
+Firestore (Zürich, dauerhaft)
+  users/{uid}            Spitzname, Freundescode, roles, Einstellungen
+  friendships/{a_b}      Anfrage | befreundet | blockiert
+  challenges/{id}        von, an, Spiel, Niveau, Seed, Ergebnisse, verfällt
+  users/{uid}/events/…   Lern-Events (Sync)
+
+Realtime Database (Belgien, kurzlebig)
+  status/{uid}           offline | lernt | battle-bereit, zuletzt gesehen
+  invites/{uid}          offene Live-Einladung (60 s)
+  battles/{id}           Spieler, Seed, Start, Fortschritt je Spieler
+```
+
+Regeln in der Datenbank sorgen dafür, dass man nur den Status von Freunden
+lesen und nur in eigene Battles schreiben kann.
 
 ### Weitere Vorbereitung
 
@@ -499,8 +612,11 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 6. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
 7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
 8. **Challenge-Links** (Stufe A).
-9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik, Challenges
-   Stufe B.
-10. KI-Agent.
-11. *Vielleicht später:* Klassen mit Klassencode, Kartendruck, Zuweisung,
+9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik.
+10. **Freunde per Code**, Online-Status, Eingang «Herausforderungen»
+    (asynchrone Challenges im Konto).
+11. **Live-Battle** (Wort-Duell zuerst, dann Kreuzwort-Rennen und
+    Genus-Duell), Challenge der Woche.
+12. KI-Agent.
+13. *Vielleicht später:* Klassen mit Klassencode, Kartendruck, Zuweisung,
     Klassenansicht.
