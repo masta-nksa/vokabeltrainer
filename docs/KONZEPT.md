@@ -10,7 +10,7 @@ Die App ist ein **Selbstlernmodul für Wortschatz und Grammatik**. Aus jeder
 Unit wird nur übernommen, was dem Spracherwerb im engeren Sinn dient. Lesetexte,
 Plakat, Steckbrief, Lied und Sprachfamilien bleiben im Buch.
 
-Drei Dinge machen den Unterschied zu einer Wortliste:
+Vier Dinge machen den Unterschied zu einer Wortliste:
 
 1. **Fehler werden einzeln gespeichert**, nicht nur «richtig/falsch». Daraus
    entsteht ein Schwächenprofil, das bestimmt, was als Nächstes geübt wird.
@@ -20,12 +20,14 @@ Drei Dinge machen den Unterschied zu einer Wortliste:
 3. **Minispiele** nutzen denselben Wortschatz und speisen dasselbe
    Fehlerprotokoll. Ein Spiel ist eine andere Oberfläche für dieselbe
    Sprachübung, kein Extra daneben.
+4. **Drei Niveaus – Basis, Erweitert, Expert –** gelten für jede Aufgabe und
+   jedes Spiel, mit einem einzigen Schalter.
 
 ### Was aus Unité 2 übernommen wird
 
 | Übernommen | Inhalt |
 |---|---|
-| Wortschatz | Vocabulaire Lernziel 1–3, Vocabulaire plus, Randvokabeln (le chapeau, le pantalon, les chaussures …) |
+| Wortschatz | Vocabulaire Lernziel 1–3 (Niveau Basis), Vocabulaire plus (Niveau Erweitert), Randvokabeln wie le chapeau, le pantalon, les chaussures (Erweitert) |
 | Grammatik | Possessivbegleiter *mon/ma/mes* · *être* 3. Person *est/sont* · *s'appeler* *s'appelle/s'appellent* · *c'est / ce sont* · *voici/voilà* · Genus und Artikel *le/la/l'/les* |
 | Satzmuster | «X est la sœur de Y», «C'est ma mère. Elle s'appelle …» – als Lücken- und Satzbau-Übungen |
 
@@ -68,6 +70,7 @@ für die Zuordnung von Übungen entfällt, weil die Hierarchie das ausdrückt.
   "gender": "f",                     // m | f – bei l'/les nicht aus dem Artikel ablesbar
   "number": "sg",                    // sg | pl  (les parents: pl)
   "image": "👵",
+  "level": "basis",                  // basis | erweitert | expert, siehe Abschnitt 2
   "tags": ["wf:famille"],
   "concept": "grandmother",          // optional, verknüpft Sprachen
   "aliases": ["lernziel-2-007"]      // frühere IDs, damit alter Lernstand passt
@@ -115,7 +118,64 @@ Damit wächst jede neue Unit mit Wortliste plus Feldern automatisch um
 Grammatik-Übungen. Handgeschriebene `drills` bleiben für alles, was sich nicht
 erzeugen lässt.
 
-## 2. Fehlerspeicher und Schwächenprofil
+## 2. Niveaus: Basis, Erweitert, Expert
+
+Ein Schalter in der Auswahl, gilt für alle Aufgaben und Spiele und bleibt pro
+Person gespeichert. Er ersetzt das heutige einfach/mittel/schwer (alte
+Einstellung wird übernommen: `easy` → `basis`, `medium` → `erweitert`,
+`hard` → `expert`).
+
+Ein einziger Schalter statt getrennter Regler für «Wortumfang» und
+«Schwierigkeit» – für die Unterstufe ist eine Wahl verständlicher als zwei.
+Das Niveau wirkt auf zwei Ebenen:
+
+### Welche Wörter
+
+Jedes Item trägt ein `level`. Wo das Lehrmittel eine Einteilung hat, wird sie
+übernommen:
+
+| Niveau | Wortumfang | Herkunft bei *dis donc!* |
+|---|---|---|
+| Basis | Grundwortschatz | «Vocabulaire» |
+| Erweitert | + erweiterter Wortschatz | «Vocabulaire plus», Randvokabeln der Buchseiten |
+| Expert | + Wendungen und Sätze, Wiederholung aus früheren Units | Satz-Items (`pos: phrase`), ältere Sections |
+
+Ein Niveau schliesst die darunterliegenden ein. Decks ohne Einteilung
+(DoubleDecker, Young World) haben überall `basis` – dort wirkt das Niveau nur
+auf die Aufgabenform. Beim Import (`/voci-unit`, `curate.html`) wird `level`
+eine eigene Spalte.
+
+### Wie schwer die Aufgabe ist
+
+| Aufgabe | Basis | Erweitert | Expert |
+|---|---|---|---|
+| *terms* | 4 Optionen, unähnliche Ablenker | 6 Optionen, ähnliche Ablenker | 8 Optionen, Verwechslungspaare bevorzugt |
+| *spelling* | 4 Optionen, offensichtliche Fehler | 6 Optionen, alle Fehlerarten | 8 Optionen, kombinierte Fehler |
+| *writing* | Artikel vorgegeben (*la ___*), fehlende Akzente toleriert mit Hinweis | Artikel selbst schreiben, Akzente zählen | wie Erweitert, ohne Hinweis nach dem ersten Fehler |
+| Grammatik-Drills | Auswahl per Knopf (*mon / ma / mes*) | Lücke tippen | Form umbilden oder ganzen Ausdruck schreiben (*ma tante* → *mes tantes*) |
+| Kreuzworträtsel | 6–8 Wörter, erster Buchstabe steht, Akzente tolerant, Emoji-Hinweis | 10 Wörter, keine Buchstaben vorgegeben, Akzente zählen | 12–14 Wörter, nur deutscher Hinweis, Zeit zählt |
+| Genus-Sortierer | *le / la* | + *l'* und *les* (Genus muss man wissen) | *mon / ma / mes*, höheres Tempo |
+| Speed-Runde | 90 s, Auswahl | 60 s, Auswahl | 45 s, tippen |
+| Pendu | 8 Fehlversuche | 6 | 4, Akzente zählen |
+| Satzbau | 3–4 Kärtchen | + Satzzeichen | + ein überzähliges Kärtchen |
+| Memory | 6 Paare mit Emoji | 8 Paare | 10 Paare, nur Wörter |
+
+Die Werte sind Startwerte und stehen in einer Tabelle im Code (wie heute
+`DIFFICULTY` in `spelling.js` und `optionCount()` in `util.js`), damit sie
+sich nach den ersten Erfahrungen in der Klasse leicht anpassen lassen.
+
+### Niveau im Lernstand
+
+- Jedes Event speichert das Niveau, auf dem geübt wurde.
+- Ein Wort steigt im Leitner-Fach nur auf, wenn es mindestens auf *Erweitert*
+  richtig war; auf *Basis* gilt es als «erkannt», nicht als «sicher».
+- Hat jemand auf einem Niveau über mehrere Runden fast alles auf Anhieb
+  richtig, **schlägt** die App das nächste Niveau vor. Sie wechselt nie von
+  selbst.
+- Challenges werden immer auf einem festen Niveau gespielt und nur mit
+  Partien desselben Niveaus verglichen.
+
+## 3. Fehlerspeicher und Schwächenprofil
 
 Das ist der Kern von v2. Heute speichert `logAttempt` pro Wort nur `correct`
 und `tries` – **was** falsch eingegeben wurde, geht verloren.
@@ -130,6 +190,7 @@ und `tries` – **was** falsch eingegeben wurde, geht verloren.
   "grammarId": "fr.possessif",       // falls Grammatik-Aufgabe
   "skill": "produce",                // recognize | spell | produce | grammar
   "source": "quiz",                  // quiz | drill | game | challenge
+  "level": "erweitert",              // Niveau, auf dem geübt wurde
   "game": null,                      // z. B. "crossword"
   "correct": false,                  // auf Anhieb gewusst
   "tries": 1,
@@ -191,7 +252,7 @@ macht spätere Sync- und Regeländerungen ungefährlich.
 4. **Ansicht «Meine Stolpersteine»** für die SuS selbst: die fünf häufigsten
    Fehlerarten mit Beispiel und Knopf «gezielt üben».
 
-## 3. Minispiele
+## 4. Minispiele
 
 Jedes Spiel ist ein Modul wie die Modi in `js/modes/`: es bekommt eine
 Wortmenge und einen Zufallsgenerator, baut daraus eine Partie, prüft Eingaben
@@ -212,20 +273,20 @@ Genus-Sortierer (die einzige Grammatik als Spiel), dann Speed-Runde.
 
 ### Kreuzworträtsel im Detail
 
-- 8–12 Wörter aus der gewählten Section, bevorzugt schwache (im Übungsmodus;
+- Wortzahl je nach Niveau (Abschnitt 2), aus der gewählten Section, bevorzugt schwache (im Übungsmodus;
   in einer Challenge entscheidet der Seed, siehe unten).
 - Nur Items mit einem Lemma ohne Leerzeichen. Bindestriche (*grand-mère*) sind
   vorgegebene Felder.
 - Hinweis: deutsches Wort, Emoji falls vorhanden, Genus als (m)/(f).
-- Akzente: Ein Buchstabe ohne Akzent ist auf *einfach* richtig, auf *mittel*
-  und *schwer* nicht. Eine Akzentleiste (é è ê à ç ô …) über der Tastatur
+- Akzente: Ein Buchstabe ohne Akzent ist auf *Basis* richtig, auf *Erweitert*
+  und *Expert* nicht. Eine Akzentleiste (é è ê à ç ô …) über der Tastatur
   liefert das Sprachprofil.
 - Jedes fertig eingetragene Wort wird als Event geloggt, Fehlversuche mit
   Eingabe und Klasse.
 - Aufbau des Gitters: gieriges Platzieren mit Kreuzungen, dichtestes von ein
   paar Versuchen gewinnt. Mit festem Seed kommt immer dasselbe Gitter heraus.
 
-## 4. Challenges zwischen SuS
+## 5. Challenges zwischen SuS
 
 Eine Challenge ist **dieselbe Partie für zwei oder mehr Personen**. Das geht
 ohne Server, wenn eine Partie vollständig durch ihre Parameter bestimmt ist:
@@ -233,7 +294,7 @@ ohne Server, wenn eine Partie vollständig durch ihre Parameter bestimmt ist:
 ```jsonc
 // im URL-Fragment: …/#c=<base64url>
 { "v": 1, "game": "crossword", "deck": "fr-disdonc-1", "ver": 5,
-  "sections": ["u2.lz2"], "seed": 48213,
+  "sections": ["u2.lz2"], "level": "erweitert", "seed": 48213,
   "score": 920, "ms": 74000, "alias": "Renard 7" }
 ```
 
@@ -260,7 +321,7 @@ Person der Klasse, Bestenliste pro Klasse.
 - Punkte zählen Genauigkeit vor Tempo: ein Fehler kostet mehr, als
   Schnelligkeit einbringt. So lohnt sich Raten nicht.
 
-## 5. Weitere Sprachen: Sprachprofil
+## 6. Weitere Sprachen: Sprachprofil
 
 Was sprachabhängig ist, steht in `data/languages/<code>.json`, nicht im Code:
 
@@ -287,7 +348,7 @@ Was sprachabhängig ist, steht in `data/languages/<code>.json`, nicht im Code:
 
 Oberflächensprache (Deutsch) bleibt getrennt von Ausgangs- und Zielsprache.
 
-## 6. Login, Sync, KI – was das Modell dafür vorbereitet
+## 7. Login, Sync, KI – was das Modell dafür vorbereitet
 
 - **Login:** `userId` steht schon in jedem Event. Beim ersten Login wird
   `local` auf die echte Kennung umgeschrieben; der Stand vor dem Login bleibt.
@@ -304,23 +365,27 @@ Oberflächensprache (Deutsch) bleibt getrennt von Ausgangs- und Zielsprache.
   gehen). Anfragen nur über einen eigenen Proxy, keine Personendaten ans
   Modell.
 
-## 7. Umsetzung in Schritten
+## 8. Umsetzung in Schritten
 
 Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 
-1. **Apostroph-Normalisierung** in `normalize()`.
-2. **Fehlerspeicher:** `errors[]`, `skill`, `source`, `durationMs` im Event;
+1. ~~**Apostroph-Normalisierung** in `normalize()`~~ – erledigt, auf `main`
+   (81462d3).
+2. **Niveau-Schalter Basis / Erweitert / Expert** statt einfach/mittel/schwer,
+   alte Einstellung übernehmen, Tabelle der Startwerte für die bestehenden
+   Modi. Klein und sofort sichtbar.
+3. **Fehlerspeicher:** `errors[]`, `skill`, `source`, `durationMs` im Event;
    Klassifizierer `js/learning/errors.js`; *spelling*-Optionen tragen ihre
    Operation mit. IndexedDB Version 3 mit Index `byUserItem`. Ab hier sammeln
    sich Daten, auch wenn noch nichts sie anzeigt.
-3. **Inhaltsmodell v2:** Course/Unit/Section, stabile IDs mit `aliases`,
-   Felder `lemma`/`gender`/`number`/`pos`/`tags`; Migrationsskript für die
+4. **Inhaltsmodell v2:** Course/Unit/Section, stabile IDs mit `aliases`,
+   Felder `lemma`/`gender`/`number`/`pos`/`level`/`tags`; Migrationsskript für die
    drei bestehenden Decks; `/voci-unit` und `curate.html` um die neuen Felder
    erweitern.
-4. **Unité 2 importieren** (Wortschatz + Felder) und GrammarPoints
+5. **Unité 2 importieren** (Wortschatz + Felder) und GrammarPoints
    *possessif*, *être 3p*, *s'appeler*, *c'est/ce sont* mit Generatoren.
-5. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
-6. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
-7. **Challenge-Links** (Stufe A).
-8. Login, Sync, Klassenansicht, Challenges Stufe B.
-9. KI-Agent.
+6. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
+7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
+8. **Challenge-Links** (Stufe A).
+9. Login, Sync, Klassenansicht, Challenges Stufe B.
+10. KI-Agent.
