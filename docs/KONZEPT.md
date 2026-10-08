@@ -10,6 +10,11 @@ Die App ist ein **Selbstlernmodul für Wortschatz und Grammatik**. Aus jeder
 Unit wird nur übernommen, was dem Spracherwerb im engeren Sinn dient. Lesetexte,
 Plakat, Steckbrief, Lied und Sprachfamilien bleiben im Buch.
 
+Sie ist ein **freiwilliges Angebot neben dem Unterricht**, nicht ein Werkzeug
+für die ganze Klasse. Wer sie nutzt, tut es für sich. Daraus folgt: keine
+Klassenverwaltung, keine Zuweisungen, keine Auswertung einzelner SuS durch
+die Lehrperson. Alles muss ohne Anleitung im Unterricht verständlich sein.
+
 Vier Dinge machen den Unterschied zu einer Wortliste:
 
 1. **Fehler werden einzeln gespeichert**, nicht nur «richtig/falsch». Daraus
@@ -162,7 +167,7 @@ eine eigene Spalte.
 
 Die Werte sind Startwerte und stehen in einer Tabelle im Code (wie heute
 `DIFFICULTY` in `spelling.js` und `optionCount()` in `util.js`), damit sie
-sich nach den ersten Erfahrungen in der Klasse leicht anpassen lassen.
+sich nach den ersten Erfahrungen leicht anpassen lassen.
 
 ### Niveau im Lernstand
 
@@ -299,23 +304,25 @@ ohne Server, wenn eine Partie vollständig durch ihre Parameter bestimmt ist:
 ```
 
 **Stufe A – sofort möglich, ohne Server.**
-Partie spielen → «Herausfordern» → Link oder QR-Code teilen (Teams, Klassen-
-chat, Beamer). Wer den Link öffnet, spielt dasselbe Gitter und sieht danach
+Partie spielen → «Herausfordern» → Link oder QR-Code an Freundinnen und
+Freunde schicken (Chat, Teams). Wer den Link öffnet, spielt dasselbe Gitter und sieht danach
 den Vergleich. Die Daten stehen im `#`-Fragment, das nie an einen Server
 geht. Statt Namen gibt es zufällige Spitznamen (*Renard 7*). Ein Link lässt
-sich fälschen – für ein Spiel unter Klassenkameraden ist das in Ordnung.
+sich fälschen – für ein Spiel unter Freunden ist das in Ordnung.
 
 Technisch braucht das nur einen Zufallsgenerator mit Seed (z. B. mulberry32)
 statt `Math.random()` bei der Partie-Erzeugung und eine Warnung, wenn die
 Deck-Version im Link nicht mehr zum Stand passt.
 
 **Stufe B – mit Login.**
-Klassen-Challenge der Woche (alle dasselbe Gitter), Duell-Einladung an eine
-Person der Klasse, Bestenliste pro Klasse.
+- **Freunde:** über einen Freundescode verbinden; danach Herausforderungen
+  direkt in der App statt per Link, Ergebnisse bleiben sichtbar.
+- **Challenge der Woche:** ein Rätsel pro Unit und Niveau für alle, die die App
+  nutzen – Bestenliste mit Spitznamen.
 
 **Pädagogische Leitplanken**
-- Standard ist «gegen die eigene Bestzeit». Die Bestenliste der Klasse ist
-  eine Option, die die Lehrperson einschaltet.
+- Standard ist «gegen die eigene Bestzeit». In Bestenlisten erscheint nur,
+  wer das selbst einschaltet.
 - Gezeigt werden die ersten Plätze und der eigene Platz, nie eine
   vollständige Rangliste mit letztem Platz.
 - Punkte zählen Genauigkeit vor Tempo: ein Fehler kostet mehr, als
@@ -360,8 +367,8 @@ freigeben. Stattdessen ein eigener, einfacher Login nach dem Vorbild von
 
 1. **Ohne Konto loslegen.** Wie heute: alles läuft lokal, nichts wird
    verlangt.
-2. **«Fortschritt sichern».** Spitzname wählen (kein voller Name), optional
-   Klassencode eingeben. Die App zeigt die **Zugangskarte**: QR-Code plus
+2. **«Fortschritt sichern».** Spitzname wählen (kein voller Name). Die App
+   zeigt die **Zugangskarte**: QR-Code plus
    kurzer Code zum Abtippen (`KATZE-7Q4M-X2PL`). Karte drucken, als Bild
    speichern oder abfotografieren. Der bisherige Lernstand wandert ins Konto.
 3. **Auf einem anderen Gerät** den QR-Code mit der normalen Kamera scannen –
@@ -371,15 +378,17 @@ freigeben. Stattdessen ein eigener, einfacher Login nach dem Vorbild von
    verliert, bekommt per Mail einen Link und damit eine neue Karte; die alte
    wird ungültig.
 
-**Ablauf für die Lehrperson**
+**Wiederherstellung ohne Lehrperson.** Weil niemand eine Klassenliste führt,
+muss jede Person selbst wieder hineinkommen können:
 
-- Klasse anlegen → Klassencode. Oder umgekehrt: Spitznamen der Klasse
-  eintragen, die App legt die Konten an und druckt **alle Zugangskarten auf
-  einmal** – im selben A8-Format wie die Karteikarten (`js/ui/print.js`).
-- Verlorene Karte: in der Klassenliste «neue Karte» – die alte wird gesperrt.
-  So braucht in einer Klasse niemand eine E-Mail-Adresse.
-- Die Lehrperson sieht nur Spitznamen; die Zuordnung zu echten Namen führt
-  sie selbst, ausserhalb der App.
+- Die Karte lässt sich auf jedem angemeldeten Gerät jederzeit wieder anzeigen
+  oder neu ausstellen («Meine Zugangskarte»). Solange ein Gerät angemeldet
+  ist, ist nichts verloren.
+- Beim Sichern bietet die App die Karte als Bild zum Speichern und als
+  Druckvorlage an (A8 wie die Karteikarten, `js/ui/print.js`) und erinnert
+  freundlich an die E-Mail.
+- Ohne Karte, ohne angemeldetes Gerät und ohne E-Mail ist das Konto verloren.
+  Das sagt die App beim Sichern klar.
 
 **Sicherheit**
 
@@ -421,13 +430,16 @@ freigeben. Stattdessen ein eigener, einfacher Login nach dem Vorbild von
 - **Sync:** Events werden nur angehängt und tragen eine UUID. Sync heisst:
   noch nicht hochgeladene IDs schicken. Keine Konflikte, offline geht weiter.
   Der Lernstand wird auf jedem Gerät aus den Events berechnet.
-- **Lehrperson:** Schwächenprofil der Klasse (welche Fehlerklassen, welche
-  Wörter), Zuweisung von Sections mit Testtermin.
+- **Lehrperson:** keine Sicht auf einzelne SuS. Möglich und nützlich ist eine
+  **anonyme Gesamtstatistik** über alle Nutzenden: welche Wörter und
+  Fehlerklassen am meisten Mühe machen – als Rückmeldung für den Unterricht.
+- **Testtermine** bleiben wie heute im Inhalt (Titel bzw. Feld der Section),
+  da es keine Klassen gibt, an die man sie hängen könnte.
 - **KI-Agent:** liest das Schwächenprofil und arbeitet mit denselben
   Bausteinen. Naheliegend: «Erklär mir, warum hier *ma* und nicht *mon*» auf
   Basis des GrammarPoint; zusätzliche Drills zu den eigenen Fehlerklassen
-  (mit `origin: "ai"`, von der Lehrperson freigegeben, bevor sie an die Klasse
-  gehen). Anfragen nur über einen eigenen Proxy, keine Personendaten ans
+  (mit `origin: "ai"`, von der Lehrperson geprüft, bevor sie allen angeboten
+  werden). Anfragen nur über einen eigenen Proxy, keine Personendaten ans
   Modell.
 
 ## 8. Umsetzung in Schritten
@@ -452,6 +464,6 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 6. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
 7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
 8. **Challenge-Links** (Stufe A).
-9. Login mit Zugangskarte, Sync, Klassenansicht mit Kartendruck,
-   Challenges Stufe B.
+9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik, Challenges
+   Stufe B.
 10. KI-Agent.
