@@ -63,6 +63,35 @@ Der Lernstand wird nicht gespeichert, sondern bei jedem Öffnen aus den
 protokollierten Antworten berechnet (`js/learning/mastery.js`). Eine geänderte
 Regel gilt darum sofort für alles Bisherige.
 
+## Spiele
+
+Unter **Spielen** stehen, sobald die gewählten Wörter es hergeben:
+
+| Spiel | Worum es geht | Basis | Erweitert | Expert |
+|---|---|---|---|---|
+| **Kreuzworträtsel** | deutscher Hinweis, das Wort der Zielsprache ins Gitter | 7 Wörter, erster Buchstabe steht, fehlende Akzente gelten | 10 Wörter, Akzente zählen | 13 Wörter, ohne Bild-Hinweis und ohne Tipp nach einem Fehler |
+| **Genus-Sortierer** | fallende Wörter ins richtige Fach | *le* / *la* | männlich / weiblich, auch bei *l'* und *les* | *mon* / *ma* / *mes*, schneller |
+| **Speed-Runde** | so viele Wörter wie möglich | 90 s, aus vier wählen | 60 s | 45 s, tippen |
+
+Jede Antwort in einem Spiel landet im selben Protokoll wie die des Quiz
+(`source: "game"`, `game: "<id>"`) – mit Eingabe und Fehlerklasse. Das
+Kreuzworträtsel zählt für die Lernkartei wie selbst geschrieben; der
+Genus-Sortierer übt eine Regel und bewegt keine Karte, seine Fehler stehen
+aber in «Meine Stolpersteine».
+
+Punkte belohnen Genauigkeit vor Tempo: Im Kreuzworträtsel gibt ein Wort 100
+Punkte, jeder Fehlversuch und jeder aufgedeckte Buchstabe kostet 30. In der
+Speed-Runde kostet ein Fehler so viel, wie ein Treffer bringt.
+
+Ein Spiel ist ein Modul unter `js/games/` mit `available(deck, items, level)`
+und `start(context)`; `host.js` stellt Bildschirm, Protokoll und Ergebnis.
+Der Genus-Sortierer erscheint nur bei Sprachen, deren Profil ein Geschlecht
+kennt (`js/learning/languages.js`) – Englisch hat ihn nicht.
+
+Der Zufall der Spiele hat einen Startwert (`js/games/rng.js`): Dieselben
+Wörter und derselbe Startwert ergeben dieselbe Partie. Darauf bauen die
+Challenges.
+
 ## Drucken
 
 In der Lektionsauswahl unter **Drucken**: die gewählten Wörter entweder als
@@ -94,7 +123,10 @@ js/
   modes/            Lernmodi (terms, spelling, writing) und exercise
   learning/         Niveaus, Fehlerklassen, Sprachprofile, Aufgaben-Generatoren,
                     Lernstand (mastery.js rechnet, insight.js liest aus dem Speicher)
-  ui/               Screens, Lektionsauswahl, Scoreboard, Druck, Belohnung
+  games/            Spiele: host.js (Rahmen), crossword, sorter, speed,
+                    crosswordGrid.js (Gitter), rng.js (Zufall mit Startwert)
+  ui/               Screens, Lektionsauswahl, Scoreboard, Druck, Belohnung,
+                    «Meine Stolpersteine»
   speech/tts.js     Sprachausgabe
   speech/assess.js  Schnittstelle für die spätere Ausspracheprüfung
 data/decks/         Mitgelieferte Wortschätze als JSON

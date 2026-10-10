@@ -138,6 +138,12 @@
                     <div id="exercise-list" class="modes"></div>
                     <p class="hint">Übungen zu den gewählten Lektionen – Grammatik und Sachwissen.</p>
                 </div>
+
+                <div id="game-block" hidden>
+                    <span class="label">Spielen</span>
+                    <div id="game-list" class="modes"></div>
+                    <p class="hint">Mit den gewählten Wörtern – auch die Spiele merken sich, was noch nicht sitzt.</p>
+                </div>
             </div>
 
             <details class="card">
@@ -231,6 +237,39 @@
                 <button type="button" id="result-missed" class="primary">Fehler wiederholen</button>
                 <button type="button" id="result-again">ganze Runde nochmals</button>
                 <button type="button" id="result-home" class="link">zur Auswahl</button>
+            </div>
+        </section>
+
+        <!-- Spiel -->
+        <section id="screen-game" class="screen" hidden>
+            <div class="row spread">
+                <div>
+                    <h1 id="game-title"></h1>
+                    <p id="game-subtitle" class="hint"></p>
+                </div>
+                <button type="button" id="game-home" class="link">abbrechen</button>
+            </div>
+            <p id="game-status" class="scoreboard" role="status"></p>
+            <div id="game-stage" class="game-stage"></div>
+        </section>
+
+        <!-- Spielergebnis -->
+        <section id="screen-game-result" class="screen" hidden>
+            <h1>Geschafft!</h1>
+            <p id="game-result-score" class="prompt"></p>
+            <p id="game-result-detail" class="hint center"></p>
+
+            <div id="game-result-compare" class="card center" hidden></div>
+
+            <div id="game-result-missed-box" class="card" hidden>
+                <h2>Das war noch nicht sicher</h2>
+                <ul id="game-result-list" class="result-list"></ul>
+            </div>
+
+            <div class="modes">
+                <button type="button" id="game-again" class="primary">nochmals spielen</button>
+                <button type="button" id="game-challenge">Freunde herausfordern</button>
+                <button type="button" id="game-result-home" class="link">zur Auswahl</button>
             </div>
         </section>
 

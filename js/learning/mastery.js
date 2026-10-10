@@ -50,7 +50,9 @@ export function projectMastery(attempts) {
     const byItem = new Map();
 
     for (const attempt of [...attempts].sort((a, b) => a.ts - b.ts)) {
-        if (attempt.mode === 'exercise') continue;
+        // Übungsaufgaben und der Genus-Sortierer üben eine Regel, nicht das
+        // Wort – sie bewegen keine Karte.
+        if (attempt.mode === 'exercise' || attempt.skill === 'apply') continue;
 
         let entry = byItem.get(attempt.itemId);
         if (!entry) {

@@ -618,7 +618,9 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 6. ~~**Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine»~~ –
    erledigt auf `v2`, dazu Hinweise nach Fehlerart, Verwechslungspaare als
    Ablenker und der Niveau-Vorschlag nach drei fast fehlerfreien Runden.
-7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
+7. ~~**Kreuzworträtsel**, **Genus-Sortierer**, **Speed-Runde**~~ – erledigt
+   auf `v2`. Im Kreuzworträtsel werden im Übungsmodus unsichere Wörter
+   bevorzugt; das Gitter selbst hängt nur am Startwert und an der Wortliste.
 8. **Challenge-Links** (Stufe A).
 9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik.
 10. **Freunde per Code**, Online-Status, Eingang «Herausforderungen»

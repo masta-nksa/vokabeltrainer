@@ -12,6 +12,8 @@ import {
 } from '../js/learning/mastery.js';
 import { aliasMap, canonicalize } from '../js/learning/insight.js';
 import * as terms from '../js/modes/terms.js';
+import { createRng, seededShuffle } from '../js/games/rng.js';
+import { buildGrid, cellsOf } from '../js/games/crosswordGrid.js';
 
 let failures = 0;
 const check = (name, condition) => {
@@ -330,6 +332,58 @@ const confusedQuestion = terms.buildQuestion(
     'erweitert', course, { confusions: new Map([['tante', ['oncle']]]) });
 check('verwechseltes Wort kommt als Ablenker', confusedQuestion.options.includes('ein Onkel') && confusedQuestion.options.length === 6);
 check('Hinweis zur Fehlerart', hintFor({ type: 'gender' }).includes('Geschlecht') && hintFor({ type: 'unknown' }) === null);
+
+m = projectMastery([att('a', 0, true, { mode: 'sorter', skill: 'apply' })]);
+check('Genus-Sortierer bewegt keine Karte', m.size === 0);
+m = projectMastery([att('a', 0, true, { mode: 'crossword', game: 'crossword' })]);
+check('Kreuzworträtsel zählt wie selbst geschrieben', m.get('a').box === 1);
+
+// ------------------------------------------------------------- Spiele
+
+const sameSeed = [createRng(42), createRng(42)].map(rng => [rng(), rng(), rng()].join());
+check('gleicher Startwert → gleiche Zufallsfolge', sameSeed[0] === sameSeed[1]);
+check('anderer Startwert → andere Folge', createRng(1)() !== createRng(2)());
+check('gemischt wird mit dem Startwert',
+    seededShuffle([1, 2, 3, 4, 5, 6], createRng(7)).join() === seededShuffle([1, 2, 3, 4, 5, 6], createRng(7)).join());
+
+const gridWords = ['famille', 'mère', 'père', 'parents', 'sœur', 'frère', 'grand-mère', 'tante', 'oncle', 'cousine']
+    .map(word => ({ id: word, word }));
+const gridA = buildGrid(gridWords, createRng(5));
+const gridB = buildGrid(gridWords, createRng(5));
+check('gleiche Wörter und Startwert → gleiches Gitter', JSON.stringify(gridA) === JSON.stringify(gridB));
+check('fast alle Wörter finden Platz', gridA.entries.length >= gridWords.length - 1);
+check('Gitter bleibt in der Grösse', gridA.width <= 14 && gridA.height <= 14);
+
+// Jede Zelle trägt genau einen Buchstaben, und im Gitter stehen nur die
+// gesetzten Wörter – keine zufälligen Nachbarschaften.
+const letterAt = new Map();
+let consistent = true;
+for (const entry of gridA.entries) {
+    for (const cell of cellsOf(entry)) {
+        const k = `${cell.row},${cell.col}`;
+        if (letterAt.has(k) && letterAt.get(k) !== cell.letter) consistent = false;
+        letterAt.set(k, cell.letter);
+    }
+}
+check('Kreuzungen tragen denselben Buchstaben', consistent);
+
+const runs = [];
+for (const [dr, dc] of [[0, 1], [1, 0]]) {
+    for (const k of letterAt.keys()) {
+        const [r, c] = k.split(',').map(Number);
+        if (letterAt.has(`${r - dr},${c - dc}`)) continue; // nicht der Anfang
+        let text = '';
+        for (let i = 0; letterAt.has(`${r + dr * i},${c + dc * i}`); i++) text += letterAt.get(`${r + dr * i},${c + dc * i}`);
+        if ([...text].length > 1) runs.push(text);
+    }
+}
+check('keine ungewollten Wörter im Gitter',
+    runs.length === gridA.entries.length && runs.every(text => gridWords.some(entry => entry.word === text)));
+check('jedes Wort hat mindestens eine Kreuzung',
+    gridA.entries.every(entry => cellsOf(entry).some(cell =>
+        gridA.entries.some(other => other !== entry && cellsOf(other).some(o => o.row === cell.row && o.col === cell.col)))));
+check('Nummern steigen in Leserichtung',
+    gridA.entries.every((entry, i) => i === 0 || entry.number >= gridA.entries[i - 1].number));
 
 console.log(failures === 0 ? '\nAlle Prüfungen bestanden.' : `\n${failures} Prüfung(en) fehlgeschlagen.`);
 process.exit(failures === 0 ? 0 : 1);

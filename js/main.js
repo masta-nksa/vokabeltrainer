@@ -16,6 +16,7 @@ import * as lessonSelect from './ui/lessonSelect.js';
 import * as print from './ui/print.js';
 import * as reward from './ui/reward.js';
 import * as quiz from './quiz.js';
+import * as games from './games/host.js';
 
 const HEROES = {
     'Iron Man': 'img/ironman.gif',
@@ -101,8 +102,33 @@ function onSelectionChange() {
         : `${count} Wörter ausgewählt`;
 
     renderVoicePicker();
+    refreshGames();
     refreshExercises().catch(error => console.warn('Übungen nicht geladen:', error));
     refreshInsight().catch(error => console.warn('Lernstand nicht geladen:', error));
+}
+
+// ------------------------------------------------------------ Spielen
+
+/** Zeigt die Spiele, die mit den gewählten Wörtern auf diesem Niveau gehen. */
+function refreshGames() {
+    const deck = state.deck;
+    const block = document.getElementById('game-block');
+    const list = document.getElementById('game-list');
+    const items = selectedItems();
+
+    const available = deck ? games.availableGames(deck, items, state.level) : [];
+    list.replaceChildren();
+
+    for (const game of available) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = game.label;
+        button.title = game.description;
+        button.addEventListener('click', () => games.play(game.id, deck, items));
+        list.append(button);
+    }
+
+    block.hidden = available.length === 0;
 }
 
 function selectedItems() {
@@ -461,6 +487,7 @@ async function main() {
     initImport();
     print.init();
     quiz.init({ onLeave: openSelection, onLevelUp: setLevel });
+    games.init({ onLeave: openSelection, onChallenge() {} });
 
     await ensureBuiltinDecks();
 
