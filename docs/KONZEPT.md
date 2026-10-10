@@ -1,6 +1,6 @@
 # Konzept v2 – Selbstlernmodul Wortschatz & Grammatik
 
-Stand 8. Oktober 2026. Ausgangspunkt war die Durchsicht von *dis donc!*
+Stand 10. Oktober 2026. Ausgangspunkt war die Durchsicht von *dis donc!*
 Unité 2 (Buchseiten 44–73) und die Frage, wie die App wachsen kann: neue
 Units, Login, KI-Agent, weitere Sprachen, Minispiele.
 
@@ -345,8 +345,9 @@ Die Freundesliste zeigt pro Person einen von drei Zuständen:
 | am Lernen | grün | App offen |
 | bereit zum Battle | grün mit ⚔️ | hat «Battle-bereit» eingeschaltet |
 
-- Der Zustand verschwindet von selbst, wenn die App geschlossen wird oder die
-  Verbindung abreisst – niemand bleibt fälschlich «online».
+- Der Zustand verschwindet von selbst: Die App meldet sich regelmässig, und
+  wer 90 Sekunden nichts meldet, gilt als offline. Im Prototyp kann die
+  Anzeige also bis zu anderthalb Minuten nachhinken (Abschnitt 7).
 - Schalter **«unsichtbar»**: man erscheint offline und bekommt keine
   Live-Einladungen, nur Challenges im Eingang.
 - Was jemand gerade übt, wird nicht angezeigt – nur *dass* er online ist.
@@ -443,99 +444,178 @@ Was sprachabhängig ist, steht in `data/languages/<code>.json`, nicht im Code:
 
 Oberflächensprache (Deutsch) bleibt getrennt von Ausgangs- und Zielsprache.
 
-## 7. Login, Sync, KI – was das Modell dafür vorbereitet
+## 7. Login, Sync, KI
+
+Stand 10. Oktober 2026: Der nächste Ausbau ist ein **Prototyp ohne laufende
+Kosten**. Was dafür nicht gratis geht, bleibt vorerst weg.
 
 ### Login mit Zugangskarte (unabhängig von der Schul-IT)
 
 Kein Microsoft-Login: Dafür müsste die Schul-IT die App im Schulkonto
 freigeben. Stattdessen ein eigener, einfacher Login nach dem Vorbild von
-*Anton* – Spitzname plus Zugangskarte mit QR-Code, E-Mail nur optional.
+*Anton* – Spitzname plus Zugangskarte mit Code.
 
 **Ablauf für SuS**
 
 1. **Ohne Konto loslegen.** Wie heute: alles läuft lokal, nichts wird
-   verlangt.
+   verlangt. Wer nur auf einem Gerät übt, braucht nie ein Konto.
 2. **«Fortschritt sichern».** Spitzname wählen (kein voller Name). Die App
-   zeigt die **Zugangskarte**: QR-Code plus
-   kurzer Code zum Abtippen (`KATZE-7Q4M-X2PL`). Karte drucken, als Bild
-   speichern oder abfotografieren. Der bisherige Lernstand wandert ins Konto.
+   legt das Konto an und zeigt die **Zugangskarte**: einen Code aus 16 Zeichen
+   in vier Gruppen (`KATZ-7Q4M-X2PL-9RTW`), dazu derselbe Code als QR-Code und
+   als Link. Karte drucken, als Bild speichern oder abfotografieren. Der
+   bisherige Lernstand wandert ins Konto.
 3. **Auf einem anderen Gerät** den QR-Code mit der normalen Kamera scannen –
-   er enthält einen Link (`…/#login=<geheimnis>`), der direkt eingeloggt
-   öffnet. Oder den kurzen Code eintippen. Das Gerät bleibt danach angemeldet.
-4. **Optional E-Mail** (eigene oder die der Eltern) hinterlegen. Wer die Karte
-   verliert, bekommt per Mail einen Link und damit eine neue Karte; die alte
-   wird ungültig.
+   er enthält einen Link (`…/#login=<code>`), der direkt angemeldet öffnet.
+   Oder den Code eintippen. Das Gerät bleibt danach angemeldet.
 
 **Wiederherstellung ohne Lehrperson.** Weil niemand eine Klassenliste führt,
 muss jede Person selbst wieder hineinkommen können:
 
 - Die Karte lässt sich auf jedem angemeldeten Gerät jederzeit wieder anzeigen
-  oder neu ausstellen («Meine Zugangskarte»). Solange ein Gerät angemeldet
-  ist, ist nichts verloren.
+  («Meine Zugangskarte»). Solange ein Gerät angemeldet ist, ist nichts
+  verloren.
+- **«Neue Karte ausstellen»** macht die alte ungültig und meldet alle anderen
+  Geräte ab – das ist zugleich das Mittel gegen eine abfotografierte Karte.
 - Beim Sichern bietet die App die Karte als Bild zum Speichern und als
-  Druckvorlage an (A8 wie die Karteikarten, `js/ui/print.js`) und erinnert
-  freundlich an die E-Mail.
-- Ohne Karte, ohne angemeldetes Gerät und ohne E-Mail ist das Konto verloren.
-  Das sagt die App beim Sichern klar.
+  Druckvorlage an (A8 wie die Karteikarten, `js/ui/print.js`).
+- Ohne Karte und ohne angemeldetes Gerät ist das Konto verloren. Das sagt die
+  App beim Sichern klar. Der Lernstand auf dem Gerät selbst bleibt.
+
+Eine Wiederherstellung per E-Mail gibt es im Prototyp nicht (siehe «Was der
+Prototyp weglässt»).
 
 **Sicherheit**
 
-- Der QR-Code trägt ein langes Zufallsgeheimnis (128 Bit) – er ist das
-  Passwort. Gespeichert wird auf dem Server nur ein Hash davon.
-- Der kurze Abtipp-Code ist kürzer und darum mit Versuchsbegrenzung
-  geschützt (wenige Fehlversuche pro Minute).
-- Das Geheimnis steht im `#`-Teil des Links. Der geht nie an einen Server und
-  in kein Server-Log; die App entfernt ihn nach dem Login sofort aus der
+- Der Code ist Kennung und Passwort in einem: 6 Zeichen benennen das Konto,
+  10 sind das Geheimnis (rund 50 Bit). Firebase speichert davon nur einen
+  Hash und bremst Durchprobieren von selbst. Für Lernstände und Spielstände
+  reicht das; mehr steht im Konto nicht.
+- Im Link steht der Code im `#`-Teil. Der geht nie an einen Server und in
+  kein Server-Log; die App entfernt ihn nach dem Anmelden sofort aus der
   Adresszeile.
-- Jede Karte lässt sich sperren und ersetzen. Unter «Meine Geräte» sieht man,
-  wo man angemeldet ist, und kann Geräte abmelden.
+- Auf einem angemeldeten Gerät liegt der Code im Browserspeicher, damit die
+  Karte wieder angezeigt werden kann. Wer das Gerät hat, hat also auch die
+  Karte – wie bei jeder App, die angemeldet bleibt.
 - Restrisiko: Wer eine Karte abfotografiert, kann sich anmelden – wie bei
-  Anton. Für Lernstand und Spielstände vertretbar; darum keine weiteren
-  Personendaten im Konto.
+  Anton. Vertretbar, weil im Konto nur Spitzname und Lernstand stehen.
 
-**Technik (Firebase)**
+### Prototyp ohne laufende Kosten
 
-- Erster Start: anonymes Firebase-Konto (`signInAnonymously`), damit
-  Sync von Anfang an eine feste Kennung hat.
-- Zugangskarte: eine Serverfunktion speichert den Hash des Geheimnisses zur
-  Kennung. Beim Scannen prüft sie den Hash und gibt ein Firebase-Login-Token
-  für **dieselbe** Kennung aus (`createCustomToken` → `signInWithCustomToken`).
-- E-Mail-Wiederherstellung: Firebase-Login per E-Mail-Link, an das Konto
-  gekoppelt; keine Passwörter.
-- Firebase-Konten liegen nicht in der Schweiz; dort steht darum nur die
-  Kennung und die optionale E-Mail. Lernstand und Spitzname liegen in
-  Firestore in Zürich (`europe-west6`).
-- **Online-Status und Live-Battle** über die Firebase *Realtime Database*:
-  Sie kann einen Eintrag automatisch löschen, wenn die Verbindung abreisst
-  (`onDisconnect`) – genau das, was ein ehrlicher Online-Status braucht – und
-  verteilt Battle-Fortschritt in Bruchteilen einer Sekunde an beide Geräte.
-  Sie steht nicht in Zürich, sondern in Belgien (`europe-west1`); dort liegen
-  nur kurzlebige Daten (online ja/nein, laufender Battle), die nach dem
-  Battle gelöscht werden.
-- Freunde, Challenges und Ergebnisse liegen dauerhaft in Firestore Zürich.
-- Ohne Microsoft-Login wäre auch Cloudflare (Workers + D1, Live-Teil mit
-  Durable Objects) möglich – dann aber E-Mail-Versand, Login-Sicherheit und
-  Online-Status selbst gebaut. Mit den Live-Funktionen spricht noch mehr für
-  Firebase: anonyme Konten, E-Mail-Links und Online-Status sind fertig und
-  erprobt.
+Ziel: Konto, Abgleich zwischen Geräten, Freunde, Herausforderungen und
+Live-Battle – ohne Kreditkarte und ohne eigenes Serverprogramm.
 
-**Datenablage**
+**Die Bausteine**
+
+| Aufgabe | Dienst | Kosten |
+|---|---|---|
+| Anmelden | Firebase Authentication, Gratis-Tarif «Spark» | 0 |
+| Lernstand, Freunde, Battles | Cloud Firestore in Zürich (`europe-west6`), Spark | 0 |
+| Die Seite selbst ausliefern | GitHub Pages wie bisher – oder Cloudflare Pages, sobald das Repo privat sein soll | 0 |
+
+Ein Serverprogramm (bei Firebase «Cloud Functions») gibt es im Gratis-Tarif
+nicht. Was es sonst täte, übernehmen hier die **Sicherheitsregeln** der
+Datenbank: Sie legen fest, wer welchen Datensatz lesen und schreiben darf,
+und laufen bei Google, nicht im Browser.
+
+**Grenzen des Gratis-Tarifs** (Stand Oktober 2026, laut Preisseite; können
+sich ändern)
+
+| Was | Grenze | Was das für uns heisst |
+|---|---|---|
+| Aktive Konten pro Monat | 50'000 | kein Thema |
+| Datenbank: Schreibvorgänge | 20'000 pro Tag | Antworten **gebündelt** speichern, nicht einzeln |
+| Datenbank: Lesevorgänge | 50'000 pro Tag | der Online-Status ist der grösste Verbraucher |
+| Datenbank: Speicher | 1 GiB | reicht für Jahre |
+| Neue Konten | 100 pro Stunde und Internetanschluss | nur relevant, wenn sehr viele gleichzeitig vom Schulnetz aus ein Konto anlegen |
+| Anmelde-Mails (Link) | 5 pro Tag | unbrauchbar – darum keine E-Mail-Anmeldung |
+| Passwort-zurücksetzen-Mails | 150 pro Tag | Weg für eine spätere E-Mail-Wiederherstellung |
+
+Wird eine Grenze erreicht, **kostet das nichts**: Die Datenbank nimmt bis zum
+nächsten Tag nichts mehr an. Weil die App alles zuerst lokal speichert, übt
+man weiter, und der Abgleich holt später auf. Nur Freunde und Battles
+pausieren.
+
+**Wie es mit den Grenzen zusammenpasst**
+
+- **Konto erst beim Sichern.** Wer nur lokal übt, erzeugt weder ein Konto
+  noch einen Datenbankzugriff.
+- **Eine Runde, ein Schreibvorgang.** Die Antworten einer Runde gehen als ein
+  Bündel in die Datenbank (rund 15 Antworten). 50 Lernende mit 20 Runden am
+  Tag sind 1'000 Schreibvorgänge.
+- **Online-Status als Lebenszeichen.** Die App meldet alle 60 Sekunden «bin
+  da», solange sie offen ist und jemand Freunde hat. Wer 90 Sekunden nichts
+  meldet, gilt als offline. Das ist etwas träger als eine echte
+  Live-Verbindung, kostet aber nichts und bleibt in derselben Datenbank in
+  Zürich. 30 Lernende, je eine Stunde online: 1'800 Schreibvorgänge.
+- **Live-Battle** schreibt pro Antwort einmal: ein Wort-Duell mit 10 Fragen
+  sind 20 Schreibvorgänge. Die Anzeige beim Gegenüber folgt in Bruchteilen
+  einer Sekunde.
+- **Challenge der Woche ohne Server.** Der Startwert ergibt sich aus
+  Kalenderwoche, Unit und Niveau – alle rechnen dasselbe Rätsel aus.
+
+Reicht der Online-Status so nicht (zu träge, zu viele Lesevorgänge), ist die
+*Realtime Database* von Firebase der nächste Schritt: ebenfalls gratis, mit
+echtem «Verbindung weg = offline», aber höchstens 100 gleichzeitige
+Verbindungen und Standort Belgien statt Zürich.
+
+**Technik**
+
+- Anmelden über Firebase mit Kennung und Passwort, erzeugt im Browser: Aus
+  den ersten 6 Zeichen des Codes wird eine technische Adresse
+  (`<kennung>@karte.invalid`), die restlichen 10 sind das Passwort. An diese
+  Adresse geht nie eine Mail. Als Erstes im Prototyp prüfen, ob Firebase die
+  Endung `.invalid` annimmt; sonst `<kennung>@<projekt>.firebaseapp.com`.
+- «Neue Karte» setzt ein neues Passwort; Firebase meldet damit alle anderen
+  Geräte ab.
+- Die Firebase-Bibliothek wird als Modul direkt von Google geladen – die App
+  bleibt ohne Build-Schritt.
+- Die Zugangsdaten des Firebase-Projekts stehen im Code und sind **kein
+  Geheimnis**; sie sagen nur, welches Projekt gemeint ist. Schutz bieten
+  allein die Sicherheitsregeln. Die gehören deshalb ins Repo und werden
+  getestet.
+- Der QR-Code auf der Karte braucht eine kleine Bibliothek (eine Datei,
+  freie Lizenz). Ohne sie funktioniert die Karte mit Code und Link.
+- Firebase-Konten selbst liegen nicht in der Schweiz; dort stehen darum nur
+  die technische Adresse und der Passwort-Hash. Spitzname, Lernstand und
+  Freunde liegen in Firestore in Zürich. Der Standort der Datenbank wird beim
+  Anlegen gewählt und lässt sich danach nicht mehr ändern.
+
+**Datenablage (Firestore, Zürich)**
 
 ```
-Firestore (Zürich, dauerhaft)
-  users/{uid}            Spitzname, Freundescode, roles, Einstellungen
-  friendships/{a_b}      Anfrage | befreundet | blockiert
-  challenges/{id}        von, an, Spiel, Niveau, Seed, Ergebnisse, verfällt
-  users/{uid}/events/…   Lern-Events (Sync)
-
-Realtime Database (Belgien, kurzlebig)
-  status/{uid}           offline | lernt | battle-bereit, zuletzt gesehen
-  invites/{uid}          offene Live-Einladung (60 s)
-  battles/{id}           Spieler, Seed, Start, Fortschritt je Spieler
+users/{uid}                    Spitzname, Freundescode, roles, Einstellungen
+users/{uid}/batches/{id}       Antworten einer Runde als Bündel (Abgleich)
+users/{uid}/friends/{uid2}     befreundet | blockiert, Spitzname
+users/{uid}/requests/{uid2}    offene Freundschaftsanfrage
+users/{uid}/inbox/{id}         Herausforderungen und Battle-Einladungen
+friendCodes/{code}             Freundescode → Konto
+presence/{uid}                 lernt | battle-bereit, letztes Lebenszeichen
+battles/{id}                   Spieler, Startwert, Fortschritt je Spieler
+weekly/{woche}/scores/{uid}    Challenge der Woche
 ```
 
-Regeln in der Datenbank sorgen dafür, dass man nur den Status von Freunden
-lesen und nur in eigene Battles schreiben kann.
+Die Regeln sorgen dafür, dass jede Person nur ihre eigenen Daten schreibt,
+den Status nur von Freunden liest, nur an Freunde Herausforderungen schickt
+und nur in eigene Battles schreibt. Punkte meldet der Browser selbst – wer
+will, kann sie fälschen. Für Spiele unter Freunden ist das in Ordnung.
+
+**Was der Prototyp weglässt**
+
+| Funktion | Warum nicht jetzt | Weg dorthin |
+|---|---|---|
+| Wiederherstellung per E-Mail | Anmelde-Mails sind auf 5 pro Tag begrenzt | über Passwort-zurücksetzen-Mails (150 pro Tag), wenn sich zeigt, dass Karten verloren gehen |
+| «Meine Geräte» mit Einzel-Abmeldung | Firebase zeigt dem Browser keine Geräteliste | «Neue Karte» meldet alle anderen ab – das genügt |
+| Anonyme Gesamtstatistik für die Lehrperson | bräuchte ein Serverprogramm, das zusammenzählt | jede Runde zählt in einen gemeinsamen Zähler hoch; nach dem Prototyp |
+| Ausspracheprüfung, KI-Agent | brauchen ein Serverprogramm für die Schlüssel, und die Dienste selbst kosten pro Aufruf | Cloudflare Worker als Vermittler (gratis); die Aufrufe bleiben kostenpflichtig |
+| Ehrlicher Online-Status in Echtzeit | Lebenszeichen alle 60 Sekunden genügt vorerst | Realtime Database |
+
+**Was du dafür tun musst** (einmalig, rund 15 Minuten, ohne Kreditkarte)
+
+1. Mit einem Google-Konto ein Firebase-Projekt anlegen.
+2. Firestore einschalten und als Standort **europe-west6 (Zürich)** wählen.
+3. Unter Authentication die Anmeldung «E-Mail/Passwort» einschalten.
+4. Die Adresse der App als erlaubte Domain eintragen.
+5. Mir die Web-Konfiguration des Projekts geben (kein Geheimnis).
 
 ### Weitere Vorbereitung
 
@@ -543,11 +623,13 @@ lesen und nur in eigene Battles schreiben kann.
   wird `local` auf die echte Kennung umgeschrieben; der Stand vor dem Login
   bleibt.
 - **Sync:** Events werden nur angehängt und tragen eine UUID. Sync heisst:
-  noch nicht hochgeladene IDs schicken. Keine Konflikte, offline geht weiter.
-  Der Lernstand wird auf jedem Gerät aus den Events berechnet.
+  noch nicht hochgeladene Antworten als Bündel schicken, auf einem neuen
+  Gerät alle Bündel holen. Keine Konflikte, offline geht weiter. Der
+  Lernstand wird auf jedem Gerät aus den Events berechnet.
 - **Lehrperson:** keine Sicht auf einzelne SuS. Möglich und nützlich ist eine
   **anonyme Gesamtstatistik** über alle Nutzenden: welche Wörter und
   Fehlerklassen am meisten Mühe machen – als Rückmeldung für den Unterricht.
+  Nicht im Prototyp.
 - **Testtermine** bleiben wie heute im Inhalt (Titel bzw. Feld der Section),
   da es keine Klassen gibt, an die man sie hängen könnte.
 - **KI-Agent:** liest das Schwächenprofil und arbeitet mit denselben
@@ -555,7 +637,8 @@ lesen und nur in eigene Battles schreiben kann.
   Basis des GrammarPoint; zusätzliche Drills zu den eigenen Fehlerklassen
   (mit `origin: "ai"`, von der Lehrperson geprüft, bevor sie allen angeboten
   werden). Anfragen nur über einen eigenen Proxy, keine Personendaten ans
-  Modell.
+  Modell. Nicht im Prototyp: Der Vermittler liesse sich gratis betreiben,
+  die KI-Aufrufe selbst kosten pro Nutzung.
 
 ### Später: Klassen (vorgesehen, nicht umgesetzt)
 
@@ -624,11 +707,15 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 8. ~~**Challenge-Links** (Stufe A)~~ – erledigt auf `v2`: Link mit Kopieren
    und Teilen, eingehende Herausforderung mit Vergleich. Noch ohne QR-Code –
    dafür bräuchte es eine QR-Bibliothek im Repo.
-9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik.
-10. **Freunde per Code**, Online-Status, Eingang «Herausforderungen»
-    (asynchrone Challenges im Konto).
-11. **Live-Battle** (Wort-Duell zuerst, dann Kreuzwort-Rennen und
-    Genus-Duell), Challenge der Woche.
-12. KI-Agent.
+9. **Prototyp, Teil 1:** Konto mit Zugangskarte und Abgleich zwischen
+   Geräten – Firebase im Gratis-Tarif, ohne Serverprogramm (Abschnitt 7).
+   Voraussetzung: das Firebase-Projekt.
+10. **Prototyp, Teil 2: Freunde per Code**, Online-Status als Lebenszeichen,
+    Eingang «Herausforderungen».
+11. **Prototyp, Teil 3: Live-Battle** (Wort-Duell zuerst, dann
+    Kreuzwort-Rennen und Genus-Duell), Challenge der Woche.
+12. *Nach dem Prototyp, soweit gewünscht:* Wiederherstellung per E-Mail,
+    anonyme Gesamtstatistik, Ausspracheprüfung und KI-Agent (die beiden
+    letzten kosten pro Aufruf).
 13. *Vielleicht später:* Klassen mit Klassencode, Kartendruck, Zuweisung,
     Klassenansicht.
