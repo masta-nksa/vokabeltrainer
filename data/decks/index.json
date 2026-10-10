@@ -16,7 +16,7 @@
       "id": "fr-disdonc",
       "title": "Französisch – dis donc!",
       "file": "data/decks/fr-disdonc.json",
-      "version": 1,
+      "version": 2,
       "replaces": [
         "fr-unite-1"
       ]

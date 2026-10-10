@@ -56,6 +56,7 @@ import * as db from './db.js';
  * @property {string} itemId    Wort-ID, bei Übungen die Aufgaben-ID
  * @property {string} mode      terms | spelling | writing | exercise
  * @property {string} [exerciseId]  nur bei mode "exercise": welches Übungsset
+ * @property {string} [grammarId]   welcher Grammatikpunkt geübt wurde
  * @property {string} [skill]   recognize | spell | produce | apply
  * @property {string} [source]  quiz | drill (später game, challenge, battle)
  * @property {import('../learning/levels.js').Level} [level]

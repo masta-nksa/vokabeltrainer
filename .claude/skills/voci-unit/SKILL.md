@@ -37,7 +37,17 @@ bestätigen lassen**:
 - welches Deck (`deckId`, `deckFile`, `deckTitle`, `sourceLang`, `targetLang`)
 - `unit.number` und `unit.title` (Titel des Blatts, z. B. „Unit 2 – Music")
 - `unit.code` – dem Deck folgen: DoubleDecker 3 / Unit 2 → `3_2`; Young World 2 /
-  Unit 5 → `2_5`. Im Zweifel an bestehenden Unit-IDs im Deck ablesen.
+  Unit 5 → `2_5`; dis donc! / Unité 3 → `u3`. Im Zweifel an bestehenden
+  Unit-IDs im Deck ablesen.
+
+**Französisch (*dis donc!*, Deck `fr-disdonc`)** ist nach Lernzielen
+gegliedert, nicht nach Tests. Dort im Entwurf `sections` statt `tests`
+verwenden, `idStyle: "slug"` setzen und pro Zeile `section` angeben. Die
+Wortliste «Vocabulaire» ist Grundwortschatz, «Vocabulaire plus» bekommt
+`level: "erweitert"`. Angaben wie «(m)» / «(f pl)» wandern in `gender` /
+`number`, Doppelformen («la mère, la maman») in `accept` – nichts davon
+bleibt im Lösungswort. Details in `tools/voci-import/README.md`. Die
+bisherigen Units (`u1`, `u2`) im Deck als Vorlage ansehen.
 
 ### 2. Seiten rendern
 

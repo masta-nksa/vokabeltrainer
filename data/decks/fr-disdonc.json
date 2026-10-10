@@ -4,7 +4,7 @@
   "sourceLang": "de",
   "targetLang": "fr",
   "builtin": true,
-  "version": 1,
+  "version": 2,
   "aliases": [
     "fr-unite-1"
   ],
@@ -12,6 +12,10 @@
     {
       "id": "u1",
       "title": "Unité 1"
+    },
+    {
+      "id": "u2",
+      "title": "Unité 2 – Drôle de famille"
     }
   ],
   "units": [
@@ -462,6 +466,499 @@
           "aliases": [
             "lernziel-3-014"
           ]
+        }
+      ]
+    },
+    {
+      "id": "u2-lz1",
+      "title": "Lernziel 1",
+      "group": "u2",
+      "items": [
+        {
+          "id": "u2-famille",
+          "source": "die Familie",
+          "target": "la famille",
+          "image": "👨‍👩‍👧‍👦",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "family"
+        },
+        {
+          "id": "u2-enfant",
+          "source": "ein Kind",
+          "target": "un enfant",
+          "accept": [
+            "une enfant"
+          ],
+          "image": "🧒",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "child"
+        },
+        {
+          "id": "u2-acteur",
+          "source": "ein Schauspieler",
+          "target": "un acteur",
+          "level": "erweitert",
+          "image": "🎭"
+        },
+        {
+          "id": "u2-cinema-muet",
+          "source": "der Stummfilm",
+          "target": "le cinéma muet",
+          "level": "erweitert",
+          "image": "🎬"
+        },
+        {
+          "id": "u2-marie",
+          "source": "verheiratet",
+          "target": "marié",
+          "accept": [
+            "mariée"
+          ],
+          "level": "erweitert",
+          "pos": "adj",
+          "image": "💍"
+        },
+        {
+          "id": "u2-onze",
+          "source": "elf",
+          "target": "onze",
+          "level": "erweitert"
+        },
+        {
+          "id": "u2-chapeau",
+          "source": "der Hut",
+          "target": "le chapeau",
+          "level": "erweitert",
+          "image": "🎩",
+          "tags": [
+            "wf:vetements"
+          ]
+        },
+        {
+          "id": "u2-pantalon",
+          "source": "die Hose",
+          "target": "le pantalon",
+          "level": "erweitert",
+          "image": "👖",
+          "tags": [
+            "wf:vetements"
+          ]
+        },
+        {
+          "id": "u2-chaussures",
+          "source": "die Schuhe",
+          "target": "les chaussures",
+          "level": "erweitert",
+          "gender": "f",
+          "number": "pl",
+          "image": "👞",
+          "tags": [
+            "wf:vetements"
+          ]
+        },
+        {
+          "id": "u2-canne",
+          "source": "der Stock",
+          "target": "la canne",
+          "level": "erweitert",
+          "image": "🦯",
+          "tags": [
+            "wf:vetements"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "u2-lz2",
+      "title": "Lernziel 2",
+      "group": "u2",
+      "items": [
+        {
+          "id": "u2-mere",
+          "source": "die Mutter",
+          "target": "la mère",
+          "accept": [
+            "la maman"
+          ],
+          "image": "👩",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "mother"
+        },
+        {
+          "id": "u2-pere",
+          "source": "der Vater",
+          "target": "le père",
+          "accept": [
+            "le papa"
+          ],
+          "image": "👨",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "father"
+        },
+        {
+          "id": "u2-parents",
+          "source": "die Eltern",
+          "target": "les parents",
+          "gender": "m",
+          "number": "pl",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "parents"
+        },
+        {
+          "id": "u2-soeur",
+          "source": "die Schwester",
+          "target": "la sœur",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "sister"
+        },
+        {
+          "id": "u2-frere",
+          "source": "der Bruder",
+          "target": "le frère",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "brother"
+        },
+        {
+          "id": "u2-grand-mere",
+          "source": "die Grossmutter",
+          "target": "la grand-mère",
+          "image": "👵",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "grandmother"
+        },
+        {
+          "id": "u2-grand-pere",
+          "source": "der Grossvater",
+          "target": "le grand-père",
+          "image": "👴",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "grandfather"
+        },
+        {
+          "id": "u2-grands-parents",
+          "source": "die Grosseltern",
+          "target": "les grands-parents",
+          "gender": "m",
+          "number": "pl",
+          "image": "👵👴",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "grandparents"
+        },
+        {
+          "id": "u2-tante",
+          "source": "die Tante",
+          "target": "la tante",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "aunt"
+        },
+        {
+          "id": "u2-oncle",
+          "source": "ein Onkel",
+          "target": "un oncle",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "uncle"
+        },
+        {
+          "id": "u2-cousine",
+          "source": "die Cousine",
+          "target": "la cousine",
+          "tags": [
+            "wf:famille"
+          ]
+        },
+        {
+          "id": "u2-cousin",
+          "source": "der Cousin",
+          "target": "le cousin",
+          "tags": [
+            "wf:famille"
+          ]
+        },
+        {
+          "id": "u2-bebe",
+          "source": "das Baby, das Kleinkind",
+          "target": "le bébé",
+          "image": "👶",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "baby"
+        },
+        {
+          "id": "u2-fille",
+          "source": "die Tochter, das Mädchen",
+          "target": "la fille",
+          "image": "👧",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "daughter"
+        },
+        {
+          "id": "u2-fils",
+          "source": "der Sohn",
+          "target": "le fils",
+          "image": "👦",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "son"
+        },
+        {
+          "id": "u2-voici",
+          "source": "hier ist",
+          "target": "voici"
+        },
+        {
+          "id": "u2-voila",
+          "source": "da ist",
+          "target": "voilà"
+        },
+        {
+          "id": "u2-il-est",
+          "source": "er ist",
+          "target": "il est"
+        },
+        {
+          "id": "u2-elle-est",
+          "source": "sie ist",
+          "target": "elle est"
+        },
+        {
+          "id": "u2-lionel-est-le-frere-de-nathalie",
+          "source": "Lionel ist der Bruder von Nathalie.",
+          "target": "Lionel est le frère de Nathalie."
+        },
+        {
+          "id": "u2-ils-sont",
+          "source": "sie sind",
+          "target": "ils sont",
+          "accept": [
+            "elles sont"
+          ]
+        },
+        {
+          "id": "u2-c-est",
+          "source": "das ist",
+          "target": "c'est"
+        },
+        {
+          "id": "u2-c-est-ma-famille",
+          "source": "Das ist meine Familie.",
+          "target": "C'est ma famille."
+        },
+        {
+          "id": "u2-ce-sont",
+          "source": "das sind",
+          "target": "ce sont"
+        },
+        {
+          "id": "u2-ce-sont-mes-grands-parents",
+          "source": "Das sind meine Grosseltern.",
+          "target": "Ce sont mes grands-parents."
+        },
+        {
+          "id": "u2-qui",
+          "source": "wer?",
+          "target": "qui?",
+          "image": "❓"
+        },
+        {
+          "id": "u2-il-s-appelle",
+          "source": "er heisst",
+          "target": "il s'appelle"
+        },
+        {
+          "id": "u2-elle-s-appelle",
+          "source": "sie heisst",
+          "target": "elle s'appelle"
+        },
+        {
+          "id": "u2-ils-s-appellent",
+          "source": "sie heissen",
+          "target": "ils s'appellent",
+          "accept": [
+            "elles s'appellent"
+          ]
+        },
+        {
+          "id": "u2-petit-fils",
+          "source": "der Enkel",
+          "target": "le petit-fils",
+          "level": "erweitert",
+          "tags": [
+            "wf:famille"
+          ]
+        },
+        {
+          "id": "u2-petite-fille",
+          "source": "die Enkelin",
+          "target": "la petite-fille",
+          "level": "erweitert",
+          "tags": [
+            "wf:famille"
+          ]
+        },
+        {
+          "id": "u2-chien",
+          "source": "der Hund",
+          "target": "le chien",
+          "level": "erweitert",
+          "image": "🐕",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "dog"
+        },
+        {
+          "id": "u2-chat",
+          "source": "die Katze",
+          "target": "le chat",
+          "level": "erweitert",
+          "image": "🐈",
+          "tags": [
+            "wf:famille"
+          ],
+          "concept": "cat"
+        },
+        {
+          "id": "u2-membre-de-la-famille",
+          "source": "das Familienmitglied",
+          "target": "le membre de la famille",
+          "level": "erweitert",
+          "gender": "m"
+        },
+        {
+          "id": "u2-arbre-genealogique",
+          "source": "ein Stammbaum",
+          "target": "un arbre généalogique",
+          "level": "erweitert",
+          "image": "🌳"
+        }
+      ]
+    },
+    {
+      "id": "u2-lz3",
+      "title": "Lernziel 3",
+      "group": "u2",
+      "items": [
+        {
+          "id": "u2-fiche-personnelle",
+          "source": "der Steckbrief",
+          "target": "la fiche personnelle",
+          "image": "📋"
+        },
+        {
+          "id": "u2-nom",
+          "source": "der Name",
+          "target": "le nom"
+        },
+        {
+          "id": "u2-prenom",
+          "source": "der Vorname",
+          "target": "le prénom"
+        },
+        {
+          "id": "u2-langue",
+          "source": "die Sprache",
+          "target": "la langue",
+          "image": "🗣️"
+        },
+        {
+          "id": "u2-je-parle-allemand-francais-et-anglais",
+          "source": "Ich spreche Deutsch, Französisch und Englisch.",
+          "target": "Je parle allemand, français et anglais."
+        },
+        {
+          "id": "u2-sexe",
+          "source": "das Geschlecht",
+          "target": "le sexe",
+          "level": "erweitert"
+        },
+        {
+          "id": "u2-age",
+          "source": "das Alter",
+          "target": "l'âge",
+          "level": "erweitert",
+          "gender": "m"
+        },
+        {
+          "id": "u2-adresse",
+          "source": "eine Adresse",
+          "target": "une adresse",
+          "level": "erweitert",
+          "image": "🏠"
+        },
+        {
+          "id": "u2-pays",
+          "source": "das Land",
+          "target": "le pays",
+          "level": "erweitert",
+          "image": "🗺️"
+        },
+        {
+          "id": "u2-signature",
+          "source": "die Unterschrift",
+          "target": "la signature",
+          "level": "erweitert",
+          "image": "✍️"
+        },
+        {
+          "id": "u2-neerlandais",
+          "source": "Niederländisch",
+          "target": "le néerlandais",
+          "level": "erweitert"
+        },
+        {
+          "id": "u2-suedois",
+          "source": "Schwedisch",
+          "target": "le suédois",
+          "level": "erweitert"
+        },
+        {
+          "id": "u2-italien",
+          "source": "Italienisch",
+          "target": "l'italien",
+          "level": "erweitert",
+          "gender": "m"
+        },
+        {
+          "id": "u2-espagnol",
+          "source": "Spanisch",
+          "target": "l'espagnol",
+          "level": "erweitert",
+          "gender": "m"
+        },
+        {
+          "id": "u2-drapeau",
+          "source": "die Fahne",
+          "target": "le drapeau",
+          "level": "erweitert",
+          "image": "🚩"
         }
       ]
     }

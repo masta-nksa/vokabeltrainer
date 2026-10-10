@@ -5,6 +5,7 @@ import { splitArticle, misspellings } from '../js/util.js';
 import * as writing from '../js/modes/writing.js';
 import * as spelling from '../js/modes/spelling.js';
 import { enrichItem, inLevel, targetForms, groupOf, itemsFrom, prepareDeck } from '../js/data/decks.js';
+import { generate, germanWith, relation } from '../js/learning/generators.js';
 
 let failures = 0;
 const check = (name, condition) => {
@@ -151,6 +152,87 @@ check('Basis: gleicher Artikel bei allen Formen → vorgegeben',
     motherBasis.prefix === 'la' && writing.check(motherBasis, 'maman', 'basis').correct);
 const child = writing.buildQuestion({ id: '3', source: 'ein Kind', target: 'un enfant', accept: ['une enfant'] }, [], 'basis', course);
 check('Basis: verschiedene Artikel → keiner vorgegeben', child.prefix === undefined);
+
+// ------------------------------------------------------- Generatoren
+
+const famille = ['wf:famille'];
+const grammarDeck = prepareDeck({
+    id: 'g', targetLang: 'fr', sourceLang: 'de',
+    units: [{ id: 'u2-lz2', title: 'LZ2', group: 'u2', items: [
+        { id: 'mere', source: 'die Mutter', target: 'la mère', accept: ['la maman'], tags: famille },
+        { id: 'pere', source: 'der Vater', target: 'le père', tags: famille },
+        { id: 'parents', source: 'die Eltern', target: 'les parents', gender: 'm', number: 'pl', tags: famille },
+        { id: 'oncle', source: 'ein Onkel', target: 'un oncle', tags: famille },
+        { id: 'enfant', source: 'ein Kind', target: 'un enfant', accept: ['une enfant'], tags: famille },
+        { id: 'chat', source: 'die Katze', target: 'le chat', level: 'erweitert', tags: famille },
+        { id: 'voici', source: 'hier ist', target: 'voici' }
+    ] }]
+});
+const answerOf = (tasks, id) => [].concat(tasks.find(task => task.id === id)?.answer ?? []);
+
+const poss = generate({ id: 's', unitId: 'u2', generators: [{ type: 'possessive', tags: famille }] }, grammarDeck, 'basis');
+check('mon/ma/mes aus Genus und Zahl',
+    answerOf(poss, 's:mere')[0] === 'ma' && answerOf(poss, 's:pere')[0] === 'mon' && answerOf(poss, 's:parents')[0] === 'mes');
+check('Basis bietet mon, ma, mes als Knöpfe', poss[0].choices.join() === 'mon,ma,mes');
+check('zweideutiges Genus (un/une enfant) bleibt draussen', !poss.some(task => task.id === 's:enfant'));
+check('Zusatzwortschatz erst ab Erweitert', !poss.some(task => task.id === 's:chat'));
+check('Wörter ohne Genus bleiben draussen', !poss.some(task => task.id === 's:voici'));
+
+const possExpert = generate({ id: 's', unitId: 'u2', generators: [{ type: 'possessive', tags: famille }] }, grammarDeck, 'expert');
+check('Expert schreibt den ganzen Ausdruck',
+    possExpert.find(task => task.id === 's:mere').text.startsWith('meine Mutter')
+    && answerOf(possExpert, 's:mere').includes('ma mère') && answerOf(possExpert, 's:mere').includes('ma maman'));
+check('deutsches Genus zählt nicht: die Katze → mon chat', answerOf(possExpert, 's:chat')[0] === 'mon chat');
+
+const art = generate({ id: 'a', unitId: 'u2', generators: [{ type: 'article', tags: famille }] }, grammarDeck, 'expert');
+check('Artikel le / la / les', answerOf(art, 'a:pere')[0] === 'le' && answerOf(art, 'a:mere')[0] === 'la' && answerOf(art, 'a:parents')[0] === 'les');
+check("vor Vokal l' – und bei «ein Onkel» gilt auch un",
+    answerOf(art, 'a:oncle')[0] === "l'" && answerOf(art, 'a:oncle').includes('un'));
+check('Expert: unbestimmter Artikel dazu', answerOf(art, 'a:mere:un')[0] === 'une' && !art.some(task => task.id === 'a:oncle:un'));
+check('andere Unit → keine Aufgaben',
+    generate({ id: 'a', unitId: 'u9', generators: [{ type: 'article' }] }, grammarDeck, 'expert').length === 0);
+
+check('mein/meine aus dem deutschen Artikel',
+    germanWith('das Baby, das Kleinkind', 'possessive', false) === 'mein Baby'
+    && germanWith('die Tante', 'indefinite', false) === 'eine Tante'
+    && germanWith('Montag', 'possessive', false) === null);
+
+const tree = {
+    people: [
+        { id: 'marc', name: 'Marc', g: 'm' }, { id: 'claire', name: 'Claire', g: 'f' },
+        { id: 'emma', name: 'Emma', g: 'f', parents: ['marc', 'claire'] },
+        { id: 'jules', name: 'Jules', g: 'm', parents: ['marc', 'claire'] },
+        { id: 'hugo', name: 'Hugo', g: 'm' }, { id: 'lucie', name: 'Lucie', g: 'f' },
+        { id: 'lea', name: 'Léa', g: 'f', parents: ['emma', 'hugo'] },
+        { id: 'theo', name: 'Théo', g: 'm', parents: ['jules', 'lucie'] }
+    ],
+    terms: {
+        mother: 'la mère', father: 'le père', daughter: 'la fille', son: 'le fils', sister: 'la sœur', brother: 'le frère',
+        grandmother: 'la grand-mère', grandfather: 'le grand-père', granddaughter: 'la petite-fille', grandson: 'le petit-fils',
+        aunt: 'la tante', uncle: "l'oncle", cousin_f: 'la cousine', cousin_m: 'le cousin'
+    },
+    advanced: ['granddaughter', 'grandson']
+};
+const folk = new Map(tree.people.map(person => [person.id, person]));
+const rel = (a, b) => relation(folk.get(a), folk.get(b), folk);
+check('Verwandtschaft: Eltern und Kinder', rel('emma', 'lea') === 'mother' && rel('lea', 'hugo') === 'daughter');
+check('Verwandtschaft: Geschwister', rel('jules', 'emma') === 'brother');
+check('Verwandtschaft: Grosseltern und Enkel', rel('claire', 'theo') === 'grandmother' && rel('lea', 'marc') === 'granddaughter');
+check('Verwandtschaft: Onkel, auch angeheiratet', rel('jules', 'lea') === 'uncle' && rel('hugo', 'theo') === 'uncle' && rel('lucie', 'lea') === 'aunt');
+check('Verwandtschaft: Cousin und Cousine', rel('theo', 'lea') === 'cousin_m' && rel('lea', 'theo') === 'cousin_f');
+check('nicht verwandt → nichts', rel('hugo', 'lucie') === null && rel('hugo', 'marc') === null);
+
+const kinSet = { id: 'k', unitId: 'u2', generators: [{ type: 'kinship' }], family: tree };
+const kinBasis = generate(kinSet, grammarDeck, 'basis');
+check('Basis: Umkehrung mit vier Knöpfen, ohne Enkel',
+    kinBasis.length > 0 && kinBasis.every(task => task.choices.length === 4 && !/petit/.test([].concat(task.answer).join())));
+check("d' vor Vokal und h", kinBasis.some(task => task.text.includes("d'Emma")) && kinBasis.some(task => task.text.includes("d'Hugo"))
+    && !kinBasis.some(task => /de (Emma|Hugo)/.test(task.text)));
+const kinMid = generate(kinSet, grammarDeck, 'erweitert');
+const uncleTask = kinMid.find(task => task.id === 'k:jules-emma-lea');
+check('Erweitert: Kette zum Onkel', uncleTask && [].concat(uncleTask.answer)[0] === "l'oncle" && !uncleTask.choices);
+const kinExpert = generate(kinSet, grammarDeck, 'expert');
+check('Expert: nur Ketten und Enkel', kinExpert.length > 0 && kinExpert.length < kinMid.length);
 
 console.log(failures === 0 ? '\nAlle Prüfungen bestanden.' : `\n${failures} Prüfung(en) fehlgeschlagen.`);
 process.exit(failures === 0 ? 0 : 1);

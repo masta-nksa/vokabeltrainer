@@ -7,7 +7,7 @@
  * @property {import('./storage/index.js').Item[]} pool    Auswahlgrundlage für Ablenker
  * @property {string} mode
  * @property {import('./learning/levels.js').Level} level
- * @property {{title: string, subtitle: string, exerciseId?: string} | null} context
+ * @property {{title: string, subtitle: string, exerciseId?: string, grammarId?: string} | null} context
  *   Kopfzeile und Herkunft einer Runde, wenn sie nicht vom Modus selbst kommt
  *   (Anwendungsübungen). Sonst null.
  * @property {number} index

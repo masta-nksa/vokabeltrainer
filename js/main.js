@@ -4,7 +4,7 @@ import * as storage from './storage/index.js';
 import { ensureBuiltinDecks, itemsFrom, languageName } from './data/decks.js';
 import * as tts from './speech/tts.js';
 import { readTextFile, deckFromCsv } from './data/csv.js';
-import { exercisesFor, setsForUnits } from './data/exercises.js';
+import { exercisesFor, setsForUnits, tasksFor } from './data/exercises.js';
 import { state } from './state.js';
 import { stripDiacritics } from './util.js';
 import { toLevel } from './learning/levels.js';
@@ -129,13 +129,15 @@ async function refreshExercises() {
     // Zwischenzeitlicher Deckwechsel: Ergebnis gehört nicht mehr hierher.
     if (state.deck?.id !== deck.id) return;
 
-    const available = setsForUnits(exerciseCache.sets, deck, state.selectedUnits);
+    // Ein Set, das auf diesem Niveau keine Aufgabe hergibt, erscheint nicht.
+    const available = setsForUnits(exerciseCache.sets, deck, state.selectedUnits)
+        .filter(set => tasksFor(set, deck, state.level).length > 0);
     list.replaceChildren();
 
     for (const set of available) {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = set.title.replace(/^Unit\s*\d+\s*[–-]\s*/, '');
+        button.textContent = set.title.replace(/^Unit[ée]?\s*\d+\s*[–-]\s*/, '');
         button.addEventListener('click', () => quiz.startExercise(deck, set));
         list.append(button);
     }

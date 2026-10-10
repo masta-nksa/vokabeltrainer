@@ -1,7 +1,8 @@
 # Voci-Import
 
-Aus einem **Vocabulary-Practice-Sheet** (PDF-Scan oder Foto) eine Lektion im
-mitgelieferten Deck machen. Der bequeme Weg ist der Skill `/voci-unit` – er
+Aus einem Vokabelblatt (PDF-Scan oder Foto) die Lektionen einer Unit im
+mitgelieferten Deck machen – je Voci-Test eine Lektion (Englisch) oder je
+Lernziel eine (Französisch). Der bequeme Weg ist der Skill `/voci-unit` – er
 führt durch alle Schritte. Die Teile lassen sich aber auch einzeln aufrufen.
 
 ```
@@ -68,7 +69,9 @@ Seite einfach neu laden, ein zweiter Start ist unnötig.
 
 - **`unit.code`** folgt dem Deck: DoubleDecker 3, Unit 2 → `3_2`. Die Item-IDs
   werden `3_2-001`, `3_2-002`, … aus der Zeilennummer `nr`. Stabil bei einem
-  zweiten Lauf, eine Zeile lässt sich einzeln korrigieren.
+  zweiten Lauf, eine Zeile lässt sich einzeln korrigieren. Ein Wort, das es
+  mit demselben Zielwort schon gibt, behält beim Neubau in jedem Fall seine
+  Kennung; fällt eine bisherige Kennung weg, meldet `build.mjs` das.
 - **`tests`** – je Eintrag eine Lektion. `fromTerm`/`toTerm` sind der erste und
   letzte englische Begriff des Testbereichs, exakt wie in der Tabelle. Bereiche
   dürfen sich überschneiden (dann steht ein Wort in beiden Lektionen; der
@@ -82,6 +85,22 @@ Seite einfach neu laden, ein zweiter Start ist unnötig.
   `img/decks/<deckId>/`. Leer = kein Bild. `imageHint` ist nur eine Notiz aus
   der Erkennung und hilft beim Aussuchen; sie wandert nicht ins Deck.
 - **`keep: false`** lässt eine Zeile beim Bauen weg.
+- **`sections`** statt `tests` (oberste Ebene) – wenn das Lehrmittel nach
+  Lernzielen gliedert: `[{ "id": "lz1", "title": "Lernziel 1" }, …]`. Jede
+  Zeile nennt dann ihre `section`. Aus Unit `u2` und `lz1` wird die Lektion
+  `u2-lz1`.
+- **`idStyle: "slug"`** – Kennungen aus dem Wort statt aus der Zeilennummer
+  (`u2-grand-mere`). Sinnvoll, wenn Zeilen keine feste Nummer haben.
+- **`rows[].level`** – `erweitert` oder `expert`; leer = Grundwortschatz.
+  «Vocabulaire plus» ist `erweitert`.
+- **`rows[].accept`** – weitere Schreibweisen, die als richtig gelten
+  (`["la maman"]`). Doppelformen des Blatts («la mère, la maman») so
+  auflösen, nicht im Lösungswort belassen.
+- **`rows[].gender`** / **`number`** – nur wo der Artikel es nicht verrät
+  (`l'âge` → `m`, `les parents` → `m` und `pl`). Angaben wie «(m)» aus dem
+  Blatt gehören hierhin und nicht ins Lösungswort.
+- **`rows[].tags`**, **`concept`**, **`pos`**, **`id`** – optional; `id` gibt
+  einer Zeile eine feste Kennung.
 - **`notes`** (optional, oberste Ebene) – freie Notiz aus der Erkennung, etwa
   Auffälligkeiten des Blatts. Wird nicht ins Deck übernommen.
 

@@ -128,7 +128,11 @@ export function classify({ given, expected, lang = '', others = [] }) {
 
     if (stripDiacritics(g) === stripDiacritics(e)) return { type: 'accent' };
 
-    if (profile.eliding && (elide(g, profile) === e || elide(e, profile) === g)) return { type: 'elision' };
+    if (profile.eliding) {
+        // "le acteur" statt "l'acteur" – oder nur der Artikel: "le" statt "l'"
+        if (elide(g, profile) === e || elide(e, profile) === g) return { type: 'elision' };
+        if (profile.eliding[g] === e || profile.eliding[e] === g) return { type: 'elision' };
+    }
 
     const gt = tokens(g);
     const et = tokens(e);

@@ -1,0 +1,104 @@
+{
+  "deckId": "fr-disdonc",
+  "version": 1,
+  "sets": [
+    {
+      "id": "u2-articles",
+      "unitId": "u2",
+      "grammarId": "fr.article",
+      "title": "Unité 2 – le, la, l', les",
+      "intro": "Männlich: le. Weiblich: la. Vor einem Vokal: l'. Mehrzahl: les.",
+      "generators": [{ "type": "article", "tags": ["wf:famille"] }],
+      "tasks": [
+      ]
+    },
+    {
+      "id": "u2-possessif",
+      "unitId": "u2",
+      "grammarId": "fr.possessif",
+      "title": "Unité 2 – mon, ma, mes",
+      "intro": "Männlich: mon. Weiblich: ma. Mehrzahl: mes.",
+      "generators": [{ "type": "possessive", "tags": ["wf:famille"] }],
+      "tasks": [
+        { "id": "u2-possessif-01", "type": "gap", "text": "Voici ___ cousine.", "answer": "ma", "choices": ["mon", "ma", "mes"], "note": "cousine ist weiblich → ma" },
+        { "id": "u2-possessif-02", "type": "gap", "text": "C'est ___ frère.", "answer": "mon", "choices": ["mon", "ma", "mes"], "note": "frère ist männlich → mon" },
+        { "id": "u2-possessif-03", "type": "gap", "text": "Ce sont ___ grands-parents.", "answer": "mes", "choices": ["mon", "ma", "mes"], "note": "Mehrzahl → mes" },
+        { "id": "u2-possessif-04", "type": "gap", "text": "Voilà ___ tante.", "answer": "ma", "choices": ["mon", "ma", "mes"], "note": "tante ist weiblich → ma" },
+        { "id": "u2-possessif-05", "type": "gap", "text": "___ oncle s'appelle Marc.", "answer": "Mon", "choices": ["Mon", "Ma", "Mes"], "note": "oncle ist männlich → mon" },
+        { "id": "u2-possessif-06", "type": "gap", "text": "___ parents s'appellent Emma et Hugo.", "answer": "Mes", "choices": ["Mon", "Ma", "Mes"], "note": "Mehrzahl → mes" },
+        { "id": "u2-possessif-07", "type": "gap", "text": "Voici ___ sœurs.", "answer": "mes", "choices": ["mon", "ma", "mes"], "note": "Mehrzahl → mes" },
+        { "id": "u2-possessif-08", "type": "gap", "text": "C'est ___ grand-mère.", "answer": "ma", "choices": ["mon", "ma", "mes"], "note": "grand-mère ist weiblich → ma" }
+      ]
+    },
+    {
+      "id": "u2-etre",
+      "unitId": "u2",
+      "grammarId": "fr.etre-3p",
+      "title": "Unité 2 – est oder sont",
+      "intro": "Eine Person: il est, elle est. Mehrere: ils sont, elles sont.",
+      "tasks": [
+        { "id": "u2-etre-01", "type": "gap", "text": "Léa ___ la sœur de Noah.", "answer": "est", "choices": ["est", "sont"], "note": "eine Person → est" },
+        { "id": "u2-etre-02", "type": "gap", "text": "Emma et Hugo ___ les parents de Léa.", "answer": "sont", "choices": ["est", "sont"], "note": "zwei Personen → sont" },
+        { "id": "u2-etre-03", "type": "gap", "text": "Marc ___ le grand-père de Noah.", "answer": "est", "choices": ["est", "sont"], "note": "eine Person → est" },
+        { "id": "u2-etre-04", "type": "gap", "text": "Ils ___ frères.", "answer": "sont", "choices": ["est", "sont"], "note": "ils → sont" },
+        { "id": "u2-etre-05", "type": "gap", "text": "Elle ___ ma tante.", "answer": "est", "choices": ["est", "sont"], "note": "elle → est" },
+        { "id": "u2-etre-06", "type": "gap", "text": "Anna et Léa ___ cousines.", "answer": "sont", "choices": ["est", "sont"], "note": "zwei Personen → sont" },
+        { "id": "u2-etre-07", "type": "gap", "text": "Le bébé ___ le fils de ma tante.", "answer": "est", "choices": ["est", "sont"], "note": "eine Person → est" },
+        { "id": "u2-etre-08", "type": "gap", "text": "Théo et Noah ___ mes cousins.", "answer": "sont", "choices": ["est", "sont"], "note": "zwei Personen → sont" },
+        { "id": "u2-etre-09", "type": "gap", "text": "Qui ___ Théo?", "answer": "est", "choices": ["est", "sont"], "note": "eine Person → est" },
+        { "id": "u2-etre-10", "type": "gap", "text": "Elles ___ sœurs.", "answer": "sont", "choices": ["est", "sont"], "note": "elles → sont" },
+        { "id": "u2-etre-11", "type": "gap", "text": "Mes grands-parents ___ Marc et Claire.", "answer": "sont", "choices": ["est", "sont"], "note": "Mehrzahl → sont" },
+        { "id": "u2-etre-12", "type": "gap", "text": "Mon oncle ___ le frère de ma mère.", "answer": "est", "choices": ["est", "sont"], "note": "eine Person → est" }
+      ]
+    },
+    {
+      "id": "u2-appeler",
+      "unitId": "u2",
+      "grammarId": "fr.s-appeler-3p",
+      "title": "Unité 2 – s'appelle oder s'appellent",
+      "intro": "Eine Person: il s'appelle. Mehrere: ils s'appellent.",
+      "tasks": [
+        { "id": "u2-appeler-01", "type": "gap", "text": "Ma mère ___ Emma.", "answer": "s'appelle", "choices": ["s'appelle", "s'appellent"], "note": "eine Person → s'appelle" },
+        { "id": "u2-appeler-02", "type": "gap", "text": "Mes parents ___ Emma et Hugo.", "answer": "s'appellent", "choices": ["s'appelle", "s'appellent"], "note": "Mehrzahl → s'appellent" },
+        { "id": "u2-appeler-03", "type": "gap", "text": "Mon frère ___ Noah.", "answer": "s'appelle", "choices": ["s'appelle", "s'appellent"], "note": "eine Person → s'appelle" },
+        { "id": "u2-appeler-04", "type": "gap", "text": "Mes cousins ___ Anna et Théo.", "answer": "s'appellent", "choices": ["s'appelle", "s'appellent"], "note": "Mehrzahl → s'appellent" },
+        { "id": "u2-appeler-05", "type": "gap", "text": "Il ___ Jules.", "answer": "s'appelle", "choices": ["s'appelle", "s'appellent"], "note": "il → s'appelle" },
+        { "id": "u2-appeler-06", "type": "gap", "text": "Elles ___ Anna et Léa.", "answer": "s'appellent", "choices": ["s'appelle", "s'appellent"], "note": "elles → s'appellent" },
+        { "id": "u2-appeler-07", "type": "gap", "text": "Mon chien ___ Filou.", "answer": "s'appelle", "choices": ["s'appelle", "s'appellent"], "note": "ein Tier → s'appelle" },
+        { "id": "u2-appeler-08", "type": "gap", "text": "Mes grands-parents ___ Marc et Claire.", "answer": "s'appellent", "choices": ["s'appelle", "s'appellent"], "note": "Mehrzahl → s'appellent" },
+        { "id": "u2-appeler-09", "type": "gap", "text": "Ma tante ___ Lucie.", "answer": "s'appelle", "choices": ["s'appelle", "s'appellent"], "note": "eine Person → s'appelle" },
+        { "id": "u2-appeler-10", "type": "gap", "text": "Ils ___ Théo et Noah.", "answer": "s'appellent", "choices": ["s'appelle", "s'appellent"], "note": "ils → s'appellent" }
+      ]
+    },
+    {
+      "id": "u2-cest",
+      "unitId": "u2",
+      "grammarId": "fr.c-est",
+      "title": "Unité 2 – c'est oder ce sont",
+      "intro": "Eine Person oder Sache: c'est. Mehrere: ce sont.",
+      "tasks": [
+        { "id": "u2-cest-01", "type": "gap", "text": "___ ma sœur.", "answer": "C'est", "choices": ["C'est", "Ce sont"], "note": "eine Person → c'est" },
+        { "id": "u2-cest-02", "type": "gap", "text": "___ mes parents.", "answer": "Ce sont", "choices": ["C'est", "Ce sont"], "note": "Mehrzahl → ce sont" },
+        { "id": "u2-cest-03", "type": "gap", "text": "___ mon grand-père.", "answer": "C'est", "choices": ["C'est", "Ce sont"], "note": "eine Person → c'est" },
+        { "id": "u2-cest-04", "type": "gap", "text": "___ mes cousins.", "answer": "Ce sont", "choices": ["C'est", "Ce sont"], "note": "Mehrzahl → ce sont" },
+        { "id": "u2-cest-05", "type": "gap", "text": "___ le bébé de ma tante.", "answer": "C'est", "choices": ["C'est", "Ce sont"], "note": "eine Person → c'est" },
+        { "id": "u2-cest-06", "type": "gap", "text": "___ mes grands-parents.", "answer": "Ce sont", "choices": ["C'est", "Ce sont"], "note": "Mehrzahl → ce sont" },
+        { "id": "u2-cest-07", "type": "gap", "text": "___ mon chat.", "answer": "C'est", "choices": ["C'est", "Ce sont"], "note": "ein Tier → c'est" },
+        { "id": "u2-cest-08", "type": "gap", "text": "___ mes tantes.", "answer": "Ce sont", "choices": ["C'est", "Ce sont"], "note": "Mehrzahl → ce sont" },
+        { "id": "u2-cest-09", "type": "gap", "text": "___ ma famille.", "answer": "C'est", "choices": ["C'est", "Ce sont"], "note": "la famille ist Einzahl → c'est" },
+        { "id": "u2-cest-10", "type": "gap", "text": "___ les enfants de mon oncle.", "answer": "Ce sont", "choices": ["C'est", "Ce sont"], "note": "Mehrzahl → ce sont" }
+      ]
+    },
+    {
+      "id": "u2-parente",
+      "unitId": "u2",
+      "grammarId": "fr.parente",
+      "title": "Unité 2 – Wer ist wer?",
+      "intro": "Lies genau, wer mit wem verwandt ist, und ergänze die Verwandtschaft mit Artikel.",
+      "generators": [{ "type": "kinship" }],
+      "family": { "people": [{ "id": "marc", "name": "Marc", "g": "m" }, { "id": "claire", "name": "Claire", "g": "f" }, { "id": "emma", "name": "Emma", "g": "f", "parents": ["marc", "claire"] }, { "id": "jules", "name": "Jules", "g": "m", "parents": ["marc", "claire"] }, { "id": "hugo", "name": "Hugo", "g": "m" }, { "id": "lucie", "name": "Lucie", "g": "f" }, { "id": "lea", "name": "Léa", "g": "f", "parents": ["emma", "hugo"] }, { "id": "noah", "name": "Noah", "g": "m", "parents": ["emma", "hugo"] }, { "id": "anna", "name": "Anna", "g": "f", "parents": ["jules", "lucie"] }, { "id": "theo", "name": "Théo", "g": "m", "parents": ["jules", "lucie"] }], "terms": { "mother": "la mère", "father": "le père", "daughter": "la fille", "son": "le fils", "sister": "la sœur", "brother": "le frère", "grandmother": "la grand-mère", "grandfather": "le grand-père", "granddaughter": "la petite-fille", "grandson": "le petit-fils", "aunt": "la tante", "uncle": "l'oncle", "cousin_f": "la cousine", "cousin_m": "le cousin" }, "advanced": ["granddaughter", "grandson"] },
+      "tasks": [
+      ]
+    }
+  ]
+}

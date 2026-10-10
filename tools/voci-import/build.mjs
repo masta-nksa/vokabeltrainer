@@ -110,6 +110,7 @@ function itemFrom(row) {
         ...(row.pos ? { pos: row.pos } : {}),
         ...(row.image && row.image.trim() ? { image: row.image.trim() } : {}),
         ...(Array.isArray(row.tags) && row.tags.length > 0 ? { tags: row.tags } : {}),
+        ...(row.concept ? { concept: row.concept } : {}),
         ...(known?.aliases ? { aliases: known.aliases } : {})
     };
     return item;

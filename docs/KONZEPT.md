@@ -603,12 +603,18 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
    `js/learning/errors.js`; *spelling*-Optionen tragen ihre Operation mit;
    IndexedDB Version 3 mit Index `byUserItem`. Selbsttest
    `node tools/test-learning.mjs`.
-4. **Inhaltsmodell v2:** Course/Unit/Section, stabile IDs mit `aliases`,
-   Felder `lemma`/`gender`/`number`/`pos`/`level`/`tags`; Migrationsskript für die
-   drei bestehenden Decks; `/voci-unit` und `curate.html` um die neuen Felder
-   erweitern.
-5. **Unité 2 importieren** (Wortschatz + Felder) und GrammarPoints
-   *possessif*, *être 3p*, *s'appeler*, *c'est/ce sont* mit Generatoren.
+4. ~~**Inhaltsmodell v2**~~ – erledigt auf `v2`. Umgesetzt schonender als oben
+   skizziert: `units` bleibt die flache Liste der Lektionen (= Section), jede
+   nennt mit `group` ihre Unit; so laufen selbst importierte und ältere Decks
+   unverändert weiter. Lemma, Genus und Zahl leitet die App aus dem Artikel
+   ab, im Deck steht nur die Ausnahme. Sprachprofil als Modul
+   `js/learning/languages.js` statt als JSON-Datei. `fr-unite-1` ist im Kurs
+   `fr-disdonc` aufgegangen (Aliase für den Lernstand).
+5. ~~**Unité 2 importieren**~~ – erledigt auf `v2`: 60 Einträge (36 Basis, 24
+   Erweitert), Übungen *le/la/l'/les*, *mon/ma/mes*, *est/sont*,
+   *s'appelle/s'appellent*, *c'est/ce sont* und «Wer ist wer?» mit Generatoren
+   `article`, `possessive`, `kinship`. Die GrammarPoints leben als Übungssets
+   mit `grammarId` in `data/exercises/fr-disdonc.json`.
 6. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
 7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
 8. **Challenge-Links** (Stufe A).

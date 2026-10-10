@@ -59,10 +59,10 @@ js/
   storage/db.js     IndexedDB (Decks, Versuche, Einstellungen)
   storage/index.js  Storage-Schnittstelle – später gegen Server austauschbar
   data/csv.js       CSV-Import und -Export
-  data/decks.js     Deck-Verwaltung
-  data/exercises.js Anwendungsübungen laden und auswählen
+  data/decks.js     Deck-Verwaltung, Einträge aufbereiten (prepareDeck)
+  data/exercises.js Anwendungsübungen laden, Aufgaben einer Runde ziehen
   modes/            Lernmodi (terms, spelling, writing) und exercise
-  learning/         Niveaus und Fehlerklassen
+  learning/         Niveaus, Fehlerklassen, Sprachprofile, Aufgaben-Generatoren
   ui/               Screens, Lektionsauswahl, Scoreboard, Druck, Belohnung
   speech/tts.js     Sprachausgabe
   speech/assess.js  Schnittstelle für die spätere Ausspracheprüfung
@@ -106,6 +106,56 @@ Wortschätze werden nie überschrieben.
 
 Veröffentlicht wird durch Pushen auf `main`; GitHub Pages baut von selbst.
 
+### Aufbau eines Decks
+
+Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
+
+```jsonc
+{
+  "id": "fr-disdonc", "title": "Französisch – dis donc!",
+  "sourceLang": "de", "targetLang": "fr", "version": 2,
+  "aliases": ["fr-unite-1"],                 // frühere Deck-Kennungen
+  "groups": [{ "id": "u2", "title": "Unité 2 – Drôle de famille" }],
+  "units": [
+    { "id": "u2-lz2", "title": "Lernziel 2", "group": "u2",
+      "items": [
+        { "id": "u2-mere", "source": "die Mutter", "target": "la mère",
+          "accept": ["la maman"], "image": "👩", "tags": ["wf:famille"] },
+        { "id": "u2-age", "source": "das Alter", "target": "l'âge",
+          "gender": "m", "level": "erweitert" }
+      ] }
+  ]
+}
+```
+
+- **`units`** sind die wählbaren Lektionen (Lernziel, Voci-Test). **`group`**
+  nennt die Unit des Lehrmittels; `groups` gibt ihr einen Titel. Die Auswahl
+  zeigt die Units als Überschriften, ein Klick wählt alle Lektionen darunter.
+  Decks ohne Gruppen – ältere, selbst importierte – erscheinen als flache
+  Liste.
+- **`id`** eines Eintrags ist stabil: nie für einen anderen Eintrag
+  wiederverwenden, der Lernstand hängt daran. Ändert sich eine Kennung doch,
+  kommt die alte in **`aliases`**.
+- **`target`** ist die Hauptform, **`accept`** nennt weitere Schreibweisen,
+  die als richtig gelten. Angaben wie «(m)» gehören nicht ins Lösungswort,
+  sondern in `gender`.
+- **`level`** – `erweitert` oder `expert`; ohne Angabe gehört der Eintrag zum
+  Grundwortschatz. Bei *dis donc!* ist «Vocabulaire» Basis und «Vocabulaire
+  plus» Erweitert. Das gewählte Niveau schliesst die tieferen ein.
+- **`gender`**, **`number`** nur dort, wo der Artikel es nicht verrät
+  (`l'âge`, `les parents`). Den Rest – Lemma ohne Artikel, Genus aus
+  *le/la/un/une*, Mehrzahl aus *les/des* – leitet `prepareDeck` beim Laden
+  ab, auch für selbst importierte Wortschätze.
+- **`tags`** ordnen einem Wortfeld zu (`wf:famille`); die Generatoren der
+  Grammatikübungen greifen darüber auf die passenden Wörter zu.
+
+Was von der Sprache abhängt – Artikel, Wortpaare für die Fehlerklassen,
+Elision, Sonderzeichen – steht in `js/learning/languages.js`. Eine weitere
+Sprache ist dort ein weiterer Eintrag.
+
+Geht ein Deck in einem anderen auf, nennt der Index-Eintrag des neuen
+`"replaces": ["<alte Kennung>"]`; die App räumt das alte dann im Browser weg.
+
 ### Bilder zu Wörtern
 
 Ein Eintrag darf ein `image` tragen. Zwei Formen:
@@ -130,10 +180,10 @@ mitbringt.
 
 ### Vokabelblatt einlesen
 
-`tools/voci-import/` macht aus einem gescannten *Vocabulary Practice Sheet*
-(PDF oder Foto) eine Lektion: Seiten rendern, Wortliste und Test-Einteilung
-erkennen, in einer lokalen Tabelle korrigieren, ins Deck schreiben. Der bequeme
-Weg ist der Skill **`/voci-unit <pfad>`**; Details in
+`tools/voci-import/` macht aus einem gescannten Vokabelblatt (PDF oder Foto)
+die Lektionen einer Unit: Seiten rendern, Wortliste und Einteilung (Tests oder
+Lernziele) erkennen, in einer lokalen Tabelle korrigieren, ins Deck schreiben.
+Der bequeme Weg ist der Skill **`/voci-unit <pfad>`**; Details in
 `tools/voci-import/README.md`.
 
 ## Anwendungsübungen
@@ -163,17 +213,52 @@ App holt sie bei Bedarf frisch. Ein Deck ohne Datei hat einfach keine Übungen.
 }
 ```
 
-- **`unitId`** ist die Unit ohne Test-Zusatz (`3_3`). Ein Set erscheint in der
-  Auswahl, sobald eine Lektion dieser Unit gewählt ist (`3_3-t1`, `3_3-t2`, …).
+- **`unitId`** ist die Unit des Lehrmittels, also die `group` der Lektionen
+  (`3_3`, `u2`). Ein Set erscheint in der Auswahl, sobald eine Lektion dieser
+  Unit gewählt ist.
 - **`type: "gap"`** – Lücke `___` im `text`, `answer` ist ein String oder eine
   Liste erlaubter Formen. Gross-/Kleinschreibung und Randzeichen sind egal.
+  Mit **`choices`** (`["mon", "ma", "mes"]`) erscheinen auf Niveau Basis
+  Knöpfe; ab Erweitert wird getippt.
 - **`type: "mc"`** – `options` als Knöpfe, `answer` ist genau einer der Texte.
 - **`note`** erscheint nach dem ersten Fehlversuch als Hilfe.
-- Task-IDs werden beim Laden vergeben (`<setId>-01` …); Übungs-Versuche landen
-  mit `mode: "exercise"` und `exerciseId` im selben Fortschrittsspeicher wie
-  der Wortschatz.
+- **`level`** an einer Aufgabe: ab welchem Niveau sie erscheint.
+- **`id`** jeder Aufgabe steht im JSON und bleibt, auch wenn Aufgaben
+  dazukommen oder umgestellt werden – der Lernstand hängt daran. Versuche
+  landen mit `mode: "exercise"`, `exerciseId` und, falls gesetzt, `grammarId`
+  im selben Speicher wie der Wortschatz.
+
+Eine Runde zieht höchstens 15 Aufgaben und mischt neu – wer öfter übt, sieht
+andere.
 
 Kein Text aus dem Lehrmittel abschreiben – eigene Sätze; Fakten sind frei.
+
+### Aufgaben aus dem Wortschatz
+
+Ein Set kann seine Aufgaben auch **erzeugen** lassen
+(`js/learning/generators.js`). Dann wächst die Übung mit jeder Unit mit:
+
+```jsonc
+{
+  "id": "u2-possessif", "unitId": "u2", "grammarId": "fr.possessif",
+  "title": "Unité 2 – mon, ma, mes",
+  "intro": "Männlich: mon. Weiblich: ma. Mehrzahl: mes.",
+  "generators": [{ "type": "possessive", "tags": ["wf:famille"] }],
+  "tasks": [ /* handgeschriebene Sätze dazu, optional */ ]
+}
+```
+
+| Generator | Aufgabe | Basis | Erweitert | Expert |
+|---|---|---|---|---|
+| `article` | `___ grand-mère (die Grossmutter)` → *la* | Knöpfe *le / la / l' / les* | tippen | dazu der unbestimmte Artikel |
+| `possessive` | `___ fils (mein Sohn)` → *mon* | Knöpfe *mon / ma / mes* | tippen | ganzer Ausdruck: `meine Tante → ma tante` |
+| `kinship` | `Emma est la mère de Léa. Léa est ___ d'Emma.` → *la fille* | vier Knöpfe, nur Umkehrungen | tippen, dazu Ketten über einen Elternteil (Onkel, Grosseltern) | nur Ketten und Enkel |
+
+`article` und `possessive` nehmen die Nomen der Unit mit passendem `tags`,
+soweit Genus und Zahl feststehen und der Eintrag zum Niveau gehört.
+`kinship` braucht im Set einen Stammbaum `family` (Personen mit Eltern, dazu
+die Wörter für jede Beziehung) – erfundene Namen, nicht die Familie aus dem
+Lehrmittel.
 
 ## Entwicklung
 

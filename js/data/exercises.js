@@ -9,17 +9,30 @@
  * @property {string} text          Aufgabenstellung; bei "gap" mit ___ als Lücke
  * @property {string | string[]} answer   akzeptierte Lösung(en)
  * @property {string[]} [options]   nur bei "mc"
+ * @property {string[]} [choices]   bei "gap": auf Niveau Basis als Knöpfe
+ *                                  angeboten, darüber wird getippt
+ * @property {import('../learning/levels.js').Level} [level]  ab welchem
+ *                                  Niveau die Aufgabe erscheint (sonst immer)
  * @property {string} [note]        Hinweis, erscheint nach einem Fehlversuch
  *
  * @typedef {Object} ExerciseSet
  * @property {string} id
  * @property {string} unitId        an welche Unit die Übung hängt (z.B. "3_2")
+ * @property {string} [grammarId]   welcher Grammatikpunkt geübt wird
  * @property {string} title
  * @property {string} [intro]
- * @property {Task[]} tasks
+ * @property {Task[]} [tasks]       handgeschriebene Aufgaben
+ * @property {{type: string, tags?: string[]}[]} [generators]
+ *   Aufgaben aus dem Wortschatz, siehe js/learning/generators.js
+ * @property {Object} [family]      Stammbaum für den Generator "kinship"
  */
 
-import { groupOf } from './decks.js';
+import { groupOf, inLevel } from './decks.js';
+import { generate } from '../learning/generators.js';
+import { shuffle } from '../util.js';
+
+/** So viele Aufgaben hat eine Runde höchstens. */
+const ROUND_SIZE = 15;
 
 /** @type {Map<string, ExerciseSet[]>} */
 const byDeck = new Map();
@@ -64,4 +77,18 @@ export function setsForUnits(sets, deck, unitIds) {
     const wanted = new Set(unitIds);
     const groups = new Set(deck.units.filter(unit => wanted.has(unit.id)).map(groupOf));
     return sets.filter(set => groups.has(set.unitId));
+}
+
+/**
+ * Die Aufgaben einer Runde: die handgeschriebenen des Sets und was seine
+ * Generatoren auf diesem Niveau hergeben, gemischt und auf eine Rundenlänge
+ * gekürzt. Jede Runde zieht neu – wer öfter übt, sieht andere Wörter.
+ * @param {ExerciseSet} set
+ * @param {import('../storage/index.js').Deck} deck
+ * @param {import('../learning/levels.js').Level} level
+ * @returns {Task[]}
+ */
+export function tasksFor(set, deck, level) {
+    const written = (set.tasks ?? []).filter(task => !task.level || inLevel(task, level));
+    return shuffle([...written, ...generate(set, deck, level)]).slice(0, ROUND_SIZE);
 }

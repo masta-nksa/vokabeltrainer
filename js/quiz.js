@@ -10,6 +10,7 @@ import * as scoreboard from './ui/scoreboard.js';
 import * as screens from './ui/screens.js';
 import { shuffle } from './util.js';
 import { classify, editDistance } from './learning/errors.js';
+import { tasksFor } from './data/exercises.js';
 
 const MAX_TRIES = 2;
 
@@ -82,11 +83,13 @@ export function start(modeId, deck, items, context = null) {
  * @param {import('./data/exercises.js').ExerciseSet} set
  */
 export function startExercise(deck, set) {
-    const tasks = set.tasks.map(task => ({ ...task }));
+    const tasks = tasksFor(set, deck, state.level).map(task => ({ ...task }));
+    if (tasks.length === 0) return;
     start('exercise', deck, tasks, {
         title: set.title,
         subtitle: set.intro ?? '',
-        exerciseId: set.id
+        exerciseId: set.id,
+        grammarId: set.grammarId
     });
 }
 
@@ -367,6 +370,7 @@ function resolveItem() {
         itemId: item.id,
         mode: session.mode,
         ...(exerciseId ? { exerciseId } : {}),
+        ...(session.context?.grammarId ? { grammarId: session.context.grammarId } : {}),
         skill: mode.skill,
         source: exerciseId ? 'drill' : 'quiz',
         level: session.level,
