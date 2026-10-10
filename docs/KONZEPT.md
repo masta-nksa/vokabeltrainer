@@ -615,7 +615,9 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
    *s'appelle/s'appellent*, *c'est/ce sont* und «Wer ist wer?» mit Generatoren
    `article`, `possessive`, `kinship`. Die GrammarPoints leben als Übungssets
    mit `grammarId` in `data/exercises/fr-disdonc.json`.
-6. **Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine».
+6. ~~**Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine»~~ –
+   erledigt auf `v2`, dazu Hinweise nach Fehlerart, Verwechslungspaare als
+   Ablenker und der Niveau-Vorschlag nach drei fast fehlerfreien Runden.
 7. **Kreuzworträtsel** mit Seed, dann **Genus-Sortierer**, **Speed-Runde**.
 8. **Challenge-Links** (Stufe A).
 9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik.

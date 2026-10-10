@@ -9,7 +9,9 @@ import * as reward from './ui/reward.js';
 import * as scoreboard from './ui/scoreboard.js';
 import * as screens from './ui/screens.js';
 import { shuffle } from './util.js';
-import { classify, editDistance } from './learning/errors.js';
+import { classify, editDistance, hintFor } from './learning/errors.js';
+import { readyForNextLevel } from './learning/mastery.js';
+import { LEVELS } from './learning/levels.js';
 import { tasksFor } from './data/exercises.js';
 
 const MAX_TRIES = 2;
@@ -20,10 +22,13 @@ let mode = null;
 let question = null;
 /** @type {(() => void) | null} */
 let onLeave = null;
+/** @type {((level: string) => void) | null} */
+let onLevelUp = null;
 
-/** @param {{onLeave: () => void}} config */
+/** @param {{onLeave: () => void, onLevelUp: (level: string) => void}} config */
 export function init(config) {
     onLeave = config.onLeave;
+    onLevelUp = config.onLevelUp;
 
     const field = document.getElementById('answer-input');
 
@@ -55,6 +60,12 @@ export function init(config) {
 
     document.getElementById('result-home')
         .addEventListener('click', () => leave());
+
+    document.getElementById('result-level-up').addEventListener('click', event => {
+        const next = event.currentTarget.dataset.level;
+        if (next) onLevelUp?.(next);
+        document.getElementById('result-level').hidden = true;
+    });
 }
 
 /**
@@ -63,11 +74,16 @@ export function init(config) {
  * @param {import('./storage/index.js').Deck} deck
  * @param {import('./storage/index.js').Item[]} items
  * @param {import('./state.js').Session['context']} [context]
- *   Kopfzeile und Herkunft, wenn sie nicht vom Modus kommen (Übungssets).
+ *   Kopfzeile und Herkunft, wenn sie nicht vom Modus kommen (Übungssets,
+ *   «Für dich»). `itemModes` gibt einzelnen Einträgen einen eigenen Modus,
+ *   `pool` eine grössere Auswahl für die Ablenker als die Runde selbst.
  */
 export function start(modeId, deck, items, context = null) {
     mode = getMode(modeId);
-    startSession({ deck, items: shuffle(items), pool: items, mode: modeId, level: state.level, context });
+    startSession({
+        deck, items: shuffle(items), pool: context?.pool ?? items,
+        mode: modeId, level: state.level, context
+    });
 
     document.getElementById('quiz-title').textContent = context?.title ?? mode.label;
     document.getElementById('quiz-subtitle').textContent = context?.subtitle ?? mode.description;
@@ -128,7 +144,16 @@ function nextQuestion() {
     session.errors = [];
     session.shownAt = Date.now();
     const item = session.items[session.index];
-    question = mode.buildQuestion(item, session.pool, session.level, session.deck);
+
+    // In einer gemischten Runde bringt jedes Wort seinen Modus mit.
+    const itemModes = session.context?.itemModes;
+    if (itemModes) {
+        mode = getMode(itemModes[item.id] ?? session.mode);
+        document.getElementById('quiz-subtitle').textContent = mode.description;
+    }
+
+    question = mode.buildQuestion(item, session.pool, session.level, session.deck,
+        { confusions: state.insight?.confusions });
 
     // Ein Bild wird nur in Modi gezeigt, die es nicht zu leicht machen – bei
     // "terms" stünde die Antwort sonst als Bild neben den vier Wörtern. Nur
@@ -277,9 +302,14 @@ function answer(given, button) {
 
     session.wrong++;
     session.tries++;
-    session.errors.push(describeError(given));
+    const error = describeError(given);
+    session.errors.push(error);
     reward.worse();
-    note.textContent = result.note ?? '';
+
+    // Getippte Antworten bekommen einen Hinweis auf die Art des Fehlers – auf
+    // Expert nicht, dort muss man selbst darauf kommen.
+    const hint = !button && session.level !== 'expert' ? hintForError(error) : null;
+    note.textContent = result.note ?? hint ?? '';
     scoreboard.render(session);
 
     if (button) {
@@ -300,6 +330,19 @@ function answer(given, button) {
         resolveItem();
         window.setTimeout(nextQuestion, 2500);
     }
+}
+
+/**
+ * Ein Satz dazu, was am Fehler falsch war. Bei einer Verwechslung: was das
+ * getippte Wort wirklich heisst.
+ * @param {import('./learning/errors.js').ErrorEntry} error
+ */
+function hintForError(error) {
+    if (error.type === 'confusion') {
+        const other = state.session.pool.find(entry => entry.id === error.confusedWith);
+        return other?.source ? `«${other.target}» heisst «${other.source}».` : null;
+    }
+    return hintFor(error);
 }
 
 // Eingaben werden gekürzt gespeichert – ein versehentlich eingefügter Text
@@ -368,11 +411,11 @@ function resolveItem() {
         deckId: session.deck.id,
         contentVersion: session.deck.version ?? 0,
         itemId: item.id,
-        mode: session.mode,
+        mode: mode.id,
         ...(exerciseId ? { exerciseId } : {}),
         ...(session.context?.grammarId ? { grammarId: session.context.grammarId } : {}),
         skill: mode.skill,
-        source: exerciseId ? 'drill' : 'quiz',
+        source: session.context?.source ?? (exerciseId ? 'drill' : 'quiz'),
         level: session.level,
         correct: clean,
         tries: session.tries,
@@ -431,5 +474,39 @@ function finish() {
 
     if (!hasMissed) reward.reveal();
 
+    suggestLevel(session, total, solved)
+        .catch(error => console.warn('Runde konnte nicht vermerkt werden:', error));
+
     screens.show('screen-result');
+}
+
+// So viele Runden bleiben für den Niveau-Vorschlag im Gedächtnis.
+const ROUNDS_KEPT = 20;
+
+/**
+ * Vermerkt die Runde und schlägt das nächste Niveau vor, wenn die letzten
+ * Runden auf diesem fast fehlerfrei waren. Die App wechselt nie von selbst.
+ */
+async function suggestLevel(session, total, clean) {
+    const box = document.getElementById('result-level');
+    box.hidden = true;
+
+    const rounds = await storage.getSetting('rounds', []);
+    rounds.push({ level: session.level, total, clean, ts: Date.now() });
+    await storage.setSetting('rounds', rounds.slice(-ROUNDS_KEPT));
+
+    const next = LEVELS[LEVELS.indexOf(session.level) + 1];
+    if (!next || !readyForNextLevel(rounds, session.level)) return;
+
+    // Derselbe Vorschlag kommt nicht nach jeder Runde wieder.
+    if (await storage.getSetting('levelSuggested', null) === next) return;
+    await storage.setSetting('levelSuggested', next);
+
+    const label = next.charAt(0).toUpperCase() + next.slice(1);
+    document.getElementById('result-level-text').textContent =
+        `Die letzten Runden liefen fast fehlerfrei. Bereit für das Niveau ${label}?`;
+    const button = document.getElementById('result-level-up');
+    button.textContent = `auf ${label} wechseln`;
+    button.dataset.level = next;
+    box.hidden = false;
 }

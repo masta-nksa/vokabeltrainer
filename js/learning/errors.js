@@ -154,6 +154,35 @@ export function classify({ given, expected, lang = '', others = [] }) {
     return { type: 'unknown' };
 }
 
+// Was man dem Lernenden nach einem Fehler dieser Art sagt.
+const HINTS = {
+    accent: 'Fast! Achte auf die Akzente.',
+    gender: 'Fast! Achte auf das Geschlecht – männlich oder weiblich?',
+    number: 'Fast! Einzahl oder Mehrzahl?',
+    elision: 'Fast! Vor einem Vokal wird der Artikel verkürzt.',
+    letters: 'Fast! Schau dir die Buchstaben nochmals an.'
+};
+
+/**
+ * Ein kurzer Hinweis zur Fehlerart – oder null, wenn sich nichts Hilfreiches
+ * sagen lässt.
+ * @param {{type: ErrorType}} error
+ * @returns {string | null}
+ */
+export function hintFor(error) {
+    return HINTS[error.type] ?? null;
+}
+
+// Bezeichnungen für die Ansicht «Meine Stolpersteine».
+export const ERROR_LABELS = {
+    accent: 'Akzente',
+    gender: 'Geschlecht (männlich / weiblich)',
+    number: 'Einzahl und Mehrzahl',
+    elision: 'Apostroph vor Vokal',
+    letters: 'Buchstaben vertauscht, vergessen oder doppelt',
+    confusion: 'Wörter verwechselt'
+};
+
 /**
  * Fehlerklasse einer Variante, deren Entstehung bekannt ist – im Modus
  * "spelling" wurde jede falsche Option durch benannte Operationen erzeugt

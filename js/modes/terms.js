@@ -55,8 +55,11 @@ function pickDistractors(candidates, answer, closeness, count) {
  * @param {import('../storage/index.js').Item} item
  * @param {import('../storage/index.js').Item[]} pool Nur die gewählten Lektionen
  * @param {import('../learning/levels.js').Level} [level]
+ * @param {import('../storage/index.js').Deck} [deck]
+ * @param {{confusions?: Map<string, string[]>}} [hints]
+ *   Was der Lernende schon verwechselt hat
  */
-export function buildQuestion(item, pool, level = 'erweitert') {
+export function buildQuestion(item, pool, level = 'erweitert', deck, hints = {}) {
     const settings = LEVELS[level] ?? LEVELS.erweitert;
 
     // Ablenker kommen aus den gewählten Lektionen. Sie stammen bewusst nicht
@@ -67,7 +70,22 @@ export function buildQuestion(item, pool, level = 'erweitert') {
 
     // Mehr Optionen bei höherem Niveau (Basis 4, Erweitert 6, Expert 8),
     // begrenzt durch das, was die gewählten Lektionen hergeben.
-    const distractors = pickDistractors(candidates, item.source, settings.distractors, optionCount(level) - 1);
+    const wanted = optionCount(level) - 1;
+
+    // Wörter, die schon einmal mit diesem verwechselt wurden, kommen
+    // absichtlich als Ablenker – bis die Unterscheidung sitzt. Basis bleibt
+    // davon verschont.
+    const partners = level === 'basis' ? [] : (hints.confusions?.get(item.id) ?? []);
+    const confused = pool
+        .filter(entry => partners.includes(entry.id) && candidates.includes(entry.source))
+        .map(entry => entry.source)
+        .slice(0, wanted);
+
+    const others = candidates.filter(text => !confused.includes(text));
+    const distractors = [
+        ...confused,
+        ...pickDistractors(others, item.source, settings.distractors, wanted - confused.length)
+    ];
     const options = shuffle([item.source, ...distractors]);
 
     return {

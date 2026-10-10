@@ -33,6 +33,36 @@ in der Auswahl unter den Modus-Knöpfen erscheinen, sobald eine passende
 Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Das
 Niveau wirkt hier noch nicht.
 
+## Für dich und Meine Stolpersteine
+
+Der Knopf **Für dich** stellt aus den gewählten Lektionen eine Runde von 15
+Wörtern zusammen: vor allem, was zur Wiederholung dran oder noch unsicher ist,
+dazu Neues und ein wenig Sicheres. Jedes Wort kommt im Modus, der zu seinem
+Stand passt – erst erkennen (*terms*), dann die Schreibweise (*spelling*),
+dann selbst schreiben (*writing*).
+
+Dahinter steht eine Lernkartei nach Leitner mit fünf Fächern (Wiederholung
+nach 1, 2, 4, 8, 16 Tagen). Auf Anhieb richtig lässt ein Wort ein Fach
+steigen – einmal pro Tag, erst ab Niveau Erweitert, und über Fach 3 hinaus
+nur, wenn es selbst geschrieben wurde. Ein Fehler bringt es zurück ins erste
+Fach.
+
+**Meine Stolpersteine** zeigt, wo es hakt: die Lernkartei, die häufigsten
+Fehlerarten der letzten 30 Tage mit Beispielen, verwechselte Wortpaare, die
+Trefferquote je Grammatikübung und die unsicheren Wörter – jeweils mit einem
+Knopf, der genau das übt. Wörter, die jemand verwechselt hat, tauchen ab
+Niveau Erweitert in *terms* absichtlich gemeinsam als Antwortmöglichkeiten
+auf.
+
+Nach einem Tippfehler sagt die App, woran es lag (Akzent, Geschlecht,
+Einzahl/Mehrzahl, Apostroph, Buchstaben) – auf Expert nicht. Waren die letzten
+drei Runden auf einem Niveau fast fehlerfrei, schlägt sie das nächste vor;
+umgestellt wird nur auf Knopfdruck.
+
+Der Lernstand wird nicht gespeichert, sondern bei jedem Öffnen aus den
+protokollierten Antworten berechnet (`js/learning/mastery.js`). Eine geänderte
+Regel gilt darum sofort für alles Bisherige.
+
 ## Drucken
 
 In der Lektionsauswahl unter **Drucken**: die gewählten Wörter entweder als
@@ -62,7 +92,8 @@ js/
   data/decks.js     Deck-Verwaltung, Einträge aufbereiten (prepareDeck)
   data/exercises.js Anwendungsübungen laden, Aufgaben einer Runde ziehen
   modes/            Lernmodi (terms, spelling, writing) und exercise
-  learning/         Niveaus, Fehlerklassen, Sprachprofile, Aufgaben-Generatoren
+  learning/         Niveaus, Fehlerklassen, Sprachprofile, Aufgaben-Generatoren,
+                    Lernstand (mastery.js rechnet, insight.js liest aus dem Speicher)
   ui/               Screens, Lektionsauswahl, Scoreboard, Druck, Belohnung
   speech/tts.js     Sprachausgabe
   speech/assess.js  Schnittstelle für die spätere Ausspracheprüfung
@@ -310,9 +341,8 @@ war: jeder Fehlversuch mit Eingabe und Fehlerklasse (`errors`), dazu Niveau,
 Fertigkeit (`skill`), Dauer und Deck-Version. Die Fehlerklassen – Akzent,
 Genus, Zahl, Elision, Buchstabenfehler, Verwechslung mit einem anderen Wort
 der Runde – bestimmt `js/learning/errors.js`. Auf Basis tolerierte Akzente
-stehen als `tolerated` mit drin. Angezeigt wird davon noch nichts; die Daten
-sind die Grundlage für die «Für dich»-Runde und das Schwächenprofil
-(docs/KONZEPT.md, Abschnitt 3).
+stehen als `tolerated` mit drin. Daraus entstehen die «Für dich»-Runde und
+die Ansicht «Meine Stolpersteine» (siehe oben).
 
 Das ist zugleich die Antwort auf die Frage nach einer Statistik. Entschieden
 (1. September 2026): **gemessen wird der Lernfortschritt, nicht der

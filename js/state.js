@@ -7,7 +7,8 @@
  * @property {import('./storage/index.js').Item[]} pool    Auswahlgrundlage für Ablenker
  * @property {string} mode
  * @property {import('./learning/levels.js').Level} level
- * @property {{title: string, subtitle: string, exerciseId?: string, grammarId?: string} | null} context
+ * @property {{title: string, subtitle: string, exerciseId?: string, grammarId?: string,
+ *   source?: string, itemModes?: Record<string, string>, pool?: import('./storage/index.js').Item[]} | null} context
  *   Kopfzeile und Herkunft einer Runde, wenn sie nicht vom Modus selbst kommt
  *   (Anwendungsübungen). Sonst null.
  * @property {number} index
@@ -31,6 +32,8 @@ export const state = {
     selectedUnits: [],
     /** @type {import('./learning/levels.js').Level} */
     level: 'erweitert',
+    /** @type {import('./learning/insight.js').Insight | null} Lernstand zum gewählten Deck */
+    insight: null,
     /** @type {Session | null} */
     session: null
 };

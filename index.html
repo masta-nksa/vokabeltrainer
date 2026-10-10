@@ -114,6 +114,14 @@
                     <label><input type="radio" name="level" value="erweitert" checked> Erweitert</label>
                     <label><input type="radio" name="level" value="expert"> Expert</label>
                 </fieldset>
+
+                <button type="button" id="foryou-start" class="primary wide">Für dich</button>
+                <p class="hint">
+                    <span id="foryou-hint"></span>
+                    <button type="button" id="insight-open" class="link">Meine Stolpersteine</button>
+                </p>
+
+                <span class="label">Oder einen Modus wählen</span>
                 <div class="modes">
                     <button type="button" class="primary" data-mode="terms">terms</button>
                     <button type="button" class="primary" data-mode="spelling">spelling</button>
@@ -214,10 +222,51 @@
                 <ul id="result-list" class="result-list"></ul>
             </div>
 
+            <div id="result-level" class="card" hidden>
+                <p id="result-level-text"></p>
+                <button type="button" id="result-level-up" class="primary"></button>
+            </div>
+
             <div class="modes">
                 <button type="button" id="result-missed" class="primary">Fehler wiederholen</button>
                 <button type="button" id="result-again">ganze Runde nochmals</button>
                 <button type="button" id="result-home" class="link">zur Auswahl</button>
+            </div>
+        </section>
+
+        <!-- Lernstand und Schwächen -->
+        <section id="screen-insight" class="screen" hidden>
+            <div class="row spread">
+                <h1>Meine Stolpersteine</h1>
+                <button type="button" id="insight-home" class="link">zurück</button>
+            </div>
+            <p id="insight-scope" class="hint"></p>
+
+            <div class="card">
+                <h2>Lernkartei</h2>
+                <div id="insight-boxes" class="boxes"></div>
+                <p id="insight-summary" class="hint"></p>
+            </div>
+
+            <div class="card">
+                <h2>Das passiert dir oft</h2>
+                <div id="insight-errors"></div>
+            </div>
+
+            <div id="insight-confusions-card" class="card" hidden>
+                <h2>Diese Wörter verwechselst du</h2>
+                <div id="insight-confusions"></div>
+            </div>
+
+            <div id="insight-grammar-card" class="card" hidden>
+                <h2>Grammatik</h2>
+                <div id="insight-grammar"></div>
+            </div>
+
+            <div id="insight-weak-card" class="card" hidden>
+                <h2>Noch unsicher</h2>
+                <ul id="insight-weak" class="result-list"></ul>
+                <button type="button" id="insight-weak-start" class="primary">diese Wörter üben</button>
             </div>
         </section>
 

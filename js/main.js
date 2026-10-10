@@ -8,6 +8,9 @@ import { exercisesFor, setsForUnits, tasksFor } from './data/exercises.js';
 import { state } from './state.js';
 import { stripDiacritics } from './util.js';
 import { toLevel } from './learning/levels.js';
+import { loadInsight } from './learning/insight.js';
+import { pickForYou, summarize } from './learning/mastery.js';
+import * as insightView from './ui/insight.js';
 import * as screens from './ui/screens.js';
 import * as lessonSelect from './ui/lessonSelect.js';
 import * as print from './ui/print.js';
@@ -75,6 +78,9 @@ async function openSelection() {
     document.getElementById('greeting').textContent =
         `Hallo ${state.learnerName}, los geht es.`;
 
+    // Nach einer Runde hat sich der Lernstand geändert.
+    insightStale = true;
+
     const lastDeckId = await storage.getSetting('lastDeckId', null);
     await lessonSelect.refresh(lastDeckId);
     screens.show('screen-select');
@@ -96,11 +102,114 @@ function onSelectionChange() {
 
     renderVoicePicker();
     refreshExercises().catch(error => console.warn('Übungen nicht geladen:', error));
+    refreshInsight().catch(error => console.warn('Lernstand nicht geladen:', error));
 }
 
 function selectedItems() {
     if (!state.deck) return [];
     return itemsFrom(state.deck, state.selectedUnits, state.level);
+}
+
+// ------------------------------------------------------------ Lernstand
+
+/** Nach einer Runde oder einem Deckwechsel muss der Lernstand neu gelesen werden. */
+let insightStale = true;
+
+/**
+ * Liest den Lernstand zum gewählten Deck (nur wenn nötig) und beschriftet den
+ * Knopf «Für dich» mit dem, was ansteht.
+ */
+async function refreshInsight() {
+    const deck = state.deck;
+    const button = document.getElementById('foryou-start');
+    const hint = document.getElementById('foryou-hint');
+
+    if (!deck) {
+        state.insight = null;
+        button.disabled = true;
+        hint.textContent = '';
+        return;
+    }
+
+    if (insightStale || state.insight?.deckId !== deck.id) {
+        insightStale = false;
+        const insight = await loadInsight(deck);
+        // Zwischenzeitlicher Deckwechsel: Ergebnis gehört nicht mehr hierher.
+        if (state.deck?.id !== deck.id) return;
+        state.insight = insight;
+    }
+
+    const items = selectedItems();
+    button.disabled = items.length === 0;
+    if (items.length === 0) {
+        hint.textContent = '';
+        return;
+    }
+
+    const summary = summarize(items, state.insight.mastery, state.insight.now);
+    hint.textContent = `Die App wählt aus: ${summary.due} zur Wiederholung, ${summary.new} neu, ${summary.safe} sitzen. `;
+}
+
+/** Startet die gemischte Runde: fällige, neue und ein paar sichere Wörter. */
+function startForYou() {
+    const deck = state.deck;
+    const items = selectedItems();
+    if (!deck || !state.insight || items.length === 0) return;
+
+    const picked = pickForYou(items, state.insight.mastery, Date.now());
+    quiz.start('terms', deck, picked.map(entry => entry.item), {
+        title: 'Für dich',
+        subtitle: '',
+        source: 'foryou',
+        itemModes: Object.fromEntries(picked.map(entry => [entry.item.id, entry.mode])),
+        pool: items
+    });
+}
+
+/** Öffnet «Meine Stolpersteine» für die gewählten Lektionen – oder das ganze Deck. */
+async function openInsight() {
+    const deck = state.deck;
+    if (!deck || !state.insight) return;
+
+    const selected = selectedItems();
+    const everything = itemsFrom(deck, deck.units.map(unit => unit.id), state.level);
+    const scope = selected.length > 0 ? selected : everything;
+    const label = selected.length > 0
+        ? `${deck.title} · gewählte Lektionen (${selected.length} Wörter)`
+        : `${deck.title} · alle Lektionen (${everything.length} Wörter)`;
+
+    const sets = await exercisesFor(deck.id);
+
+    insightView.render(deck, scope, label, state.insight, sets, {
+        practice(items, modeId, title) {
+            if (items.length === 0) return;
+            quiz.start(modeId, deck, items, {
+                title, subtitle: '', source: 'insight',
+                // Ablenker aus dem ganzen Deck, sonst gäbe es bei zwei Wörtern keine Wahl.
+                pool: everything
+            });
+        },
+        practiceGrammar(exerciseId) {
+            const set = sets.find(entry => entry.id === exerciseId);
+            if (set) quiz.startExercise(deck, set);
+            return Boolean(set);
+        }
+    });
+
+    screens.show('screen-insight');
+}
+
+/** Stellt das Niveau um – vom Schalter oder vom Vorschlag nach einer Runde. */
+function setLevel(level) {
+    state.level = toLevel(level);
+    storage.setSetting('level', state.level);
+
+    const radio = document.querySelector(`input[name="level"][value="${state.level}"]`);
+    if (radio) radio.checked = true;
+
+    // Das Niveau bestimmt auch, welche Wörter dazugehören.
+    lessonSelect.refreshCounts();
+    onSelectionChange();
 }
 
 // ------------------------------------------------------------ Anwenden
@@ -253,15 +362,15 @@ function initSelection() {
 
     for (const radio of document.querySelectorAll('input[name="level"]')) {
         radio.addEventListener('change', () => {
-            if (!radio.checked) return;
-            state.level = toLevel(radio.value);
-            storage.setSetting('level', state.level);
-
-            // Das Niveau bestimmt auch, welche Wörter dazugehören.
-            lessonSelect.refreshCounts();
-            onSelectionChange();
+            if (radio.checked) setLevel(radio.value);
         });
     }
+
+    document.getElementById('foryou-start').addEventListener('click', startForYou);
+    document.getElementById('insight-open').addEventListener('click', () => {
+        openInsight().catch(error => console.warn('Lernstand nicht geladen:', error));
+    });
+    document.getElementById('insight-home').addEventListener('click', () => screens.show('screen-select'));
 
     for (const button of document.querySelectorAll('[data-mode]')) {
         button.addEventListener('click', () => {
@@ -351,7 +460,7 @@ async function main() {
     initSelection();
     initImport();
     print.init();
-    quiz.init({ onLeave: openSelection });
+    quiz.init({ onLeave: openSelection, onLevelUp: setLevel });
 
     await ensureBuiltinDecks();
 

@@ -1,11 +1,17 @@
 // Selbsttest für Niveaus und Fehlerklassen: node tools/test-learning.mjs
-import { classify, fromOperations, editDistance } from '../js/learning/errors.js';
+import { classify, fromOperations, editDistance, hintFor } from '../js/learning/errors.js';
 import { toLevel } from '../js/learning/levels.js';
 import { splitArticle, misspellings } from '../js/util.js';
 import * as writing from '../js/modes/writing.js';
 import * as spelling from '../js/modes/spelling.js';
 import { enrichItem, inLevel, targetForms, groupOf, itemsFrom, prepareDeck } from '../js/data/decks.js';
 import { generate, germanWith, relation } from '../js/learning/generators.js';
+import {
+    projectMastery, statusOf, isDue, stageMode, summarize, pickForYou,
+    buildProfile, confusionPartners, readyForNextLevel
+} from '../js/learning/mastery.js';
+import { aliasMap, canonicalize } from '../js/learning/insight.js';
+import * as terms from '../js/modes/terms.js';
 
 let failures = 0;
 const check = (name, condition) => {
@@ -233,6 +239,97 @@ const uncleTask = kinMid.find(task => task.id === 'k:jules-emma-lea');
 check('Erweitert: Kette zum Onkel', uncleTask && [].concat(uncleTask.answer)[0] === "l'oncle" && !uncleTask.choices);
 const kinExpert = generate(kinSet, grammarDeck, 'expert');
 check('Expert: nur Ketten und Enkel', kinExpert.length > 0 && kinExpert.length < kinMid.length);
+
+// ---------------------------------------------------------- Lernstand
+
+const DAY = 24 * 60 * 60 * 1000;
+const T0 = Date.UTC(2026, 9, 1, 8);
+const att = (itemId, day, correct, extra = {}) =>
+    ({ id: `${itemId}-${day}-${Math.random()}`, userId: 'local', deckId: 'd', itemId, mode: 'writing', skill: 'produce',
+       level: 'erweitert', correct, tries: correct ? 0 : 1, ts: T0 + day * DAY, ...extra });
+
+let m = projectMastery([att('a', 0, true)]);
+check('richtig → Fach 1, fällig am nächsten Tag', m.get('a').box === 1 && m.get('a').due === T0 + DAY);
+m = projectMastery([att('a', 0, true), att('a', 0, true), att('a', 0, true)]);
+check('mehrmals am selben Tag → nur ein Fach', m.get('a').box === 1);
+m = projectMastery([att('a', 0, true), att('a', 1, true), att('a', 3, true)]);
+check('an drei Tagen richtig → Fach 3', m.get('a').box === 3 && m.get('a').due === T0 + 3 * DAY + 4 * DAY);
+m = projectMastery([att('a', 0, true), att('a', 1, true), att('a', 2, false)]);
+check('Fehler → zurück ins Fach 1, sofort fällig', m.get('a').box === 1 && isDue(m.get('a'), T0 + 2 * DAY));
+m = projectMastery([0, 1, 2, 3, 4, 5].map(day => att('a', day, true, { mode: 'terms', skill: 'recognize' })));
+check('ohne selbst zu schreiben höchstens Fach 3', m.get('a').box === 3);
+m = projectMastery([0, 1, 2, 3, 4, 5].map(day => att('a', day, true)));
+check('selbst geschrieben → bis Fach 5', m.get('a').box === 5 && statusOf(m.get('a')) === 'safe');
+m = projectMastery([0, 1, 2].map(day => att('a', day, true, { level: 'basis' })));
+check('Basis: erkannt, aber nicht sicher', m.get('a').box === 1);
+m = projectMastery([{ id: 'x', userId: 'local', deckId: 'd', itemId: 'a', mode: 'terms', correct: true, tries: 0, ts: T0 }]);
+check('alte Datensätze ohne Niveau zählen', m.get('a').box === 1);
+m = projectMastery([att('a', 0, true, { mode: 'exercise' })]);
+check('Übungsaufgaben sind keine Wörter', m.size === 0);
+
+check('Modus nach Fach: erkennen → Schreibweise → schreiben',
+    stageMode(undefined) === 'terms' && stageMode({ box: 1 }) === 'terms'
+    && stageMode({ box: 2 }) === 'spelling' && stageMode({ box: 4 }) === 'writing');
+
+const words = Array.from({ length: 30 }, (_, i) => ({ id: `w${i}`, source: `s${i}`, target: `t${i}` }));
+const history = [
+    ...words.slice(0, 10).map(word => att(word.id, 0, false)),          // unsicher
+    ...words.slice(10, 20).flatMap(word => [att(word.id, 0, true), att(word.id, 1, true)])  // Fach 2, fällig an Tag 3
+];
+const state1 = projectMastery(history);
+const sum = summarize(words, state1, T0 + 1.5 * DAY);
+check('Übersicht zählt neu / unsicher / am Lernen', sum.new === 10 && sum.weak === 10 && sum.learning === 10 && sum.due === 10);
+const round = pickForYou(words, state1, T0 + 1.5 * DAY, 10);
+const kinds = round.map(entry => statusOf(state1.get(entry.item.id)));
+check('«Für dich»: 6 fällige, 3 neue, 1 sicheres',
+    round.length === 10 && kinds.filter(k => k === 'weak').length === 6
+    && kinds.filter(k => k === 'new').length === 3 && kinds.filter(k => k === 'learning').length === 1);
+check('«Für dich»: jedes Wort im Modus seines Fachs',
+    round.every(entry => entry.mode === stageMode(state1.get(entry.item.id))));
+check('«Für dich»: füllt auf, wenn nichts fällig ist',
+    pickForYou(words, new Map(), T0, 15).length === 15 && pickForYou(words.slice(0, 4), new Map(), T0, 15).length === 4);
+
+const profile = buildProfile([
+    att('a', 0, false, { errors: [{ given: 'la mere', type: 'accent' }] }),
+    att('b', 0, false, { errors: [{ given: 'la regle', type: 'accent' }, { given: 'le règle', type: 'gender' }] }),
+    att('c', 1, false, { mode: 'terms', errors: [{ given: 'x', type: 'confusion', confusedWith: 'a' }] }),
+    att('a', 1, false, { mode: 'terms', errors: [{ given: 'y', type: 'confusion', confusedWith: 'c' }] }),
+    att('g1', 1, false, { mode: 'exercise', grammarId: 'fr.possessif', exerciseId: 'u2-possessif', errors: [{ given: 'mon', type: 'gender' }] }),
+    att('g2', 1, true, { mode: 'exercise', grammarId: 'fr.possessif', exerciseId: 'u2-possessif' }),
+    att('old', -60, false, { errors: [{ given: 'z', type: 'letters' }] })
+], T0 + 2 * DAY);
+check('Profil: häufigste Fehlerart zuerst, mit Beispielen',
+    profile.errorTypes[0].count === 2 && ['accent', 'gender', 'confusion'].includes(profile.errorTypes[0].type)
+    && profile.errorTypes.find(e => e.type === 'accent').examples[0].given === 'la mere');
+check('Profil: Verwechslung zählt in beide Richtungen als ein Paar',
+    profile.confusions.length === 1 && profile.confusions[0].count === 2 && confusionPartners(profile).get('a')[0] === 'c');
+check('Profil: Grammatikpunkt mit Trefferquote',
+    profile.grammar[0].grammarId === 'fr.possessif' && profile.grammar[0].total === 2 && profile.grammar[0].clean === 1);
+check('Profil: alte Fehler zählen nicht mehr', !profile.errorTypes.some(e => e.type === 'letters'));
+check('Profil: Übungsfehler liefern keine Wort-Beispiele',
+    profile.errorTypes.find(e => e.type === 'gender').itemIds.join() === 'b');
+
+const aliasDeck = { units: [{ items: [{ id: 'u1-regle', aliases: ['lernziel-s-002'] }, { id: 'u1-livre' }] }] };
+const moved = canonicalize([
+    att('lernziel-s-002', 0, true),
+    att('u1-livre', 0, false, { errors: [{ given: 'x', type: 'confusion', confusedWith: 'lernziel-s-002' }] })
+], aliasMap(aliasDeck));
+check('alte Kennungen wandern auf die neuen',
+    moved[0].itemId === 'u1-regle' && moved[1].errors[0].confusedWith === 'u1-regle' && moved[1].itemId === 'u1-livre');
+
+const good = { level: 'basis', total: 10, clean: 10 };
+check('Niveau-Vorschlag nach drei fast fehlerfreien Runden',
+    readyForNextLevel([good, good, good], 'basis') && !readyForNextLevel([good, good], 'basis')
+    && !readyForNextLevel([good, { level: 'basis', total: 10, clean: 7 }, good], 'basis')
+    && !readyForNextLevel([good, good, { level: 'basis', total: 3, clean: 3 }], 'basis'));
+
+const confusedQuestion = terms.buildQuestion(
+    { id: 'tante', source: 'die Tante', target: 'la tante' },
+    [{ id: 'tante', source: 'die Tante', target: 'la tante' }, { id: 'oncle', source: 'ein Onkel', target: 'un oncle' },
+     ...words],
+    'erweitert', course, { confusions: new Map([['tante', ['oncle']]]) });
+check('verwechseltes Wort kommt als Ablenker', confusedQuestion.options.includes('ein Onkel') && confusedQuestion.options.length === 6);
+check('Hinweis zur Fehlerart', hintFor({ type: 'gender' }).includes('Geschlecht') && hintFor({ type: 'unknown' }) === null);
 
 console.log(failures === 0 ? '\nAlle Prüfungen bestanden.' : `\n${failures} Prüfung(en) fehlgeschlagen.`);
 process.exit(failures === 0 ? 0 : 1);
