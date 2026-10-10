@@ -4,11 +4,26 @@
   "sourceLang": "de",
   "targetLang": "en",
   "builtin": true,
-  "version": 4,
+  "version": 5,
+  "groups": [
+    {
+      "id": "3_1",
+      "title": "Unit 1 – Amazing Animals"
+    },
+    {
+      "id": "3_2",
+      "title": "Unit 2 – Music"
+    },
+    {
+      "id": "3_3",
+      "title": "Unit 3 – Sport"
+    }
+  ],
   "units": [
     {
       "id": "3_1-t1",
-      "title": "3_1 Unit 1 – Amazing Animals · Test 1 (3. Sep)",
+      "title": "Test 1 (3. Sep)",
+      "group": "3_1",
       "test": {
         "date": "2026-09-03"
       },
@@ -137,7 +152,8 @@
     },
     {
       "id": "3_1-t2",
-      "title": "3_1 Unit 1 – Amazing Animals · Test 2 (17. Sep)",
+      "title": "Test 2 (17. Sep)",
+      "group": "3_1",
       "test": {
         "date": "2026-09-17"
       },
@@ -225,7 +241,8 @@
     },
     {
       "id": "3_2-t1",
-      "title": "3_2 Unit 2 – Music · Test 1 (29. Okt)",
+      "title": "Test 1 (29. Okt)",
+      "group": "3_2",
       "test": {
         "date": "2026-10-29"
       },
@@ -361,7 +378,8 @@
     },
     {
       "id": "3_2-t2",
-      "title": "3_2 Unit 2 – Music · Test 2 (12. Nov)",
+      "title": "Test 2 (12. Nov)",
+      "group": "3_2",
       "test": {
         "date": "2026-11-12"
       },
@@ -492,7 +510,8 @@
     },
     {
       "id": "3_3-t1",
-      "title": "3_3 Unit 3 – Sport · Test 1 (10. Dez)",
+      "title": "Test 1 (10. Dez)",
+      "group": "3_3",
       "test": {
         "date": "2026-12-10"
       },
@@ -609,7 +628,8 @@
     },
     {
       "id": "3_3-t2",
-      "title": "3_3 Unit 3 – Sport · Test 2 (14. Jan)",
+      "title": "Test 2 (14. Jan)",
+      "group": "3_3",
       "test": {
         "date": "2027-01-14"
       },

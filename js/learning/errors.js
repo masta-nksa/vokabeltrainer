@@ -7,6 +7,7 @@
 // node tools/test-learning.mjs prüfen lässt.
 
 import { normalize, stripDiacritics } from '../util.js';
+import { languageProfile } from './languages.js';
 
 /**
  * @typedef {Object} ErrorEntry
@@ -20,33 +21,6 @@ import { normalize, stripDiacritics } from '../util.js';
  *
  * @typedef {'accent' | 'gender' | 'number' | 'elision' | 'letters' | 'confusion' | 'unknown'} ErrorType
  */
-
-// Wortpaare, die sich nur im Genus bzw. nur in der Zahl unterscheiden. Kommt
-// später ins Sprachprofil; die Reihenfolge innerhalb eines Paars spielt keine
-// Rolle.
-const PAIRS = {
-    fr: {
-        gender: [
-            ['le', 'la'], ['un', 'une'], ['mon', 'ma'], ['ton', 'ta'], ['son', 'sa'],
-            ['il', 'elle'], ['ils', 'elles'], ['ce', 'cette'], ['cet', 'cette']
-        ],
-        number: [
-            ['le', 'les'], ['la', 'les'], ["l'", 'les'], ['un', 'des'], ['une', 'des'],
-            ['mon', 'mes'], ['ma', 'mes'], ['ton', 'tes'], ['ta', 'tes'], ['son', 'ses'], ['sa', 'ses'],
-            ['il', 'ils'], ['elle', 'elles'], ['est', 'sont'], ['a', 'ont'],
-            ['ce', 'ces'], ['cette', 'ces'], ['appelle', 'appellent']
-        ]
-    },
-    en: {
-        gender: [['he', 'she'], ['his', 'her'], ['him', 'her'], ['himself', 'herself']],
-        number: [['is', 'are'], ['was', 'were'], ['has', 'have'], ['this', 'these'], ['that', 'those']]
-    }
-};
-
-const VOWEL_START = /^[aeiouyhàâäéèêëîïôöûüù]/;
-
-// Französische Elision: le/la/de/… vor Vokal werden zu l'/d'/…
-const ELIDING = { le: "l'", la: "l'", de: "d'", je: "j'", se: "s'", ce: "c'", ne: "n'", me: "m'", te: "t'", que: "qu'" };
 
 /** Zerlegt in Wörter; ein elidiertes l', s', qu' … ist ein eigenes Wort. */
 function tokens(text) {
@@ -64,27 +38,24 @@ function inPairs(pairs, a, b) {
  * Unterscheiden sich zwei Wörter nur im Genus oder nur in der Zahl?
  * @returns {'gender' | 'number' | null}
  */
-function agreementKind(a, b, code) {
-    const pairs = PAIRS[code];
-    if (pairs) {
-        if (inPairs(pairs.gender, a, b)) return 'gender';
-        if (inPairs(pairs.number, a, b)) return 'number';
-    }
+function agreementKind(a, b, profile) {
+    if (inPairs(profile.pairs.gender, a, b)) return 'gender';
+    if (inPairs(profile.pairs.number, a, b)) return 'number';
 
     const [short, long] = a.length < b.length ? [a, b] : [b, a];
     if (long === short + 's' || long === short + 'x') return 'number';
-    if (code === 'fr' && long === short + 'e') return 'gender';
+    if (profile.genderByE && long === short + 'e') return 'gender';
     return null;
 }
 
 /** Wendet die Elision an: "le acteur" → "l'acteur". */
-function elide(text) {
+function elide(text, profile) {
     const words = tokens(text);
     const out = [];
     for (let i = 0; i < words.length; i++) {
         const next = words[i + 1];
-        if (ELIDING[words[i]] && next && VOWEL_START.test(next)) {
-            out.push(ELIDING[words[i]] + next);
+        if (profile.eliding[words[i]] && next && profile.vowelStart.test(next)) {
+            out.push(profile.eliding[words[i]] + next);
             i++;
         } else {
             out.push(words[i]);
@@ -150,20 +121,20 @@ function letterDetail(given, expected) {
 export function classify({ given, expected, lang = '', others = [] }) {
     const g = normalize(given);
     const e = normalize(expected);
-    const code = lang.slice(0, 2).toLowerCase();
+    const profile = languageProfile(lang);
 
     const other = others.find(entry => normalize(entry.text) === g && normalize(entry.text) !== e);
     if (other) return { type: 'confusion', confusedWith: other.id };
 
     if (stripDiacritics(g) === stripDiacritics(e)) return { type: 'accent' };
 
-    if (code === 'fr' && (elide(g) === e || elide(e) === g)) return { type: 'elision' };
+    if (profile.eliding && (elide(g, profile) === e || elide(e, profile) === g)) return { type: 'elision' };
 
     const gt = tokens(g);
     const et = tokens(e);
     if (gt.length === et.length) {
         const kinds = gt
-            .map((word, i) => (word === et[i] ? 'same' : agreementKind(word, et[i], code)))
+            .map((word, i) => (word === et[i] ? 'same' : agreementKind(word, et[i], profile)))
             .filter(kind => kind !== 'same');
         if (kinds.length > 0 && kinds.every(Boolean)) {
             return { type: kinds.includes('number') ? 'number' : 'gender' };

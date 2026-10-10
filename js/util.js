@@ -1,5 +1,7 @@
 // Kleine Helfer ohne eigene Zuständigkeit.
 
+import { languageProfile } from './learning/languages.js';
+
 /**
  * Mischt eine Kopie des Arrays (Fisher-Yates, gleichverteilt).
  * @template T
@@ -41,19 +43,12 @@ export function optionCount(level) {
     return { basis: 4, erweitert: 6, expert: 8 }[level] ?? 4;
 }
 
-// Artikel, die am Anfang eines Eintrags stehen können. Kommt später in ein
-// Sprachprofil (docs/KONZEPT.md, Abschnitt 6); bis dahin genügt diese Liste.
-const ARTICLES = {
-    fr: ['le', 'la', 'les', 'un', 'une', 'des'],
-    en: ['a', 'an', 'the']
-};
-
 /**
  * Trennt einen führenden Artikel ab: "la grand-mère" → la + grand-mère,
  * "l'acteur" → l' + acteur. Ganze Sätze, lange Wendungen und Einträge mit
  * mehreren Formen ("les maths, les mathématiques (f pl)", "un/une enfant")
  * bleiben unberührt – dort ist das erste Wort nicht einfach der Artikel eines
- * Nomens.
+ * Nomens. Welche Wörter Artikel sind, sagt das Sprachprofil.
  * @param {string} text
  * @param {string} lang BCP-47, nur der Sprachteil zählt
  * @returns {{article: string, rest: string, joiner: string} | null}
@@ -62,18 +57,13 @@ export function splitArticle(text, lang) {
     const trimmed = text.trim();
     if (/[.!?]$/.test(trimmed) || /[,()/;]/.test(trimmed) || trimmed.split(/\s+/).length > 4) return null;
 
-    const code = (lang ?? '').slice(0, 2).toLowerCase();
+    const profile = languageProfile(lang);
 
-    if (code === 'fr') {
-        const elided = trimmed.match(/^([lL]['’])(\S.*)$/);
-        if (elided) return { article: elided[1], rest: elided[2], joiner: '' };
-    }
-
-    const words = ARTICLES[code];
-    if (!words) return null;
+    const elided = profile.elided ? trimmed.match(profile.elided) : null;
+    if (elided) return { article: elided[1], rest: elided[2], joiner: '' };
 
     const match = trimmed.match(/^(\S+)\s+(.+)$/);
-    if (!match || !words.includes(match[1].toLowerCase())) return null;
+    if (!match || !profile.articles[match[1].toLowerCase()]) return null;
     return { article: match[1], rest: match[2], joiner: ' ' };
 }
 

@@ -9,24 +9,43 @@ import * as db from './db.js';
 
 /**
  * @typedef {Object} Item
- * @property {string} id
+ * @property {string} id       Stabil: wird nie für einen anderen Eintrag
+ *                             wiederverwendet (der Lernstand hängt daran)
  * @property {string} source   Wort in der Ausgangssprache
- * @property {string} target   Wort in der Zielsprache
+ * @property {string} target   Wort in der Zielsprache, die Hauptform
+ * @property {string[]} [accept]  Weitere Schreibweisen, die als richtig gelten
  * @property {string} [hint]
  * @property {string} [image]  Emoji direkt, oder Dateiname unter
  *                             img/decks/<deckId>/ – aufgelöst durch resolveImage
+ * @property {'basis' | 'erweitert' | 'expert'} [level]  Ohne Angabe: basis
+ * @property {string} [lemma]  Ohne Artikel; sonst aus `target` abgeleitet
+ * @property {string} [pos]    noun | verb | adj | phrase | …
+ * @property {'m' | 'f'} [gender]   Nur nötig, wo der Artikel es nicht verrät
+ * @property {'sg' | 'pl'} [number]
+ * @property {string[]} [tags]     Wortfeld u.ä., z.B. "wf:famille"
+ * @property {string} [concept]    Verknüpft dieselbe Bedeutung über Sprachen
+ * @property {string[]} [aliases]  Frühere Kennungen dieses Eintrags
  *
- * @typedef {Object} Unit
+ * Die Felder ab `level` ergänzt prepareDeck (js/data/decks.js), soweit sie
+ * sich aus dem Eintrag ablesen lassen.
+ *
+ * @typedef {Object} Unit      Eine wählbare Lektion (Lernziel, Voci-Test)
  * @property {string} id
  * @property {string} title
+ * @property {string} [group]  Zu welcher Unit des Lehrmittels sie gehört
+ * @property {{date: string}} [test]  Testtermin, ISO-Datum
  * @property {Item[]} items
  *
- * @typedef {Object} Deck
+ * @typedef {Object} Deck      Ein Kurs: Lehrmittel und Sprache
  * @property {string} id
  * @property {string} title
  * @property {string} sourceLang  BCP-47, z.B. "de"
  * @property {string} targetLang  BCP-47, z.B. "fr"
  * @property {boolean} [builtin]
+ * @property {number} [version]
+ * @property {string[]} [aliases]  Frühere Deck-Kennungen (Lernstand bleibt)
+ * @property {{id: string, title: string}[]} [groups]  Units des Lehrmittels,
+ *                                in der Reihenfolge der Anzeige
  * @property {Unit[]} units
  *
  * @typedef {Object} Attempt

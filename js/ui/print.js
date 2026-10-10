@@ -2,7 +2,10 @@
 // Ausfüllen.
 
 import { shuffle } from '../util.js';
-import { languageName } from '../data/decks.js';
+import { languageName, targetForms } from '../data/decks.js';
+
+// Auf dem Blatt stehen alle Schreibweisen: "la géo, la géographie".
+const targetText = item => targetForms(item).join(', ');
 
 /** @type {import('../storage/index.js').Item[]} */
 let rows = [];
@@ -79,13 +82,13 @@ function renderTable() {
     for (const item of rows) {
         const row = body.insertRow();
         if (mode === 'both') {
-            row.insertCell().textContent = item.target;
+            row.insertCell().textContent = targetText(item);
             row.insertCell().textContent = item.source;
         } else if (mode === 'source') {
             row.insertCell().textContent = item.source;
             row.insertCell().className = 'blank';
         } else {
-            row.insertCell().textContent = item.target;
+            row.insertCell().textContent = targetText(item);
             row.insertCell().className = 'blank';
         }
     }
@@ -137,9 +140,9 @@ const CARDS_PER_PAGE = 8; // 2 Spalten x 4 Zeilen
 
 function cardLines(item) {
     const mode = printMode();
-    if (mode === 'target') return [item.target];
+    if (mode === 'target') return [targetText(item)];
     if (mode === 'source') return [item.source];
-    return [item.target, item.source];
+    return [targetText(item), item.source];
 }
 
 function isDuplex() {
@@ -173,7 +176,7 @@ function printCardsWindow() {
     for (let i = 0; i < rows.length; i += CARDS_PER_PAGE) {
         const pageItems = rows.slice(i, i + CARDS_PER_PAGE);
         if (duplex) {
-            const frontHtml = pageItems.map(item => cardHtml(item.target, false)).join('');
+            const frontHtml = pageItems.map(item => cardHtml(targetText(item), false)).join('');
             const backHtml = pageItems.map(item => cardHtml(item.source, true)).join('');
             pagesHtml.push('<section class="card-page">' + frontHtml + '</section>');
             pagesHtml.push('<section class="card-page">' + backHtml + '</section>');

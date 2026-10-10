@@ -10,13 +10,16 @@
       "id": "en-doubledecker-3",
       "title": "English – DoubleDecker 3",
       "file": "data/decks/en-doubledecker-3.json",
-      "version": 4
+      "version": 5
     },
     {
-      "id": "fr-unite-1",
-      "title": "Französisch – Unité 1",
-      "file": "data/decks/fr-unite-1.json",
-      "version": 1
+      "id": "fr-disdonc",
+      "title": "Französisch – dis donc!",
+      "file": "data/decks/fr-disdonc.json",
+      "version": 1,
+      "replaces": [
+        "fr-unite-1"
+      ]
     }
   ]
 }

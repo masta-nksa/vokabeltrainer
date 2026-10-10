@@ -85,8 +85,12 @@
                     <tr>
                         <th class="nr">#</th>
                         <th>Original (Hinweis)</th>
-                        <th>English</th>
+                        <th id="col-target">English</th>
                         <th>Deutsch</th>
+                        <th>weitere Formen</th>
+                        <th>Lektion</th>
+                        <th>Niveau</th>
+                        <th>Genus</th>
                         <th>Bild</th>
                         <th class="keep">dabei</th>
                         <th></th>
@@ -98,6 +102,10 @@
             <p class="sub">Bild: ein Emoji (Klick oben fügt es ins zuletzt gewählte Feld ein) oder
                 ein Dateiname aus <code>img/decks/&lt;deck&gt;/</code>. Leer lassen heisst: kein Bild.
                 Keine Grafik aus dem Original übernehmen.</p>
+            <p class="sub">Weitere Formen: Schreibweisen, die ebenfalls als richtig gelten, mit Komma
+                getrennt (<em>la maman</em> neben <em>la mère</em>). Niveau: <em>Erweitert</em> für den
+                Zusatzwortschatz («Vocabulaire plus»). Genus nur eintragen, wo der Artikel es nicht
+                verrät (<em>l'âge</em>, <em>les parents</em>).</p>
             <button type="button" id="add-row">Zeile anhängen</button>
         </div>
 
@@ -186,6 +194,19 @@
             });
         }
 
+        function selectCell(value, options, onChange) {
+            const td = document.createElement('td');
+            const select = document.createElement('select');
+            for (const [key, label] of options) select.append(new Option(label, key));
+            select.value = value ?? options[0][0];
+            select.addEventListener('change', () => { onChange(select.value); mark(); });
+            td.append(select);
+            return td;
+        }
+
+        const LEVEL_OPTIONS = [['', 'Basis'], ['erweitert', 'Erweitert'], ['expert', 'Expert']];
+        const GENDER_OPTIONS = [['', '–'], ['m', 'm'], ['f', 'f']];
+
         function renderRows() {
             const tbody = $('rows');
             tbody.replaceChildren();
@@ -204,6 +225,12 @@
                     hint,
                     textCell(row.en, v => row.en = v),
                     textCell(row.de, v => row.de = v),
+                    textCell(Array.isArray(row.accept) ? row.accept.join(', ') : row.accept,
+                        v => row.accept = v.split(',').map(form => form.trim()).filter(Boolean)),
+                    selectCell(row.section, [['', '–'], ...(draft.sections || []).map(s => [s.id, s.title])],
+                        v => row.section = v),
+                    selectCell(row.level, LEVEL_OPTIONS, v => row.level = v),
+                    selectCell(row.gender, GENDER_OPTIONS, v => row.gender = v),
                     textCell(row.image, v => row.image = v, 'emoji')
                 );
 
@@ -273,6 +300,8 @@
             draft.tests = draft.tests || [];
             const u = draft.unit || {};
             $('title').textContent = `${u.title || 'Unit'} – kuratieren`;
+            const names = { en: 'English', fr: 'Français', it: 'Italiano', es: 'Español' };
+            $('col-target').textContent = names[draft.targetLang] || 'Zielsprache';
             $('subtitle').textContent =
                 `${draft.deckTitle || draft.deckId || ''} · Code ${u.code || '?'} · ${draft.rows.length} Zeilen erkannt`;
             renderTests();

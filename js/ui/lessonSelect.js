@@ -1,7 +1,7 @@
 // Auswahl von Wortschatz und Lektionen.
 
 import * as storage from '../storage/index.js';
-import { languageName, countItems } from '../data/decks.js';
+import { languageName, countItems, prepareDeck, inLevel, groupOf } from '../data/decks.js';
 import { state } from '../state.js';
 
 /** @type {() => void} */
@@ -55,8 +55,8 @@ async function selectDeck(deckId) {
     // sonst jedes Mal abgewählt vor.
     if (state.deck?.id !== deckId) state.selectedUnits = [];
 
-    state.deck = deck ?? null;
-    renderUnits(deck);
+    state.deck = deck ? prepareDeck(deck) : null;
+    renderUnits(state.deck);
     await storage.setSetting('lastDeckId', deckId);
     updateSelection();
 }
@@ -74,13 +74,30 @@ function renderUnits(deck) {
         return;
     }
 
+    // Decks mit `groups` zeigen die Lektionen unter ihrer Unit; die
+    // Überschrift wählt alle Lektionen der Unit an oder ab.
+    const titles = new Map((deck.groups ?? []).map(group => [group.id, group.title]));
+    let currentGroup = null;
+
     for (const unit of deck.units) {
+        const group = groupOf(unit);
+        if (titles.has(group) && group !== currentGroup) {
+            currentGroup = group;
+            const heading = document.createElement('button');
+            heading.type = 'button';
+            heading.className = 'unit-group';
+            heading.textContent = titles.get(group);
+            heading.addEventListener('click', () => toggleGroup(group));
+            container.append(heading);
+        }
+
         const row = document.createElement('label');
         row.className = 'unit';
 
         const box = document.createElement('input');
         box.type = 'checkbox';
         box.value = unit.id;
+        box.dataset.group = group;
         box.checked = state.selectedUnits.includes(unit.id);
         box.addEventListener('change', updateSelection);
 
@@ -91,11 +108,35 @@ function renderUnits(deck) {
 
         const badge = document.createElement('span');
         badge.className = 'badge';
-        badge.textContent = String(unit.items.length);
+        badge.dataset.unit = unit.id;
 
         row.append(box, text, badge);
         container.append(row);
     }
+
+    refreshCounts();
+}
+
+/**
+ * Schreibt in jede Lektion, wie viele Wörter sie auf dem gewählten Niveau
+ * hat. Nach einem Niveauwechsel aufrufen.
+ */
+export function refreshCounts() {
+    const deck = state.deck;
+    if (!deck) return;
+
+    for (const badge of document.querySelectorAll('#unit-list .badge')) {
+        const unit = deck.units.find(entry => entry.id === badge.dataset.unit);
+        if (unit) badge.textContent = String(unit.items.filter(item => inLevel(item, state.level)).length);
+    }
+}
+
+/** Wählt alle Lektionen einer Unit an – oder ab, wenn schon alle gewählt sind. */
+function toggleGroup(group) {
+    const members = boxes().filter(box => box.dataset.group === group);
+    const allChecked = members.every(box => box.checked);
+    for (const box of members) box.checked = !allChecked;
+    updateSelection();
 }
 
 function boxes() {

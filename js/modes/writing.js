@@ -2,6 +2,7 @@
 // wird eingetippt.
 
 import { normalize, stripDiacritics, splitArticle } from '../util.js';
+import { targetForms } from '../data/decks.js';
 
 export const id = 'writing';
 export const label = 'writing';
@@ -36,14 +37,18 @@ export function buildQuestion(item, pool, level = 'erweitert', deck) {
         promptSide: 'source',
         speakPrompt: false,
         answer: item.target,
+        // Alle Schreibweisen, die gelten: "la géo" und "la géographie".
+        accept: targetForms(item),
         answerSide: 'target'
     };
 
     // Vorgegebener Artikel steht vor dem Eingabefeld: "la ___". Eingetippt
-    // wird nur der Rest.
-    const split = (LEVELS[level] ?? LEVELS.erweitert).articleGiven
-        ? splitArticle(item.target, deck?.targetLang)
-        : null;
+    // wird nur der Rest. Haben die Schreibweisen verschiedene Artikel
+    // ("un enfant", "une enfant"), wird keiner vorgegeben.
+    const splits = question.accept.map(form => splitArticle(form, deck?.targetLang));
+    const sameArticle = splits.every(entry =>
+        entry && normalize(entry.article) === normalize(splits[0].article));
+    const split = (LEVELS[level] ?? LEVELS.erweitert).articleGiven && sameArticle ? splits[0] : null;
     if (split) {
         question.lang = deck.targetLang;
         question.prefix = split.article;
@@ -74,12 +79,12 @@ export function completeAnswer(question, given) {
  */
 export function check(question, given, level = 'erweitert') {
     const settings = LEVELS[level] ?? LEVELS.erweitert;
-    const expected = normalize(question.answer);
+    const expected = (question.accept ?? [question.answer]).map(normalize);
     const actual = normalize(completeAnswer(question, given));
 
-    if (actual === expected) return { correct: true };
+    if (expected.includes(actual)) return { correct: true };
 
-    if (stripDiacritics(actual) === stripDiacritics(expected)) {
+    if (expected.some(form => stripDiacritics(actual) === stripDiacritics(form))) {
         if (!settings.accentsCount) {
             return { correct: true, tolerated: 'accent', note: 'Richtig! Achte beim nächsten Mal auch auf die Akzente.' };
         }

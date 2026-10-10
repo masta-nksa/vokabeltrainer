@@ -4,6 +4,7 @@ import { toLevel } from '../js/learning/levels.js';
 import { splitArticle, misspellings } from '../js/util.js';
 import * as writing from '../js/modes/writing.js';
 import * as spelling from '../js/modes/spelling.js';
+import { enrichItem, inLevel, targetForms, groupOf, itemsFrom, prepareDeck } from '../js/data/decks.js';
 
 let failures = 0;
 const check = (name, condition) => {
@@ -111,6 +112,45 @@ check('Apostroph vom iPad', writing.check({ answer: "l'acteur" }, 'l’acteur', 
 
 const elided = writing.buildQuestion({ id: 'x', source: 'der Schauspieler', target: "l'acteur" }, [], 'basis', deck);
 check("Basis l': ohne Leerzeichen ergänzt", writing.completeAnswer(elided, 'acteur') === "l'acteur");
+
+// ---------------------------------------------------- Inhaltsmodell
+
+const noun = enrichItem({ id: 'x', source: 'die Grossmutter', target: 'la grand-mère' }, 'fr');
+check('Lemma, Genus, Zahl aus dem Artikel',
+    noun.lemma === 'grand-mère' && noun.gender === 'f' && noun.number === 'sg' && noun.pos === 'noun');
+check('ohne Angabe Niveau basis', noun.level === 'basis');
+const plural = enrichItem({ id: 'x', source: 'die Eltern', target: 'les parents', gender: 'm' }, 'fr');
+check('les → Mehrzahl, Genus aus dem Deck', plural.number === 'pl' && plural.gender === 'm');
+const elidedNoun = enrichItem({ id: 'x', source: 'das Alter', target: "l'âge", gender: 'm' }, 'fr');
+check("l' verrät kein Genus – das Deck sagt es", elidedNoun.gender === 'm' && elidedNoun.lemma === 'âge');
+check('Satz wird als phrase erkannt',
+    enrichItem({ id: 'x', source: 'Das ist meine Familie.', target: "C'est ma famille." }, 'fr').pos === 'phrase');
+check('Verb bleibt ohne Genus', enrichItem({ id: 'x', source: 'singen', target: 'chanter' }, 'fr').gender === undefined);
+
+check('Niveau schliesst tiefere ein',
+    inLevel({ level: 'basis' }, 'expert') && inLevel({ level: 'erweitert' }, 'erweitert') && !inLevel({ level: 'erweitert' }, 'basis'));
+check('alle Schreibweisen', targetForms({ target: 'la géo', accept: ['la géographie'] }).length === 2);
+check('Gruppe aus dem Feld', groupOf({ id: 'u2-lz1', group: 'u2' }) === 'u2');
+check('Gruppe aus alter Kennung', groupOf({ id: '3_2-t1' }) === '3_2' && groupOf({ id: '2_0' }) === '2_0');
+
+const course = prepareDeck({
+    id: 'c', targetLang: 'fr', sourceLang: 'de',
+    units: [{ id: 'a', title: 'A', items: [
+        { id: '1', source: 'die Mutter', target: 'la mère', accept: ['la maman'] },
+        { id: '2', source: 'der Enkel', target: 'le petit-fils', level: 'erweitert' }
+    ] }]
+});
+check('Basis zeigt nur den Grundwortschatz', itemsFrom(course, ['a'], 'basis').length === 1);
+check('Erweitert nimmt den Zusatzwortschatz dazu', itemsFrom(course, ['a'], 'erweitert').length === 2);
+
+const mother = writing.buildQuestion(course.units[0].items[0], [], 'erweitert', course);
+check('weitere Schreibweise gilt', writing.check(mother, 'la maman', 'erweitert').correct);
+check('Hauptform gilt', writing.check(mother, 'la mère', 'erweitert').correct);
+const motherBasis = writing.buildQuestion(course.units[0].items[0], [], 'basis', course);
+check('Basis: gleicher Artikel bei allen Formen → vorgegeben',
+    motherBasis.prefix === 'la' && writing.check(motherBasis, 'maman', 'basis').correct);
+const child = writing.buildQuestion({ id: '3', source: 'ein Kind', target: 'un enfant', accept: ['une enfant'] }, [], 'basis', course);
+check('Basis: verschiedene Artikel → keiner vorgegeben', child.prefix === undefined);
 
 console.log(failures === 0 ? '\nAlle Prüfungen bestanden.' : `\n${failures} Prüfung(en) fehlgeschlagen.`);
 process.exit(failures === 0 ? 0 : 1);

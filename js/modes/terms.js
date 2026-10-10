@@ -2,6 +2,7 @@
 // aus mehreren Übersetzungen ist die richtige zu wählen.
 
 import { sample, shuffle, normalize, optionCount } from '../util.js';
+import { targetForms } from '../data/decks.js';
 
 export const id = 'terms';
 export const label = 'terms';
@@ -70,7 +71,8 @@ export function buildQuestion(item, pool, level = 'erweitert') {
     const options = shuffle([item.source, ...distractors]);
 
     return {
-        prompt: item.target,
+        // Alle Formen zeigen und vorlesen: "la géo, la géographie".
+        prompt: targetForms(item).join(', '),
         promptSide: 'target',
         speakPrompt: true,
         options,

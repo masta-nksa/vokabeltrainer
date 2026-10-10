@@ -9,7 +9,7 @@ import * as reward from './ui/reward.js';
 import * as scoreboard from './ui/scoreboard.js';
 import * as screens from './ui/screens.js';
 import { shuffle } from './util.js';
-import { classify } from './learning/errors.js';
+import { classify, editDistance } from './learning/errors.js';
 
 const MAX_TRIES = 2;
 
@@ -332,9 +332,14 @@ function describeError(given) {
         .filter(entry => entry.id !== current.id && typeof entry[side] === 'string')
         .map(entry => ({ id: entry.id, text: entry[side] }));
 
+    // Gelten mehrere Schreibweisen, zählt die, der die Eingabe am nächsten kam.
+    const expected = (question.accept ?? [question.answer])
+        .map(form => ({ form, distance: editDistance(full.toLowerCase(), form.toLowerCase()) }))
+        .sort((a, b) => a.distance - b.distance)[0].form;
+
     return {
         given: trimGiven(full),
-        ...classify({ given: full, expected: question.answer, lang: langFor(question.answerSide), others })
+        ...classify({ given: full, expected, lang: langFor(question.answerSide), others })
     };
 }
 

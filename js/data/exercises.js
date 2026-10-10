@@ -19,6 +19,8 @@
  * @property {Task[]} tasks
  */
 
+import { groupOf } from './decks.js';
+
 /** @type {Map<string, ExerciseSet[]>} */
 const byDeck = new Map();
 
@@ -38,8 +40,11 @@ export async function exercisesFor(deckId) {
         // kein Netz oder keine Datei – dann eben keine Übungen
     }
 
+    // Aufgaben tragen ihre Kennung im JSON. Der Rückfall auf die Position ist
+    // nur für Dateien ohne Kennungen da – wer dort eine Aufgabe einfügt,
+    // verschiebt den Lernstand aller folgenden.
     for (const set of sets) {
-        set.tasks.forEach((task, index) => {
+        (set.tasks ?? []).forEach((task, index) => {
             task.id ??= `${set.id}-${String(index + 1).padStart(2, '0')}`;
         });
     }
@@ -49,12 +54,14 @@ export async function exercisesFor(deckId) {
 }
 
 /**
- * Die Sets, die zu mindestens einer der gewählten Lektionen passen. Eine
- * Lektions-Kennung wie "3_2-t1" zählt zur Unit "3_2".
+ * Die Sets, die zu mindestens einer der gewählten Lektionen passen: ein Set
+ * hängt an einer Unit des Lehrmittels, die Lektion nennt ihre Unit (groupOf).
  * @param {ExerciseSet[]} sets
+ * @param {import('../storage/index.js').Deck} deck
  * @param {string[]} unitIds
  */
-export function setsForUnits(sets, unitIds) {
-    return sets.filter(set =>
-        unitIds.some(id => id === set.unitId || id.startsWith(`${set.unitId}-`)));
+export function setsForUnits(sets, deck, unitIds) {
+    const wanted = new Set(unitIds);
+    const groups = new Set(deck.units.filter(unit => wanted.has(unit.id)).map(groupOf));
+    return sets.filter(set => groups.has(set.unitId));
 }

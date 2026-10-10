@@ -100,7 +100,7 @@ function onSelectionChange() {
 
 function selectedItems() {
     if (!state.deck) return [];
-    return itemsFrom(state.deck, state.selectedUnits);
+    return itemsFrom(state.deck, state.selectedUnits, state.level);
 }
 
 // ------------------------------------------------------------ Anwenden
@@ -129,7 +129,7 @@ async function refreshExercises() {
     // Zwischenzeitlicher Deckwechsel: Ergebnis gehört nicht mehr hierher.
     if (state.deck?.id !== deck.id) return;
 
-    const available = setsForUnits(exerciseCache.sets, state.selectedUnits);
+    const available = setsForUnits(exerciseCache.sets, deck, state.selectedUnits);
     list.replaceChildren();
 
     for (const set of available) {
@@ -254,6 +254,10 @@ function initSelection() {
             if (!radio.checked) return;
             state.level = toLevel(radio.value);
             storage.setSetting('level', state.level);
+
+            // Das Niveau bestimmt auch, welche Wörter dazugehören.
+            lessonSelect.refreshCounts();
+            onSelectionChange();
         });
     }
 

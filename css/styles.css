@@ -267,6 +267,27 @@ button.link.danger {
     background: var(--bg);
 }
 
+/* Überschrift einer Unit über ihren Lektionen; ein Klick wählt alle. */
+.unit-group {
+    all: unset;
+    display: block;
+    margin-top: .5rem;
+    padding: .2rem .5rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+}
+
+.unit-group:first-child {
+    margin-top: 0;
+}
+
+.unit-group:hover,
+.unit-group:focus-visible {
+    color: var(--accent);
+}
+
 .unit span:first-of-type {
     flex: 1;
 }

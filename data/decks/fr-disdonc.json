@@ -1,0 +1,469 @@
+{
+  "id": "fr-disdonc",
+  "title": "Französisch – dis donc!",
+  "sourceLang": "de",
+  "targetLang": "fr",
+  "builtin": true,
+  "version": 1,
+  "aliases": [
+    "fr-unite-1"
+  ],
+  "groups": [
+    {
+      "id": "u1",
+      "title": "Unité 1"
+    }
+  ],
+  "units": [
+    {
+      "id": "u1-lz1",
+      "title": "Lernziel 1",
+      "group": "u1",
+      "items": [
+        {
+          "id": "u1-chouette-c-est-la-rentree",
+          "source": "Toll, es ist Schulanfang!",
+          "target": "Chouette, c'est la rentrée!",
+          "aliases": [
+            "lernziel-1-001"
+          ]
+        },
+        {
+          "id": "u1-zut-c-est-la-rentree",
+          "source": "Oje, es ist Schulanfang!",
+          "target": "Zut, c'est la rentrée!",
+          "aliases": [
+            "lernziel-1-002"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "u1-lzs",
+      "title": "Lernziel S",
+      "group": "u1",
+      "items": [
+        {
+          "id": "u1-livre",
+          "source": "das Buch",
+          "target": "le livre",
+          "aliases": [
+            "lernziel-s-001"
+          ]
+        },
+        {
+          "id": "u1-regle",
+          "source": "das Lineal",
+          "target": "la règle",
+          "aliases": [
+            "lernziel-s-002"
+          ]
+        },
+        {
+          "id": "u1-classeur",
+          "source": "der Ordner",
+          "target": "le classeur",
+          "aliases": [
+            "lernziel-s-003"
+          ]
+        },
+        {
+          "id": "u1-cahier",
+          "source": "das Heft",
+          "target": "le cahier",
+          "aliases": [
+            "lernziel-s-004"
+          ]
+        },
+        {
+          "id": "u1-crayon",
+          "source": "der Bleistift",
+          "target": "le crayon",
+          "aliases": [
+            "lernziel-s-005"
+          ]
+        },
+        {
+          "id": "u1-stylo",
+          "source": "der Kugelschreiber",
+          "target": "le stylo",
+          "aliases": [
+            "lernziel-s-006"
+          ]
+        },
+        {
+          "id": "u1-gomme",
+          "source": "der Gummi",
+          "target": "la gomme",
+          "aliases": [
+            "lernziel-s-007"
+          ]
+        },
+        {
+          "id": "u1-tableau-noir",
+          "source": "die Wandtafel",
+          "target": "le tableau noir",
+          "aliases": [
+            "lernziel-s-008"
+          ]
+        },
+        {
+          "id": "u1-trousse",
+          "source": "das Etui",
+          "target": "la trousse",
+          "aliases": [
+            "lernziel-s-009"
+          ]
+        },
+        {
+          "id": "u1-table",
+          "source": "der Tisch",
+          "target": "la table",
+          "aliases": [
+            "lernziel-s-010"
+          ]
+        },
+        {
+          "id": "u1-chaise",
+          "source": "der Stuhl",
+          "target": "la chaise",
+          "aliases": [
+            "lernziel-s-011"
+          ]
+        },
+        {
+          "id": "u1-cartable",
+          "source": "die Schultasche",
+          "target": "le cartable",
+          "aliases": [
+            "lernziel-s-012"
+          ]
+        },
+        {
+          "id": "u1-agenda",
+          "source": "eine Agenda",
+          "target": "un agenda",
+          "aliases": [
+            "lernziel-s-013"
+          ]
+        },
+        {
+          "id": "u1-ciseaux",
+          "source": "die Schere",
+          "target": "les ciseaux",
+          "gender": "m",
+          "number": "pl",
+          "aliases": [
+            "lernziel-s-014"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "u1-lz2",
+      "title": "Lernziel 2",
+      "group": "u1",
+      "items": [
+        {
+          "id": "u1-matiere-scolaire",
+          "source": "das Schulfach",
+          "target": "la matière scolaire",
+          "aliases": [
+            "lernziel-2-001"
+          ]
+        },
+        {
+          "id": "u1-allemand",
+          "source": "Deutsch",
+          "target": "l'allemand",
+          "gender": "m",
+          "aliases": [
+            "lernziel-2-002"
+          ]
+        },
+        {
+          "id": "u1-francais",
+          "source": "Französisch",
+          "target": "le français",
+          "aliases": [
+            "lernziel-2-003"
+          ]
+        },
+        {
+          "id": "u1-anglais",
+          "source": "Englisch",
+          "target": "l'anglais",
+          "gender": "m",
+          "aliases": [
+            "lernziel-2-004"
+          ]
+        },
+        {
+          "id": "u1-maths",
+          "source": "Mathematik",
+          "target": "les maths",
+          "accept": [
+            "les mathématiques"
+          ],
+          "gender": "f",
+          "number": "pl",
+          "aliases": [
+            "lernziel-2-005"
+          ]
+        },
+        {
+          "id": "u1-jours-de-la-semaine",
+          "source": "die Wochentage",
+          "target": "les jours de la semaine",
+          "gender": "m",
+          "aliases": [
+            "lernziel-2-006"
+          ]
+        },
+        {
+          "id": "u1-lundi",
+          "source": "Montag",
+          "target": "lundi",
+          "aliases": [
+            "lernziel-2-007"
+          ]
+        },
+        {
+          "id": "u1-mardi",
+          "source": "Dienstag",
+          "target": "mardi",
+          "aliases": [
+            "lernziel-2-008"
+          ]
+        },
+        {
+          "id": "u1-mercredi",
+          "source": "Mittwoch",
+          "target": "mercredi",
+          "aliases": [
+            "lernziel-2-009"
+          ]
+        },
+        {
+          "id": "u1-jeudi",
+          "source": "Donnerstag",
+          "target": "jeudi",
+          "aliases": [
+            "lernziel-2-010"
+          ]
+        },
+        {
+          "id": "u1-vendredi",
+          "source": "Freitag",
+          "target": "vendredi",
+          "aliases": [
+            "lernziel-2-011"
+          ]
+        },
+        {
+          "id": "u1-samedi",
+          "source": "Samstag",
+          "target": "samedi",
+          "aliases": [
+            "lernziel-2-012"
+          ]
+        },
+        {
+          "id": "u1-dimanche",
+          "source": "Sonntag",
+          "target": "dimanche",
+          "aliases": [
+            "lernziel-2-013"
+          ]
+        },
+        {
+          "id": "u1-dessin",
+          "source": "das bildnerische Gestalten, die Zeichnung",
+          "target": "le dessin",
+          "aliases": [
+            "lernziel-2-014"
+          ]
+        },
+        {
+          "id": "u1-geo",
+          "source": "die Geografie",
+          "target": "la géo",
+          "accept": [
+            "la géographie"
+          ],
+          "aliases": [
+            "lernziel-2-015"
+          ]
+        },
+        {
+          "id": "u1-histoire",
+          "source": "die Geschichte",
+          "target": "l'histoire",
+          "gender": "f",
+          "aliases": [
+            "lernziel-2-016"
+          ]
+        },
+        {
+          "id": "u1-gym",
+          "source": "das Turnen",
+          "target": "la gym",
+          "accept": [
+            "la gymnastique"
+          ],
+          "aliases": [
+            "lernziel-2-017"
+          ]
+        },
+        {
+          "id": "u1-sciences-de-la-nature",
+          "source": "die Naturwissenschaften",
+          "target": "les sciences de la nature",
+          "gender": "f",
+          "number": "pl",
+          "aliases": [
+            "lernziel-2-018"
+          ]
+        },
+        {
+          "id": "u1-musique",
+          "source": "die Musik",
+          "target": "la musique",
+          "aliases": [
+            "lernziel-2-019"
+          ]
+        },
+        {
+          "id": "u1-acm",
+          "source": "Handarbeit und Werken",
+          "target": "ACM",
+          "accept": [
+            "activités créatrices manuelles"
+          ],
+          "aliases": [
+            "lernziel-2-020"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "u1-lz3",
+      "title": "Lernziel 3",
+      "group": "u1",
+      "items": [
+        {
+          "id": "u1-ecole",
+          "source": "eine Schule",
+          "target": "une école",
+          "aliases": [
+            "lernziel-3-001"
+          ]
+        },
+        {
+          "id": "u1-calculer",
+          "source": "rechnen",
+          "target": "calculer",
+          "aliases": [
+            "lernziel-3-002"
+          ]
+        },
+        {
+          "id": "u1-dessiner",
+          "source": "zeichnen",
+          "target": "dessiner",
+          "aliases": [
+            "lernziel-3-003"
+          ]
+        },
+        {
+          "id": "u1-chanter",
+          "source": "singen",
+          "target": "chanter",
+          "aliases": [
+            "lernziel-3-004"
+          ]
+        },
+        {
+          "id": "u1-experimenter",
+          "source": "experimentieren",
+          "target": "expérimenter",
+          "aliases": [
+            "lernziel-3-005"
+          ]
+        },
+        {
+          "id": "u1-parler-francais",
+          "source": "Französisch sprechen",
+          "target": "parler français",
+          "aliases": [
+            "lernziel-3-006"
+          ]
+        },
+        {
+          "id": "u1-parler-anglais",
+          "source": "Englisch sprechen",
+          "target": "parler anglais",
+          "aliases": [
+            "lernziel-3-007"
+          ]
+        },
+        {
+          "id": "u1-explorer-l-etranger",
+          "source": "das Ausland erkunden",
+          "target": "explorer l'étranger",
+          "aliases": [
+            "lernziel-3-008"
+          ]
+        },
+        {
+          "id": "u1-visiter-un-musee",
+          "source": "ein Museum besuchen",
+          "target": "visiter un musée",
+          "aliases": [
+            "lernziel-3-009"
+          ]
+        },
+        {
+          "id": "u1-tricoter",
+          "source": "stricken",
+          "target": "tricoter",
+          "aliases": [
+            "lernziel-3-010"
+          ]
+        },
+        {
+          "id": "u1-reciter-un-poeme",
+          "source": "ein Gedicht aufsagen",
+          "target": "réciter un poème",
+          "aliases": [
+            "lernziel-3-011"
+          ]
+        },
+        {
+          "id": "u1-bricoler",
+          "source": "basteln",
+          "target": "bricoler",
+          "aliases": [
+            "lernziel-3-012"
+          ]
+        },
+        {
+          "id": "u1-sauter",
+          "source": "springen, hüpfen",
+          "target": "sauter",
+          "aliases": [
+            "lernziel-3-013"
+          ]
+        },
+        {
+          "id": "u1-grimper",
+          "source": "klettern",
+          "target": "grimper",
+          "aliases": [
+            "lernziel-3-014"
+          ]
+        }
+      ]
+    }
+  ]
+}
