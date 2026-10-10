@@ -1,7 +1,7 @@
 // Einstiegspunkt: Start, Auswahl, Import, Verdrahtung der Bausteine.
 
 import * as storage from './storage/index.js';
-import { ensureBuiltinDecks, itemsFrom, languageName } from './data/decks.js';
+import { ensureBuiltinDecks, itemsFrom, languageName, prepareDeck } from './data/decks.js';
 import * as tts from './speech/tts.js';
 import { readTextFile, deckFromCsv } from './data/csv.js';
 import { exercisesFor, setsForUnits, tasksFor } from './data/exercises.js';
@@ -17,6 +17,8 @@ import * as print from './ui/print.js';
 import * as reward from './ui/reward.js';
 import * as quiz from './quiz.js';
 import * as games from './games/host.js';
+import { fromHash } from './games/challenge.js';
+import * as challengeView from './ui/challenge.js';
 
 const HEROES = {
     'Iron Man': 'img/ironman.gif',
@@ -54,6 +56,7 @@ function initStart() {
         await storage.setSetting('hero', heroSelect.value);
 
         await openSelection();
+        if (pendingChallenge) await presentChallenge();
     });
 }
 
@@ -124,7 +127,8 @@ function refreshGames() {
         button.type = 'button';
         button.textContent = game.label;
         button.title = game.description;
-        button.addEventListener('click', () => games.play(game.id, deck, items));
+        button.addEventListener('click', () =>
+            games.play(game.id, deck, items, { units: [...state.selectedUnits] }));
         list.append(button);
     }
 
@@ -236,6 +240,68 @@ function setLevel(level) {
     // Das Niveau bestimmt auch, welche Wörter dazugehören.
     lessonSelect.refreshCounts();
     onSelectionChange();
+}
+
+// ------------------------------------------------------------ Challenge
+
+/** Eine Herausforderung aus dem Link, mit dem die App geöffnet wurde. */
+let pendingChallenge = null;
+
+/**
+ * Liest eine Herausforderung aus der Adresse und nimmt sie dort wieder
+ * heraus – sonst käme sie bei jedem Neuladen wieder.
+ */
+function takeChallengeFromAddress() {
+    pendingChallenge = fromHash(location.hash);
+    if (location.hash.includes('c=')) {
+        history.replaceState(null, '', location.pathname + location.search);
+    }
+    challengeView.announce(pendingChallenge);
+}
+
+/** Zeigt die wartende Herausforderung mit allem, was man dazu wissen muss. */
+async function presentChallenge() {
+    const challenge = pendingChallenge;
+    if (!challenge) return;
+
+    // Das Deck kann inzwischen in einem anderen aufgegangen sein.
+    const decks = await storage.listDecks();
+    const stored = decks.find(entry => entry.id === challenge.deck)
+        ?? decks.find(entry => entry.aliases?.includes(challenge.deck));
+    const deck = stored ? prepareDeck(stored) : null;
+    const game = games.getGame(challenge.game);
+    const items = deck ? itemsFrom(deck, challenge.units, challenge.level) : [];
+    const playable = Boolean(deck && game && game.available(deck, items, challenge.level));
+
+    let problem = '';
+    if (!game) problem = 'Dieses Spiel kennt deine Fassung der App noch nicht.';
+    else if (!deck) problem = 'Dieser Wortschatz ist auf diesem Gerät nicht vorhanden.';
+    else if (!playable) problem = 'Mit diesen Lektionen lässt sich das Spiel hier nicht starten.';
+    else if ((deck.version ?? 0) !== challenge.ver) {
+        problem = 'Der Wortschatz wurde seit dieser Herausforderung geändert – die Partie kann leicht abweichen.';
+    }
+
+    const done = () => {
+        pendingChallenge = null;
+        challengeView.announce(null);
+    };
+
+    challengeView.showIncoming(challenge, { gameLabel: game?.label ?? challenge.game, deck, playable, problem }, {
+        accept() {
+            done();
+            games.play(challenge.game, deck, items, {
+                seed: challenge.seed,
+                spec: challenge.spec ?? null,
+                level: challenge.level,
+                units: challenge.units,
+                challenge: { alias: challenge.alias, score: challenge.score, ms: challenge.ms }
+            });
+        },
+        decline() {
+            done();
+            screens.show('screen-select');
+        }
+    });
 }
 
 // ------------------------------------------------------------ Anwenden
@@ -487,7 +553,22 @@ async function main() {
     initImport();
     print.init();
     quiz.init({ onLeave: openSelection, onLevelUp: setLevel });
-    games.init({ onLeave: openSelection, onChallenge() {} });
+    games.init({
+        onLeave: openSelection,
+        onStart: challengeView.hideShare,
+        onChallenge: round => challengeView.share(round)
+            .catch(error => console.warn('Link konnte nicht erstellt werden:', error))
+    });
+    challengeView.init();
+    takeChallengeFromAddress();
+
+    // Ein Link, der bei offener App eintrifft, lädt die Seite nicht neu.
+    window.addEventListener('hashchange', () => {
+        takeChallengeFromAddress();
+        if (pendingChallenge && screens.current() === 'screen-select') {
+            presentChallenge().catch(error => console.warn('Herausforderung nicht lesbar:', error));
+        }
+    });
 
     await ensureBuiltinDecks();
 

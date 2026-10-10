@@ -20,6 +20,7 @@
         <!-- Startseite -->
         <section id="screen-start" class="screen" hidden>
             <h1>Vokabeltrainer</h1>
+            <p id="start-challenge" class="card" hidden></p>
             <form id="start-form" class="card">
                 <label for="name-input">Wie heisst du?</label>
                 <input type="text" id="name-input" autocomplete="given-name" required>
@@ -270,6 +271,36 @@
                 <button type="button" id="game-again" class="primary">nochmals spielen</button>
                 <button type="button" id="game-challenge">Freunde herausfordern</button>
                 <button type="button" id="game-result-home" class="link">zur Auswahl</button>
+            </div>
+
+            <div id="game-share" class="card" hidden>
+                <h2>Herausforderung verschicken</h2>
+                <p class="hint">
+                    Wer den Link öffnet, spielt genau diese Partie und sieht danach, wer besser war.
+                    Du erscheinst als <strong id="share-alias"></strong>.
+                    <button type="button" id="share-reroll" class="link">anderer Spitzname</button>
+                </p>
+                <label for="share-link">Link</label>
+                <input type="text" id="share-link" readonly>
+                <div class="row">
+                    <button type="button" id="share-copy" class="primary">Link kopieren</button>
+                    <button type="button" id="share-native" hidden>Teilen …</button>
+                </div>
+                <p id="share-message" class="hint" role="status"></p>
+            </div>
+        </section>
+
+        <!-- Eingehende Herausforderung -->
+        <section id="screen-challenge" class="screen" hidden>
+            <h1>Du wurdest herausgefordert!</h1>
+            <div class="card">
+                <p id="challenge-text" class="prompt"></p>
+                <p id="challenge-detail" class="hint center"></p>
+                <p id="challenge-warning" class="hint error" hidden></p>
+                <div class="modes">
+                    <button type="button" id="challenge-accept" class="primary">annehmen</button>
+                    <button type="button" id="challenge-decline" class="link">nicht jetzt</button>
+                </div>
             </div>
         </section>
 

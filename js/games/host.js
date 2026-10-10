@@ -48,10 +48,14 @@ const GAMES = [crossword, sorter, speed];
 /** @type {{game: Game, deck: object, items: object[], level: string, seed: number, handle: {stop: () => void}, challenge: object | null, result: GameResult | null} | null} */
 let current = null;
 
-/** @type {{onLeave: () => void, onChallenge: (play: object) => void} | null} */
+/** @type {{onLeave: () => void, onStart: () => void, onChallenge: (round: object) => void} | null} */
 let hooks = null;
 
-/** @param {{onLeave: () => void, onChallenge: (play: object) => void}} config */
+/**
+ * @param {{onLeave: () => void, onStart: () => void, onChallenge: (round: object) => void}} config
+ *   `onStart` bei jedem Spielbeginn, `onChallenge` wenn jemand die eben
+ *   gespielte Partie verschicken will.
+ */
 export function init(config) {
     hooks = config;
 
@@ -59,7 +63,7 @@ export function init(config) {
     document.getElementById('game-result-home').addEventListener('click', leave);
 
     document.getElementById('game-again').addEventListener('click', () => {
-        if (current) play(current.game.id, current.deck, current.items, { level: current.level });
+        if (current) play(current.game.id, current.deck, current.items, { level: current.level, units: current.units });
     });
 
     document.getElementById('game-challenge').addEventListener('click', () => {
@@ -87,10 +91,12 @@ function leave() {
  * @param {string} gameId
  * @param {import('../storage/index.js').Deck} deck
  * @param {import('../storage/index.js').Item[]} items
- * @param {{seed?: number, spec?: object, level?: string, challenge?: object}} [options]
- *   Mit `challenge` (Punkte und Zeit der Gegenseite) wird am Ende verglichen.
+ * @param {{seed?: number, spec?: object, level?: string, units?: string[], challenge?: object}} [options]
+ *   `units`: die Lektionen, aus denen die Wörter stammen (für den
+ *   Challenge-Link). Mit `challenge` (Punkte und Zeit der Gegenseite) wird am
+ *   Ende verglichen.
  */
-export function play(gameId, deck, items, { seed = randomSeed(), spec = null, level = state.level, challenge = null } = {}) {
+export function play(gameId, deck, items, { seed = randomSeed(), spec = null, level = state.level, units = [], challenge = null } = {}) {
     const game = getGame(gameId);
     if (!game) return;
 
@@ -107,9 +113,10 @@ export function play(gameId, deck, items, { seed = randomSeed(), spec = null, le
         : game.description;
 
     reward.reset();
+    hooks?.onStart();
     screens.show('screen-game');
 
-    const round = { game, deck, items, level, seed, challenge, result: null, handle: { stop() {} } };
+    const round = { game, deck, items, level, seed, units, challenge, result: null, handle: { stop() {} } };
     current = round;
 
     round.handle = game.start({
@@ -178,6 +185,9 @@ function showResult(round) {
     }
     document.getElementById('game-result-missed-box').hidden = result.missed.length === 0;
     if (result.missed.length === 0) reward.reveal();
+
+    // Verschicken lässt sich nur, was sich aus Lektionen wieder aufbauen lässt.
+    document.getElementById('game-challenge').hidden = round.units.length === 0;
 
     screens.show('screen-game-result');
 }

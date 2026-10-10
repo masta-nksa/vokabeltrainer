@@ -621,7 +621,9 @@ Jeder Schritt ist für sich nutzbar und veröffentlichbar.
 7. ~~**Kreuzworträtsel**, **Genus-Sortierer**, **Speed-Runde**~~ – erledigt
    auf `v2`. Im Kreuzworträtsel werden im Übungsmodus unsichere Wörter
    bevorzugt; das Gitter selbst hängt nur am Startwert und an der Wortliste.
-8. **Challenge-Links** (Stufe A).
+8. ~~**Challenge-Links** (Stufe A)~~ – erledigt auf `v2`: Link mit Kopieren
+   und Teilen, eingehende Herausforderung mit Vergleich. Noch ohne QR-Code –
+   dafür bräuchte es eine QR-Bibliothek im Repo.
 9. Login mit Zugangskarte, Sync, anonyme Gesamtstatistik.
 10. **Freunde per Code**, Online-Status, Eingang «Herausforderungen»
     (asynchrone Challenges im Konto).

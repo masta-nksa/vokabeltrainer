@@ -92,6 +92,29 @@ Der Zufall der Spiele hat einen Startwert (`js/games/rng.js`): Dieselben
 Wörter und derselbe Startwert ergeben dieselbe Partie. Darauf bauen die
 Challenges.
 
+### Freunde herausfordern
+
+Nach einem Spiel erzeugt **Freunde herausfordern** einen Link. Wer ihn
+öffnet, spielt genau diese Partie – gleiches Gitter, gleiche Reihenfolge –
+und sieht danach, wer besser war. Mehr Punkte gewinnen, bei Gleichstand die
+kürzere Zeit.
+
+Das braucht weder Konto noch Server: Alle Angaben (Spiel, Wortschatz,
+Lektionen, Niveau, Startwert, Punkte, Zeit, Spitzname) stehen im `#`-Teil der
+Adresse (`js/games/challenge.js`). Dieser Teil wird nie an einen Server
+geschickt; die App nimmt ihn nach dem Lesen aus der Adresszeile. Statt eines
+Namens steht ein zufälliger Spitzname wie *Renard 7*, der sich neu würfeln
+lässt.
+
+Ein Link ist fremde Eingabe und wird geprüft (`validate`): unbekanntes
+Format, seltsame Kennungen oder Zahlen führen dazu, dass er verworfen wird.
+Fälschen lässt er sich trotzdem – wer will, schreibt sich 9999 Punkte hinein.
+Für ein Spiel unter Freunden ist das in Ordnung; eine Rangliste, auf die es
+ankommt, bräuchte einen Server.
+
+Wurde der Wortschatz seit der Herausforderung geändert, sagt die App das vor
+dem Start. Einen QR-Code erzeugt sie noch nicht.
+
 ## Drucken
 
 In der Lektionsauswahl unter **Drucken**: die gewählten Wörter entweder als

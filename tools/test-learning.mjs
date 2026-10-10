@@ -14,6 +14,7 @@ import { aliasMap, canonicalize } from '../js/learning/insight.js';
 import * as terms from '../js/modes/terms.js';
 import { createRng, seededShuffle } from '../js/games/rng.js';
 import { buildGrid, cellsOf } from '../js/games/crosswordGrid.js';
+import { linkFor, fromHash, encode, decode, validate, randomAlias } from '../js/games/challenge.js';
 
 let failures = 0;
 const check = (name, condition) => {
@@ -384,6 +385,28 @@ check('jedes Wort hat mindestens eine Kreuzung',
         gridA.entries.some(other => other !== entry && cellsOf(other).some(o => o.row === cell.row && o.col === cell.col)))));
 check('Nummern steigen in Leserichtung',
     gridA.entries.every((entry, i) => i === 0 || entry.number >= gridA.entries[i - 1].number));
+
+// ----------------------------------------------------------- Challenge
+
+const sent = {
+    v: 1, game: 'crossword', deck: 'fr-disdonc', ver: 2, units: ['u2-lz1', 'u2-lz2'], level: 'erweitert',
+    seed: 48213, spec: { items: ['u2-mere', 'u2-soeur'] }, score: 920, ms: 74000, alias: 'Renard 7'
+};
+const link = linkFor(sent, 'https://example.org/vokabeltrainer/#alt');
+check('Link trägt die Partie im #-Teil', /^https:\/\/example\.org\/vokabeltrainer\/#c=[\w-]+$/.test(link));
+check('hin und zurück bleibt alles gleich', JSON.stringify(fromHash(new URL(link).hash)) === JSON.stringify(sent));
+check('Umlaute im Spitznamen überleben', decode(encode({ ...sent, alias: 'Füchsin 3' })).alias === 'Füchsin 3');
+check('Unsinn wird verworfen', fromHash('#c=abc') === null && fromHash('#nichts') === null && decode('%%%') === null);
+check('unbekannte Format-Version wird verworfen', validate({ ...sent, v: 2 }) === null);
+check('unbekanntes Niveau wird verworfen', validate({ ...sent, level: 'profi' }) === null);
+check('fehlende Lektionen werden verworfen', validate({ ...sent, units: [] }) === null);
+check('seltsame Kennungen werden verworfen', validate({ ...sent, deck: '../../etc' }) === null
+    && validate({ ...sent, units: ['<script>'] }) === null);
+check('negative oder fehlende Zahlen werden verworfen',
+    validate({ ...sent, score: -5 }) === null && validate({ ...sent, seed: 'x' }) === null);
+check('überlanger Spitzname wird gekürzt', validate({ ...sent, alias: 'x'.repeat(200) }).alias.length === 24);
+check('fremde Felder kommen nicht mit', !('boese' in validate({ ...sent, boese: 1 })));
+check('Spitzname ist Tier und Zahl', /^\p{L}+ \d{1,2}$/u.test(randomAlias()));
 
 console.log(failures === 0 ? '\nAlle Prüfungen bestanden.' : `\n${failures} Prüfung(en) fehlgeschlagen.`);
 process.exit(failures === 0 ? 0 : 1);
