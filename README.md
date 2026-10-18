@@ -199,7 +199,7 @@ Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
 ```jsonc
 {
   "id": "fr-disdonc", "title": "Französisch – dis donc!",
-  "sourceLang": "de", "targetLang": "fr", "version": 2,
+  "sourceLang": "de", "targetLang": "fr", "version": 3,
   "aliases": ["fr-unite-1"],                 // frühere Deck-Kennungen
   "groups": [{ "id": "u2", "title": "Unité 2 – Drôle de famille" }],
   "units": [
@@ -207,14 +207,22 @@ Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
       "items": [
         { "id": "u2-mere", "source": "die Mutter", "target": "la mère",
           "accept": ["la maman"], "image": "👩", "tags": ["wf:famille"] },
+        { "id": "u2-parents", "source": "die Eltern", "target": "les parents",
+          "gender": "m", "number": "pl" }
+      ] },
+    { "id": "u2-lz3-plus", "title": "Lernziel 3 plus", "group": "u2",
+      "items": [
         { "id": "u2-age", "source": "das Alter", "target": "l'âge",
-          "gender": "m", "level": "erweitert" }
+          "gender": "m" }
       ] }
   ]
 }
 ```
 
-- **`units`** sind die wählbaren Lektionen (Lernziel, Voci-Test). **`group`**
+- **`units`** sind die wählbaren Lektionen (Lernziel, Voci-Test). Bei
+  *dis donc!* bekommt jedes Lernziel zwei Lektionen: «Lernziel 2» mit der
+  Wortliste «Vocabulaire» und «Lernziel 2 plus» mit «Vocabulaire plus».
+  **`group`**
   nennt die Unit des Lehrmittels; `groups` gibt ihr einen Titel. Die Auswahl
   zeigt die Units als Überschriften, ein Klick wählt alle Lektionen darunter.
   Decks ohne Gruppen – ältere, selbst importierte – erscheinen als flache
@@ -226,8 +234,10 @@ Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
   die als richtig gelten. Angaben wie «(m)» gehören nicht ins Lösungswort,
   sondern in `gender`.
 - **`level`** – `erweitert` oder `expert`; ohne Angabe gehört der Eintrag zum
-  Grundwortschatz. Bei *dis donc!* ist «Vocabulaire» Basis und «Vocabulaire
-  plus» Erweitert. Das gewählte Niveau schliesst die tieferen ein.
+  Grundwortschatz. Das gewählte Niveau schliesst die tieferen ein. Ein
+  Eintrag mit `level` fehlt auf tieferen Niveaus ganz – darum tragen die
+  «plus»-Wörter von *dis donc!* kein `level`, sie stehen in eigenen
+  Lektionen.
 - **`gender`**, **`number`** nur dort, wo der Artikel es nicht verrät
   (`l'âge`, `les parents`). Den Rest – Lemma ohne Artikel, Genus aus
   *le/la/un/une*, Mehrzahl aus *les/des* – leitet `prepareDeck` beim Laden

@@ -92,7 +92,9 @@ Seite einfach neu laden, ein zweiter Start ist unnötig.
 - **`idStyle: "slug"`** – Kennungen aus dem Wort statt aus der Zeilennummer
   (`u2-grand-mere`). Sinnvoll, wenn Zeilen keine feste Nummer haben.
 - **`rows[].level`** – `erweitert` oder `expert`; leer = Grundwortschatz.
-  «Vocabulaire plus» ist `erweitert`.
+  Solche Zeilen fehlen auf tieferen Niveaus. «Vocabulaire plus» bekommt
+  darum kein `level`, sondern eine eigene Section pro Lernziel:
+  `{ "id": "lz1-plus", "title": "Lernziel 1 plus" }`.
 - **`rows[].accept`** – weitere Schreibweisen, die als richtig gelten
   (`["la maman"]`). Doppelformen des Blatts («la mère, la maman») so
   auflösen, nicht im Lösungswort belassen.

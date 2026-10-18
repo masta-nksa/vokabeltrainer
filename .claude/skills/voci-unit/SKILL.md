@@ -43,9 +43,10 @@ bestätigen lassen**:
 **Französisch (*dis donc!*, Deck `fr-disdonc`)** ist nach Lernzielen
 gegliedert, nicht nach Tests. Dort im Entwurf `sections` statt `tests`
 verwenden, `idStyle: "slug"` setzen und pro Zeile `section` angeben. Die
-Wortliste «Vocabulaire» ist Grundwortschatz, «Vocabulaire plus» bekommt
-`level: "erweitert"`. Angaben wie «(m)» / «(f pl)» wandern in `gender` /
-`number`, Doppelformen («la mère, la maman») in `accept` – nichts davon
+Wortliste «Vocabulaire» kommt in die Sections `lz1`, `lz2` …, «Vocabulaire
+plus» in eigene Sections `lz1-plus` («Lernziel 1 plus») usw. – ohne `level`,
+damit die Wörter auf jedem Niveau wählbar bleiben. Angaben wie «(m)» /
+«(f pl)» wandern in `gender` / `number`, Doppelformen («la mère, la maman») in `accept` – nichts davon
 bleibt im Lösungswort. Details in `tools/voci-import/README.md`. Die
 bisherigen Units (`u1`, `u2`) im Deck als Vorlage ansehen.
 

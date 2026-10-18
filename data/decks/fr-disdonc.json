@@ -4,7 +4,7 @@
   "sourceLang": "de",
   "targetLang": "fr",
   "builtin": true,
-  "version": 2,
+  "version": 3,
   "aliases": [
     "fr-unite-1"
   ],
@@ -496,19 +496,24 @@
             "wf:famille"
           ],
           "concept": "child"
-        },
+        }
+      ]
+    },
+    {
+      "id": "u2-lz1-plus",
+      "title": "Lernziel 1 plus",
+      "group": "u2",
+      "items": [
         {
           "id": "u2-acteur",
           "source": "ein Schauspieler",
           "target": "un acteur",
-          "level": "erweitert",
           "image": "🎭"
         },
         {
           "id": "u2-cinema-muet",
           "source": "der Stummfilm",
           "target": "le cinéma muet",
-          "level": "erweitert",
           "image": "🎬"
         },
         {
@@ -518,21 +523,18 @@
           "accept": [
             "mariée"
           ],
-          "level": "erweitert",
           "pos": "adj",
           "image": "💍"
         },
         {
           "id": "u2-onze",
           "source": "elf",
-          "target": "onze",
-          "level": "erweitert"
+          "target": "onze"
         },
         {
           "id": "u2-chapeau",
           "source": "der Hut",
           "target": "le chapeau",
-          "level": "erweitert",
           "image": "🎩",
           "tags": [
             "wf:vetements"
@@ -542,7 +544,6 @@
           "id": "u2-pantalon",
           "source": "die Hose",
           "target": "le pantalon",
-          "level": "erweitert",
           "image": "👖",
           "tags": [
             "wf:vetements"
@@ -552,7 +553,6 @@
           "id": "u2-chaussures",
           "source": "die Schuhe",
           "target": "les chaussures",
-          "level": "erweitert",
           "gender": "f",
           "number": "pl",
           "image": "👞",
@@ -564,7 +564,6 @@
           "id": "u2-canne",
           "source": "der Stock",
           "target": "la canne",
-          "level": "erweitert",
           "image": "🦯",
           "tags": [
             "wf:vetements"
@@ -804,12 +803,18 @@
           "accept": [
             "elles s'appellent"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "u2-lz2-plus",
+      "title": "Lernziel 2 plus",
+      "group": "u2",
+      "items": [
         {
           "id": "u2-petit-fils",
           "source": "der Enkel",
           "target": "le petit-fils",
-          "level": "erweitert",
           "tags": [
             "wf:famille"
           ]
@@ -818,7 +823,6 @@
           "id": "u2-petite-fille",
           "source": "die Enkelin",
           "target": "la petite-fille",
-          "level": "erweitert",
           "tags": [
             "wf:famille"
           ]
@@ -827,7 +831,6 @@
           "id": "u2-chien",
           "source": "der Hund",
           "target": "le chien",
-          "level": "erweitert",
           "image": "🐕",
           "tags": [
             "wf:famille"
@@ -838,7 +841,6 @@
           "id": "u2-chat",
           "source": "die Katze",
           "target": "le chat",
-          "level": "erweitert",
           "image": "🐈",
           "tags": [
             "wf:famille"
@@ -849,14 +851,12 @@
           "id": "u2-membre-de-la-famille",
           "source": "das Familienmitglied",
           "target": "le membre de la famille",
-          "level": "erweitert",
           "gender": "m"
         },
         {
           "id": "u2-arbre-genealogique",
           "source": "ein Stammbaum",
           "target": "un arbre généalogique",
-          "level": "erweitert",
           "image": "🌳"
         }
       ]
@@ -892,72 +892,69 @@
           "id": "u2-je-parle-allemand-francais-et-anglais",
           "source": "Ich spreche Deutsch, Französisch und Englisch.",
           "target": "Je parle allemand, français et anglais."
-        },
+        }
+      ]
+    },
+    {
+      "id": "u2-lz3-plus",
+      "title": "Lernziel 3 plus",
+      "group": "u2",
+      "items": [
         {
           "id": "u2-sexe",
           "source": "das Geschlecht",
-          "target": "le sexe",
-          "level": "erweitert"
+          "target": "le sexe"
         },
         {
           "id": "u2-age",
           "source": "das Alter",
           "target": "l'âge",
-          "level": "erweitert",
           "gender": "m"
         },
         {
           "id": "u2-adresse",
           "source": "eine Adresse",
           "target": "une adresse",
-          "level": "erweitert",
           "image": "🏠"
         },
         {
           "id": "u2-pays",
           "source": "das Land",
           "target": "le pays",
-          "level": "erweitert",
           "image": "🗺️"
         },
         {
           "id": "u2-signature",
           "source": "die Unterschrift",
           "target": "la signature",
-          "level": "erweitert",
           "image": "✍️"
         },
         {
           "id": "u2-neerlandais",
           "source": "Niederländisch",
-          "target": "le néerlandais",
-          "level": "erweitert"
+          "target": "le néerlandais"
         },
         {
           "id": "u2-suedois",
           "source": "Schwedisch",
-          "target": "le suédois",
-          "level": "erweitert"
+          "target": "le suédois"
         },
         {
           "id": "u2-italien",
           "source": "Italienisch",
           "target": "l'italien",
-          "level": "erweitert",
           "gender": "m"
         },
         {
           "id": "u2-espagnol",
           "source": "Spanisch",
           "target": "l'espagnol",
-          "level": "erweitert",
           "gender": "m"
         },
         {
           "id": "u2-drapeau",
           "source": "die Fahne",
           "target": "le drapeau",
-          "level": "erweitert",
           "image": "🚩"
         }
       ]
