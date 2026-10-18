@@ -79,8 +79,9 @@ function showHero(name) {
 // ------------------------------------------------------------ Lektionswahl
 
 async function openSelection() {
-    document.getElementById('greeting').textContent =
-        `Hallo ${state.learnerName}, los geht es.`;
+    document.getElementById('greeting').textContent = `Hallo ${state.learnerName}`;
+    document.getElementById('avatar').textContent =
+        state.learnerName.trim().charAt(0).toUpperCase();
 
     // Nach einer Runde hat sich der Lernstand geändert.
     insightStale = true;
@@ -93,16 +94,11 @@ async function openSelection() {
 /** Aktiviert die Modus-Knöpfe nur, wenn etwas ausgewählt ist. */
 function onSelectionChange() {
     const count = selectedItems().length;
-    const hint = document.getElementById('selection-hint');
 
     for (const button of document.querySelectorAll('[data-mode]')) {
         button.disabled = count === 0;
     }
     document.getElementById('print-open').disabled = count === 0;
-
-    hint.textContent = count === 0
-        ? 'Wähle mindestens eine Lektion.'
-        : `${count} Wörter ausgewählt`;
 
     renderVoicePicker();
     refreshGames();
@@ -125,14 +121,29 @@ function refreshGames() {
     for (const game of available) {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = game.label;
+        button.className = 'game-tile';
         button.title = game.description;
+        button.append(svgIcon(GAME_ICONS[game.id] ?? 'i-bolt'), game.label);
         button.addEventListener('click', () =>
             games.play(game.id, deck, items, { units: [...state.selectedUnits] }));
         list.append(button);
     }
 
     block.hidden = available.length === 0;
+}
+
+/** Symbol je Spiel, aus dem Symbolvorrat in index.html. */
+const GAME_ICONS = { crossword: 'i-grid', sorter: 'i-sort', speed: 'i-bolt' };
+
+/** @param {string} id Kennung eines Symbols in index.html */
+function svgIcon(id) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'icon');
+    svg.setAttribute('aria-hidden', 'true');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', `#${id}`);
+    svg.append(use);
+    return svg;
 }
 
 function selectedItems() {
@@ -152,13 +163,20 @@ let insightStale = true;
 async function refreshInsight() {
     const deck = state.deck;
     const button = document.getElementById('foryou-start');
-    const hint = document.getElementById('foryou-hint');
+    const hint = document.getElementById('foryou-detail');
+    const pick = 'Wähle mindestens eine Lektion.';
 
     if (!deck) {
         state.insight = null;
         button.disabled = true;
-        hint.textContent = '';
+        hint.textContent = pick;
         return;
+    }
+
+    // Sofort sagen, ob etwas gewählt ist – der Lernstand kommt gleich nach.
+    if (selectedItems().length === 0) {
+        button.disabled = true;
+        hint.textContent = pick;
     }
 
     if (insightStale || state.insight?.deckId !== deck.id) {
@@ -172,12 +190,12 @@ async function refreshInsight() {
     const items = selectedItems();
     button.disabled = items.length === 0;
     if (items.length === 0) {
-        hint.textContent = '';
+        hint.textContent = pick;
         return;
     }
 
     const summary = summarize(items, state.insight.mastery, state.insight.now);
-    hint.textContent = `Die App wählt aus: ${summary.due} zur Wiederholung, ${summary.new} neu, ${summary.safe} sitzen. `;
+    hint.textContent = `${items.length} Wörter · ${summary.due} zur Wiederholung · ${summary.new} neu`;
 }
 
 /** Startet die gemischte Runde: fällige, neue und ein paar sichere Wörter. */
@@ -234,12 +252,25 @@ function setLevel(level) {
     state.level = toLevel(level);
     storage.setSetting('level', state.level);
 
-    const radio = document.querySelector(`input[name="level"][value="${state.level}"]`);
-    if (radio) radio.checked = true;
+    showLevel();
 
     // Das Niveau bestimmt auch, welche Wörter dazugehören.
     lessonSelect.refreshCounts();
     onSelectionChange();
+}
+
+/** Was das Niveau in den Modi bewirkt, in einem Satz (Werte: LEVELS der Modi). */
+const LEVEL_HINTS = {
+    basis: '4 Antworten zur Auswahl. Beim Schreiben steht der Artikel schon da, fehlende Akzente zählen als richtig.',
+    erweitert: '6 Antworten zur Auswahl. Artikel selbst schreiben, Akzente zählen. Nach einem Fehler gibt es einen Hinweis.',
+    expert: '8 ähnliche Antworten zur Auswahl. Schreiben ohne Hinweise.'
+};
+
+/** Setzt den Schalter und den Satz darunter auf das aktuelle Niveau. */
+function showLevel() {
+    const radio = document.querySelector(`input[name="level"][value="${state.level}"]`);
+    if (radio) radio.checked = true;
+    document.getElementById('level-hint').textContent = LEVEL_HINTS[state.level] ?? '';
 }
 
 // ------------------------------------------------------------ Challenge
@@ -338,6 +369,7 @@ async function refreshExercises() {
     for (const set of available) {
         const button = document.createElement('button');
         button.type = 'button';
+        button.className = 'chip';
         button.textContent = set.title.replace(/^Unit[ée]?\s*\d+\s*[–-]\s*/, '');
         button.addEventListener('click', () => quiz.startExercise(deck, set));
         list.append(button);
@@ -459,10 +491,17 @@ function initSelection() {
     }
 
     document.getElementById('foryou-start').addEventListener('click', startForYou);
-    document.getElementById('insight-open').addEventListener('click', () => {
-        openInsight().catch(error => console.warn('Lernstand nicht geladen:', error));
-    });
     document.getElementById('insight-home').addEventListener('click', () => screens.show('screen-select'));
+
+    for (const tab of document.querySelectorAll('[data-tab]')) {
+        tab.addEventListener('click', () => {
+            if (tab.dataset.tab === 'screen-insight') {
+                openInsight().catch(error => console.warn('Lernstand nicht geladen:', error));
+            } else {
+                screens.show(tab.dataset.tab);
+            }
+        });
+    }
 
     for (const button of document.querySelectorAll('[data-mode]')) {
         button.addEventListener('click', () => {
@@ -595,8 +634,7 @@ async function main() {
     // Ohne gespeichertes Niveau gilt die frühere Stufe (einfach/mittel/schwer).
     state.level = toLevel(await storage.getSetting('level', null)
         ?? await storage.getSetting('difficulty', null));
-    const levelRadio = document.querySelector(`input[name="level"][value="${state.level}"]`);
-    if (levelRadio) levelRadio.checked = true;
+    showLevel();
 
     screens.show('screen-start');
     onSelectionChange();

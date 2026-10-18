@@ -1,26 +1,39 @@
 /* Vokabeltrainer – Grundgestaltung */
 
 :root {
-    --bg: #f4f7fb;
+    --bg: #f4f6fa;
     --surface: #ffffff;
-    --ink: #1c2430;
-    --ink-soft: #5a6675;
-    --accent: #2f6db5;
+    --track: #e6eaf1;
+    --ink: #172033;
+    --ink-soft: #5b6577;
+    --accent: #2b57c9;
+    --accent-strong: #1e3f96;
+    --accent-soft: #e7edfb;
     --accent-ink: #ffffff;
-    --line: #d8e0ea;
-    --right: #2e8b57;
+    --warm: #e8772e;
+    --warm-soft: #fde7d6;
+    --warm-ink: #6b3009;
+    --line: #dde3ec;
+    --right: #1f7a4d;
     --wrong: #c0392b;
-    --radius: 10px;
+    --radius: 16px;
+    --tabbar-height: 4rem;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --bg: #161a1f;
         --surface: #1e242b;
+        --track: #2a323c;
         --ink: #e8edf3;
         --ink-soft: #9aa7b5;
-        --accent: #5a9fe0;
+        --accent: #7aa2f7;
+        --accent-strong: #c9d8ff;
+        --accent-soft: #24304a;
         --accent-ink: #0f1418;
+        --warm: #f0a46a;
+        --warm-soft: #3b2a1e;
+        --warm-ink: #ffd9bd;
         --line: #2e3844;
         --right: #4caf7d;
         --wrong: #e06a5c;
@@ -49,8 +62,14 @@ body {
 }
 
 .page {
-    max-width: 42rem;
+    max-width: 72rem;
     margin: 0 auto;
+}
+
+/* Lernen nutzt die volle Breite, die übrigen Bereiche bleiben schmal. */
+.screen:not(.learn) {
+    max-width: 42rem;
+    margin-inline: auto;
 }
 
 h1 {
@@ -202,102 +221,537 @@ button.link.danger {
     flex: 1 1 8rem;
 }
 
-#exercise-block {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--line);
+/* ------------------------------------------------------------- Symbole */
+
+.sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
 }
 
-#exercise-block .hint {
-    margin-top: .5rem;
+.icon {
+    width: 1.25em;
+    height: 1.25em;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.inline-toggle {
-    margin: -.25rem 0 .9rem;
+/* ------------------------------------------------------------- Lernen */
+
+.learn {
+    /* Platz für die Leiste «Für dich», die auf dem Handy unten klebt. */
+    padding-bottom: 5.5rem;
 }
 
-.inline-toggle > summary {
-    cursor: pointer;
-    font-size: .85rem;
-    color: var(--accent);
-    list-style: none;
+.learn h2 {
+    font-size: 1.15rem;
+    margin: 0 0 .6rem;
 }
 
-.inline-toggle > summary::-webkit-details-marker {
+.learn section + section {
+    margin-top: 1.5rem;
+}
+
+.eyebrow {
+    margin: 0;
+    font-size: .9rem;
+    color: var(--ink-soft);
+}
+
+.learn-head {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Der Held oben rechts soll den Titel nicht verdecken. */
+body:has(#hero:not([hidden])) .learn-head {
+    padding-right: 5.5rem;
+}
+
+.learn-head h1 {
+    margin: 0;
+    line-height: 1.15;
+}
+
+.avatar {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--warm-soft);
+    color: var(--warm-ink);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.avatar:empty {
     display: none;
 }
 
-.inline-toggle > summary::before {
-    content: '+ ';
+.learn-grid {
+    display: grid;
+    gap: 1.5rem;
 }
 
-.inline-toggle[open] > summary::before {
-    content: '– ';
+.course {
+    display: block;
+    margin: 0 0 1rem;
+    padding: .75rem 1rem .25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
 }
 
-.inline-toggle form,
-.inline-toggle > .hint,
-.inline-toggle > button {
-    margin-top: .6rem;
+.course select {
+    margin: .15rem 0 .5rem;
+    padding: .35rem 0;
+    border: 0;
+    background: transparent;
+    font-weight: 700;
+    cursor: pointer;
 }
 
-/* ------------------------------------------------------------ Lektionen */
+/* Lektionen: je Unit ein aufklappbarer Block mit Kacheln */
 
 .unit-list {
     display: grid;
-    gap: .25rem;
-    max-height: 17rem;
-    overflow-y: auto;
-    padding: .25rem 0;
+    gap: .75rem;
 }
 
-.unit {
+.unit-group {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+.unit-group > summary {
     display: flex;
     align-items: center;
     gap: .5rem;
-    padding: .35rem .5rem;
-    margin: 0;
-    color: var(--ink);
-    font-size: 1rem;
-    border-radius: 6px;
+    min-height: 3.25rem;
+    padding: .5rem 1rem;
     cursor: pointer;
+    list-style: none;
 }
 
-.unit:hover {
-    background: var(--bg);
+.unit-group > summary::-webkit-details-marker {
+    display: none;
 }
 
-/* Überschrift einer Unit über ihren Lektionen; ein Klick wählt alle. */
-.unit-group {
-    all: unset;
-    display: block;
-    margin-top: .5rem;
-    padding: .2rem .5rem;
+.unit-group-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.unit-group-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.unit-group-meta {
     font-size: .85rem;
-    font-weight: 600;
     color: var(--ink-soft);
+}
+
+.unit-group .chevron {
+    color: var(--ink-soft);
+    transition: transform .2s ease;
+}
+
+.unit-group[open] .chevron {
+    transform: rotate(180deg);
+}
+
+.unit-group-body {
+    display: grid;
+    gap: .75rem;
+    padding: 0 1rem 1rem;
+}
+
+button.unit-group-all {
+    justify-self: end;
+    margin: -.25rem 0 -.25rem;
+    min-height: 2.75rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.unit-row {
+    display: grid;
+    gap: .4rem;
+}
+
+.unit-row + .unit-row {
+    padding-top: .75rem;
+    border-top: 1px solid var(--line);
+}
+
+.unit-row-title {
+    font-weight: 700;
+}
+
+.unit-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+}
+
+button.unit-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: .1rem;
+    min-height: 3.5rem;
+    padding: .5rem .75rem;
+    text-align: left;
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+}
+
+button.unit-tile[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.unit-tile-name {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.unit-tile .check {
+    display: none;
+    stroke-width: 3;
+}
+
+.unit-tile[aria-pressed="true"] .check {
+    display: block;
+}
+
+.unit-tile-count {
+    font-size: .85rem;
+    opacity: .8;
+}
+
+/* Niveau als Schalter mit drei Feldern */
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+fieldset.level {
+    margin: 0;
+}
+
+fieldset.level legend {
+    padding: 0;
+}
+
+.segmented {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .25rem;
+    padding: .25rem;
+    background: var(--track);
+    border-radius: 14px;
+}
+
+.segmented label {
+    position: relative;
+    display: block;
+    margin: 0;
+    color: var(--ink-soft);
+}
+
+.segmented input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
     cursor: pointer;
 }
 
-.unit-group:first-child {
-    margin-top: 0;
+.segmented span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: .95rem;
 }
 
-.unit-group:hover,
-.unit-group:focus-visible {
+.segmented input:checked + span {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+}
+
+.segmented input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+/* «Für dich»: auf dem Handy unten festgeklebt, breit im Panel */
+
+.cta-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--tabbar-height);
+    z-index: 20;
+    padding: .6rem 1rem;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, .06);
+}
+
+button.cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    max-width: 42rem;
+    margin: 0 auto;
+    min-height: 3.5rem;
+    padding: .5rem 1.1rem;
+    border: 0;
+    border-radius: 16px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    text-align: left;
+}
+
+button.cta:disabled {
+    opacity: 1;
+    background: var(--track);
+    color: var(--ink-soft);
+}
+
+button.cta:disabled .icon {
+    display: none;
+}
+
+.cta-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.cta-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+.cta-detail {
+    font-size: .85rem;
+    opacity: .92;
+}
+
+button.cta .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke-width: 2.4;
+}
+
+/* Modi, Grammatik, Spiele */
+
+.tile-grid {
+    display: grid;
+    gap: .5rem;
+}
+
+button.tile {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: .8rem;
+    align-items: center;
+    min-height: 4rem;
+    padding: .6rem .9rem;
+    text-align: left;
+    border-radius: var(--radius);
+}
+
+.tile-icon {
+    grid-row: span 2;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: .55rem;
+    border-radius: 12px;
+    background: var(--accent-soft);
     color: var(--accent);
 }
 
-.unit span:first-of-type {
-    flex: 1;
+.tile-title {
+    font-weight: 700;
+    line-height: 1.2;
 }
 
-.badge {
-    font-size: .8rem;
+.tile-sub {
+    font-size: .85rem;
     color: var(--ink-soft);
-    background: var(--bg);
-    border-radius: 99px;
-    padding: .05rem .5rem;
+    line-height: 1.2;
+}
+
+.chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+button.chip {
+    min-height: 2.75rem;
+    padding: .4rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+    gap: .5rem;
+}
+
+button.game-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    min-height: 5.5rem;
+    padding: .6rem;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--warm-soft);
+    color: var(--warm-ink);
+    font-weight: 700;
+    font-size: .9rem;
+    text-align: center;
+    hyphens: auto;
+}
+
+button.game-tile:hover:not(:disabled) {
+    outline: 2px solid var(--warm);
+}
+
+button.game-tile .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* ------------------------------------------------------------ Hauptmenü */
+
+.tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    height: var(--tabbar-height);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0 .5rem env(safe-area-inset-bottom);
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+}
+
+.tabbar button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .1rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink-soft);
+    font-size: .8rem;
+}
+
+.tabbar button[aria-current="page"] {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+body.has-tabbar {
+    padding-bottom: calc(var(--tabbar-height) + 1rem);
+}
+
+/* ------------------------------------------- Breite Bildschirme: zwei Spalten */
+
+@media (min-width: 60rem) {
+    .tabbar {
+        position: static;
+        height: auto;
+        display: flex;
+        gap: .25rem;
+        max-width: 72rem;
+        margin: 0 auto 1.25rem;
+        padding: .4rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+    }
+
+    .tabbar button {
+        flex-direction: row;
+        gap: .5rem;
+        min-height: 2.75rem;
+        padding: 0 1rem;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .tabbar button[aria-current="page"] {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+    }
+
+    body.has-tabbar {
+        padding-bottom: 1rem;
+    }
+
+    .learn {
+        padding-bottom: 0;
+    }
+
+    .learn-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .cta-bar {
+        position: static;
+        padding: 0;
+        margin-top: 1rem;
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
 }
 
 /* ---------------------------------------------------------- Lernrunde */

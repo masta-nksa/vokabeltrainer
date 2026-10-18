@@ -3,7 +3,25 @@
 Mehrsprachiger Vokabeltrainer für den Unterricht. Läuft als statische Seite
 auf GitHub Pages – kein Build-Schritt, keine Abhängigkeiten.
 
+## Aufbau
+
+Nach dem Namen landet man bei **Lernen**: Kurs wählen, darunter die Units als
+aufklappbare Blöcke mit einer Kachel je Lektion (bei *dis donc!* je Lernziel
+«Vocabulaire» und «plus» nebeneinander). Rechts – auf dem Handy darunter –
+Niveau, der Knopf **Für dich**, die Modi zum Selbstwählen, Grammatik und
+Spiele. Auf dem Handy klebt «Für dich» unten und nennt, wie viele Wörter
+gewählt sind; darunter liegt das Menü **Lernen · Fortschritt · Mehr**, auf
+breiten Bildschirmen steht es oben. **Fortschritt** öffnet «Meine
+Stolpersteine», **Mehr** enthält Stimme, Drucken und das Laden eines eigenen
+Wortschatzes. In einer Runde oder einem Spiel ist das Menü ausgeblendet.
+
+Der Entwurf für die übrigen Bildschirme (Lernrunde, Ergebnis, Fortschritt)
+wird Schritt für Schritt umgesetzt.
+
 ## Lernmodi
+
+Auf dem Bildschirm heissen sie **Erkennen** (*terms*), **Buchstabieren**
+(*spelling*) und **Schreiben** (*writing*).
 
 | Modus | Ablauf |
 |---|---|
@@ -29,8 +47,7 @@ bzw. *a/an/the* beginnen. Sätze, lange Wendungen und Einträge mit mehreren
 Formen (*les maths, les mathématiques*) bleiben ganz.
 
 Dazu **Anwenden**: kleine Übungen zu einer Unit (Grammatik, Sachwissen), die
-in der Auswahl unter den Modus-Knöpfen erscheinen, sobald eine passende
-Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Das
+unter «Grammatik» erscheinen, sobald eine passende Lektion gewählt ist. Siehe [Anwendungsübungen](#anwendungsübungen). Das
 Niveau wirkt hier noch nicht.
 
 ## Für dich und Meine Stolpersteine
@@ -47,7 +64,7 @@ steigen – einmal pro Tag, erst ab Niveau Erweitert, und über Fach 3 hinaus
 nur, wenn es selbst geschrieben wurde. Ein Fehler bringt es zurück ins erste
 Fach.
 
-**Meine Stolpersteine** zeigt, wo es hakt: die Lernkartei, die häufigsten
+**Meine Stolpersteine** (Menü «Fortschritt») zeigt, wo es hakt: die Lernkartei, die häufigsten
 Fehlerarten der letzten 30 Tage mit Beispielen, verwechselte Wortpaare, die
 Trefferquote je Grammatikübung und die unsicheren Wörter – jeweils mit einem
 Knopf, der genau das übt. Wörter, die jemand verwechselt hat, tauchen ab
@@ -117,7 +134,7 @@ dem Start. Einen QR-Code erzeugt sie noch nicht.
 
 ## Drucken
 
-In der Lektionsauswahl unter **Drucken**: die gewählten Wörter entweder als
+Unter **Mehr › Drucken**: die unter «Lernen» gewählten Wörter entweder als
 **Liste** (Tabelle, wahlweise mit Lücke zum Ausfüllen) oder als
 **Karteikarten** ausgeben.
 
@@ -168,8 +185,7 @@ Lektion;Ausgangssprache;Zielsprache
 2_0 Welcome back!;eine Uhr;a clock
 ```
 
-Über *eigenen Wortschatz laden* (dezenter Link unter der Wortschatz-Auswahl
-in der Lektionsauswahl) einlesen. Der Wortschatz bleibt danach im Browser
+Unter **Mehr › Eigenen Wortschatz laden** einlesen. Der Wortschatz bleibt danach im Browser
 gespeichert.
 
 Lektionen mit gleichem ersten Wort – etwa "Lernziel 1" und "Lernziel 2" –
@@ -224,9 +240,10 @@ Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
   Wortliste «Vocabulaire» und «Lernziel 2 plus» mit «Vocabulaire plus».
   **`group`**
   nennt die Unit des Lehrmittels; `groups` gibt ihr einen Titel. Die Auswahl
-  zeigt die Units als Überschriften, ein Klick wählt alle Lektionen darunter.
-  Decks ohne Gruppen – ältere, selbst importierte – erscheinen als flache
-  Liste.
+  zeigt jede Unit als aufklappbaren Block; eine Lektion `<id>-plus` steht als
+  zweite Kachel neben der Lektion `<id>`, «alle wählen» nimmt die ganze Unit.
+  Decks ohne Gruppen – ältere, selbst importierte – erscheinen als ein Block
+  «Lektionen».
 - **`id`** eines Eintrags ist stabil: nie für einen anderen Eintrag
   wiederverwenden, der Lernstand hängt daran. Ändert sich eine Kennung doch,
   kommt die alte in **`aliases`**.

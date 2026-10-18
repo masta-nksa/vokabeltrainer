@@ -11,9 +11,41 @@
 </head>
 
 <body>
+    <!-- Symbole, eingebunden mit <use href="#i-…"> -->
+    <svg class="sprite" aria-hidden="true">
+        <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+        <symbol id="i-spell" viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></symbol>
+        <symbol id="i-write" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+        <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></symbol>
+        <symbol id="i-sort" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></symbol>
+        <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+        <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></symbol>
+        <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+    </svg>
+
     <div id="hero" class="hero" hidden>
         <img id="hero-image" alt="">
     </div>
+
+    <!-- Hauptmenü: auf dem Handy unten, auf breiten Bildschirmen oben -->
+    <nav id="tabbar" class="tabbar" aria-label="Hauptmenü" hidden>
+        <button type="button" data-tab="screen-select">
+            <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+            Lernen
+        </button>
+        <button type="button" data-tab="screen-insight">
+            <svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>
+            Fortschritt
+        </button>
+        <button type="button" data-tab="screen-more">
+            <svg class="icon" aria-hidden="true"><use href="#i-more"/></svg>
+            Mehr
+        </button>
+    </nav>
 
     <main class="page">
 
@@ -34,118 +66,86 @@
             </form>
         </section>
 
-        <!-- Wortschatz und Lektionen -->
-        <section id="screen-select" class="screen" hidden>
-            <h1 id="greeting"></h1>
+        <!-- Lernen: Kurs, Lektionen, Niveau und alles, was man damit macht -->
+        <section id="screen-select" class="screen learn" hidden>
+            <header class="learn-head">
+                <span id="avatar" class="avatar" aria-hidden="true"></span>
+                <div>
+                    <p id="greeting" class="eyebrow"></p>
+                    <h1>Was übst du heute?</h1>
+                </div>
+            </header>
 
-            <div class="card">
-                <label for="deck-select">Wortschatz</label>
-                <select id="deck-select"></select>
+            <div class="learn-grid">
+                <div class="learn-main">
+                    <label class="course">
+                        <span class="eyebrow">Kurs</span>
+                        <select id="deck-select"></select>
+                    </label>
 
-                <details class="inline-toggle">
-                    <summary>eigenen Wortschatz laden</summary>
-                    <form id="import-form">
-                        <label for="import-file">CSV-Datei</label>
-                        <input type="file" id="import-file" accept=".csv,text/csv">
+                    <div id="unit-list" class="unit-list"></div>
+                </div>
 
-                        <label for="import-title">Bezeichnung</label>
-                        <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
+                <div class="learn-side">
+                    <section class="panel">
+                        <fieldset class="level">
+                            <legend><h2>Niveau</h2></legend>
+                            <div class="segmented">
+                                <label><input type="radio" name="level" value="basis"><span>Basis</span></label>
+                                <label><input type="radio" name="level" value="erweitert" checked><span>Erweitert</span></label>
+                                <label><input type="radio" name="level" value="expert"><span>Expert</span></label>
+                            </div>
+                        </fieldset>
+                        <p id="level-hint" class="hint"></p>
 
-                        <div class="row">
-                            <span>
-                                <label for="import-source">Ausgangssprache</label>
-                                <select id="import-source">
-                                    <option value="de" selected>Deutsch</option>
-                                    <option value="en">Englisch</option>
-                                    <option value="fr">Französisch</option>
-                                    <option value="it">Italienisch</option>
-                                    <option value="es">Spanisch</option>
-                                    <option value="la">Latein</option>
-                                </select>
-                            </span>
-                            <span>
-                                <label for="import-target">Zielsprache</label>
-                                <select id="import-target">
-                                    <option value="en" selected>Englisch</option>
-                                    <option value="fr">Französisch</option>
-                                    <option value="it">Italienisch</option>
-                                    <option value="es">Spanisch</option>
-                                    <option value="la">Latein</option>
-                                    <option value="de">Deutsch</option>
-                                </select>
-                            </span>
+                        <div class="cta-bar">
+                            <button type="button" id="foryou-start" class="cta">
+                                <span class="cta-text">
+                                    <span class="cta-title">Für dich</span>
+                                    <span id="foryou-detail" class="cta-detail"></span>
+                                </span>
+                                <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+                            </button>
                         </div>
+                    </section>
 
-                        <label class="check">
-                            <input type="checkbox" id="import-target-first" checked>
-                            Spalte 2 enthält die Zielsprache
-                        </label>
+                    <section>
+                        <h2>Selbst wählen</h2>
+                        <div class="tile-grid">
+                            <button type="button" class="tile" data-mode="terms">
+                                <svg class="icon tile-icon" aria-hidden="true"><use href="#i-sound"/></svg>
+                                <span class="tile-title">Erkennen</span>
+                                <span class="tile-sub">hören und wählen</span>
+                            </button>
+                            <button type="button" class="tile" data-mode="spelling">
+                                <svg class="icon tile-icon" aria-hidden="true"><use href="#i-spell"/></svg>
+                                <span class="tile-title">Buchstabieren</span>
+                                <span class="tile-sub">richtige Schreibweise</span>
+                            </button>
+                            <button type="button" class="tile" data-mode="writing">
+                                <svg class="icon tile-icon" aria-hidden="true"><use href="#i-write"/></svg>
+                                <span class="tile-title">Schreiben</span>
+                                <span class="tile-sub">selbst eintippen</span>
+                            </button>
+                        </div>
+                    </section>
 
-                        <button type="submit">Importieren</button>
-                        <p id="import-message" class="hint"></p>
-                    </form>
+                    <section id="exercise-block" hidden>
+                        <h2>Grammatik</h2>
+                        <div id="exercise-list" class="chip-list"></div>
+                    </section>
 
-                    <p class="hint">
-                        Erwartet werden drei Spalten, getrennt durch Semikolon:
-                        <code>Lektion;Zielsprache;Ausgangssprache</code>
-                    </p>
-
-                    <button type="button" id="deck-delete" class="link danger">
-                        Diesen Wortschatz löschen
-                    </button>
-                </details>
-
-                <div class="row spread">
-                    <span class="label">Lektionen</span>
-                    <span>
-                        <button type="button" id="units-all" class="link">alle</button>
-                        <button type="button" id="units-none" class="link">keine</button>
-                    </span>
-                </div>
-
-                <div id="unit-list" class="unit-list"></div>
-                <p id="selection-hint" class="hint"></p>
-            </div>
-
-            <div class="card">
-                <h2>Üben</h2>
-                <fieldset class="row">
-                    <legend class="label">Niveau</legend>
-                    <label><input type="radio" name="level" value="basis"> Basis</label>
-                    <label><input type="radio" name="level" value="erweitert" checked> Erweitert</label>
-                    <label><input type="radio" name="level" value="expert"> Expert</label>
-                </fieldset>
-
-                <button type="button" id="foryou-start" class="primary wide">Für dich</button>
-                <p class="hint">
-                    <span id="foryou-hint"></span>
-                    <button type="button" id="insight-open" class="link">Meine Stolpersteine</button>
-                </p>
-
-                <span class="label">Oder einen Modus wählen</span>
-                <div class="modes">
-                    <button type="button" class="primary" data-mode="terms">terms</button>
-                    <button type="button" class="primary" data-mode="spelling">spelling</button>
-                    <button type="button" class="primary" data-mode="writing">writing</button>
-                </div>
-                <p class="hint">
-                    <strong>terms</strong> – hören und übersetzen ·
-                    <strong>spelling</strong> – richtige Schreibweise erkennen ·
-                    <strong>writing</strong> – selbst schreiben
-                </p>
-
-                <div id="exercise-block" hidden>
-                    <span class="label">Anwenden</span>
-                    <div id="exercise-list" class="modes"></div>
-                    <p class="hint">Übungen zu den gewählten Lektionen – Grammatik und Sachwissen.</p>
-                </div>
-
-                <div id="game-block" hidden>
-                    <span class="label">Spielen</span>
-                    <div id="game-list" class="modes"></div>
-                    <p class="hint">Mit den gewählten Wörtern – auch die Spiele merken sich, was noch nicht sitzt.</p>
+                    <section id="game-block" hidden>
+                        <h2>Spielen</h2>
+                        <div id="game-list" class="game-grid"></div>
+                    </section>
                 </div>
             </div>
+        </section>
+
+        <!-- Mehr: Einstellungen, die man selten braucht -->
+        <section id="screen-more" class="screen" hidden>
+            <h1>Mehr</h1>
 
             <details class="card">
                 <summary>Stimme</summary>
@@ -159,6 +159,7 @@
 
             <details class="card">
                 <summary>Drucken</summary>
+                <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
                 <fieldset class="row">
                     <legend class="label">Was soll auf dem Blatt stehen?</legend>
                     <label><input type="radio" name="print-mode" value="both" checked> beide Sprachen</label>
@@ -184,6 +185,58 @@
                 <button type="button" id="print-open">Vorschau öffnen</button>
             </details>
 
+            <details class="card">
+                <summary>Eigenen Wortschatz laden</summary>
+                <form id="import-form">
+                    <label for="import-file">CSV-Datei</label>
+                    <input type="file" id="import-file" accept=".csv,text/csv">
+
+                    <label for="import-title">Bezeichnung</label>
+                    <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
+
+                    <div class="row">
+                        <span>
+                            <label for="import-source">Ausgangssprache</label>
+                            <select id="import-source">
+                                <option value="de" selected>Deutsch</option>
+                                <option value="en">Englisch</option>
+                                <option value="fr">Französisch</option>
+                                <option value="it">Italienisch</option>
+                                <option value="es">Spanisch</option>
+                                <option value="la">Latein</option>
+                            </select>
+                        </span>
+                        <span>
+                            <label for="import-target">Zielsprache</label>
+                            <select id="import-target">
+                                <option value="en" selected>Englisch</option>
+                                <option value="fr">Französisch</option>
+                                <option value="it">Italienisch</option>
+                                <option value="es">Spanisch</option>
+                                <option value="la">Latein</option>
+                                <option value="de">Deutsch</option>
+                            </select>
+                        </span>
+                    </div>
+
+                    <label class="check">
+                        <input type="checkbox" id="import-target-first" checked>
+                        Spalte 2 enthält die Zielsprache
+                    </label>
+
+                    <button type="submit">Importieren</button>
+                    <p id="import-message" class="hint"></p>
+                </form>
+
+                <p class="hint">
+                    Erwartet werden drei Spalten, getrennt durch Semikolon:
+                    <code>Lektion;Zielsprache;Ausgangssprache</code>
+                </p>
+
+                <button type="button" id="deck-delete" class="link danger">
+                    Gewählten Wortschatz löschen
+                </button>
+            </details>
         </section>
 
         <!-- Lernrunde -->
