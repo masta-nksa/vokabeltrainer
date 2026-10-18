@@ -1776,17 +1776,84 @@ button.wide-button {
     text-align: center;
 }
 
+.game-head {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    margin-bottom: .75rem;
+}
+
+body:has(#hero:not([hidden])) .game-head {
+    padding-right: 5.5rem;
+}
+
+.game-heading {
+    flex: 1;
+    min-width: 0;
+    padding-top: .3rem;
+}
+
+.game-heading h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.2;
+}
+
+.game-heading .hint {
+    margin: .2rem 0 0;
+}
+
+/* Punkte, Zeit, verbleibende Wörter – vom Spiel gesetzt */
+.game-status {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 .75rem;
+    padding: .4rem .9rem;
+    border-radius: 999px;
+    background: var(--track);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: .95rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.game-status:empty {
+    display: none;
+}
+
 .game-stage {
-    margin-top: 1rem;
+    margin-top: .5rem;
+}
+
+.game-stage .note {
+    margin: .75rem 0 0;
+    font-weight: 600;
 }
 
 /* Kreuzworträtsel */
+.cw-current {
+    min-height: 1.6rem;
+    margin: 0 0 .75rem;
+    padding: .6rem 1rem;
+    border-radius: var(--radius);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.cw-current:empty {
+    display: none;
+}
+
 .cw-grid {
     --cell: min(2.6rem, calc((100vw - 2.5rem) / var(--cols)));
     display: grid;
     grid-template-columns: repeat(var(--cols), var(--cell));
     grid-auto-rows: var(--cell);
-    gap: 2px;
+    gap: 3px;
     justify-content: center;
     margin: 0 auto 1rem;
 }
@@ -1794,33 +1861,38 @@ button.wide-button {
 .cw-cell {
     position: relative;
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 4px;
+    border: 2px solid var(--line);
+    border-radius: 7px;
 }
 
 .cw-cell input {
     width: 100%;
     height: 100%;
+    min-height: 0;
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: 3px;
+    border-radius: 5px;
     background: transparent;
     color: var(--ink);
     text-align: center;
     text-transform: uppercase;
-    font-size: calc(var(--cell) * .55);
-    font-weight: 600;
+    font-size: calc(var(--cell) * .5);
+    font-weight: 700;
     caret-color: var(--accent);
 }
 
 .cw-cell input:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: -2px;
+    outline: none;
+    box-shadow: none;
+}
+
+.cw-cell:focus-within {
+    border-color: var(--accent);
 }
 
 .cw-cell.active {
-    background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+    background: var(--accent-soft);
 }
 
 .cw-cell.fixed input {
@@ -1828,11 +1900,12 @@ button.wide-button {
 }
 
 .cw-cell.solved {
-    background: color-mix(in srgb, var(--right) 22%, var(--surface));
+    border-color: var(--right);
+    background: var(--right-soft);
 }
 
 .cw-cell.solved input {
-    color: var(--ink);
+    color: var(--right-ink);
 }
 
 .cw-cell.wrong {
@@ -1840,7 +1913,10 @@ button.wide-button {
 }
 
 @keyframes cw-wrong {
-    0%, 60% { background: color-mix(in srgb, var(--wrong) 40%, var(--surface)); }
+    0%, 60% {
+        border-color: var(--warn);
+        background: var(--warn-soft);
+    }
 }
 
 .cw-number {
@@ -1856,15 +1932,18 @@ button.wide-button {
 .cw-accents {
     display: flex;
     flex-wrap: wrap;
-    gap: .3rem;
+    gap: .35rem;
     justify-content: center;
     margin-bottom: .5rem;
 }
 
 .cw-accents button {
-    min-width: 2.2rem;
-    padding: .3rem .4rem;
-    font-size: 1.05rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 .4rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .cw-clues {
@@ -1874,19 +1953,31 @@ button.wide-button {
     margin-top: 1rem;
 }
 
+.cw-clues h2,
+.cw-clues h3 {
+    margin: 0 0 .4rem;
+    font-size: 1rem;
+}
+
 .cw-clue {
     all: unset;
     display: block;
     width: 100%;
     box-sizing: border-box;
-    padding: .3rem .5rem;
-    border-radius: 6px;
+    min-height: 2.5rem;
+    padding: .45rem .7rem;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .cw-clue:hover,
 .cw-clue.active {
-    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.cw-clue:focus-visible {
+    outline: 2px solid var(--accent);
 }
 
 .cw-clue.solved {
@@ -1900,8 +1991,10 @@ button.wide-button {
     height: 15rem;
     overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--surface);
+    border-radius: 20px;
+    background:
+        linear-gradient(to bottom, transparent 75%, var(--warn-soft)),
+        var(--surface);
 }
 
 .sorter-word {
@@ -1909,79 +2002,153 @@ button.wide-button {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    padding: .3rem 1rem;
-    border-radius: 99px;
+    padding: .4rem 1.1rem;
+    border-radius: 999px;
     background: var(--accent);
     color: var(--accent-ink);
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 }
 
 .sorter-bins {
     display: flex;
     gap: .6rem;
-    margin-top: .6rem;
+    margin-top: .75rem;
 }
 
-.sorter-bin {
+button.sorter-bin {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    min-height: 4.5rem;
     padding: .8rem .4rem;
-    font-size: 1.2rem;
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 0 var(--line);
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 
 .sorter-bin small {
     color: var(--ink-soft);
     font-size: .8rem;
+    font-weight: 400;
 }
 
-.sorter-bin.right {
+button.sorter-bin.right {
     border-color: var(--right);
-    background: color-mix(in srgb, var(--right) 22%, var(--surface));
+    background: var(--right-soft);
+    color: var(--right-ink);
+    box-shadow: none;
 }
 
-.sorter-bin.wrong {
-    border-color: var(--wrong);
-    background: color-mix(in srgb, var(--wrong) 22%, var(--surface));
+button.sorter-bin.wrong {
+    border-color: var(--warn);
+    background: var(--warn-soft);
+    color: var(--warn-ink);
+    box-shadow: none;
 }
 
 /* Speed-Runde */
 .speed-bar {
-    height: .5rem;
-    border-radius: 99px;
-    background: var(--bg);
+    height: .75rem;
+    border-radius: 999px;
+    background: var(--line);
     overflow: hidden;
 }
 
 .speed-fill {
     height: 100%;
     width: 100%;
-    background: var(--accent);
+    border-radius: 999px;
+    background: var(--warm);
     transition: width .2s linear;
+}
+
+.game .prompt {
+    margin: 1.25rem 0 .5rem;
 }
 
 .speed-form {
     display: flex;
-    flex-wrap: wrap;
-    gap: .6rem;
+    gap: .5rem;
     justify-content: center;
+    max-width: 30rem;
+    margin: 1rem auto 0;
 }
 
 .speed-form input {
-    flex: 1 1 16rem;
-    max-width: 22rem;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 3.25rem;
     margin: 0;
     text-align: center;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
 }
 
-.cw-current {
-    min-height: 1.6rem;
-    margin: 0 0 .6rem;
+.speed-form button {
+    flex: none;
+    min-height: 3.25rem;
+    padding: 0 1.4rem;
+    border-radius: 14px;
+}
+
+/* Spielergebnis und Herausforderung */
+.trophy {
+    width: 4.5rem;
+    height: 4.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--warm-soft);
+    color: var(--warm-ink);
+}
+
+.trophy .icon {
+    width: 2.3rem;
+    height: 2.3rem;
+}
+
+.game-score {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+#game-result-compare h2 {
+    margin: 0 0 .3rem;
+    font-size: 1.3rem;
+}
+
+#game-result-compare p {
+    margin: 0;
+}
+
+.share-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: .5rem;
+}
+
+.challenge-text {
+    margin: 0 0 .5rem;
     text-align: center;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* In einer Karte: keine klebende Leiste, kein eigener Hintergrund */
+.result-actions.plain {
+    position: static;
+    margin: 1rem 0 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
 }

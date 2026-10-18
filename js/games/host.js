@@ -180,7 +180,10 @@ function showResult(round) {
         const target = document.createElement('strong');
         target.textContent = targetForms(item).join(', ');
         target.lang = deck.targetLang;
-        row.append(target, ` – ${item.source}`);
+        const source = document.createElement('span');
+        source.textContent = item.source;
+        source.lang = deck.sourceLang;
+        row.append(target, source);
         list.append(row);
     }
     document.getElementById('game-result-missed-box').hidden = result.missed.length === 0;

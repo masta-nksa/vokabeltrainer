@@ -36,6 +36,11 @@ warm (wackelt) bis blau (sitzt), die häufigsten Fehlerarten mit Balken und
 Beispielen, verwechselte Wortpaare, die Trefferquote je Grammatikübung und
 die unsicheren Wörter – jeweils mit einem Knopf «üben».
 
+Die **Spiele** haben dieselbe Kopfzeile wie die Lernrunde (Schliessen, Titel,
+Anleitung) und darunter eine Statuszeile mit Punkten und Zeit. Das
+**Spiel-Ergebnis** zeigt Punkte, Zeit und die Wörter, die noch nicht sitzen;
+«Freunde herausfordern» öffnet darüber die Karte mit dem Link.
+
 ## Lernmodi
 
 Auf dem Bildschirm heissen sie **Erkennen** (*terms*), **Buchstabieren**
