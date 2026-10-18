@@ -34,7 +34,7 @@ Vier Dinge machen den Unterschied zu einer Wortliste:
 
 | Übernommen | Inhalt |
 |---|---|
-| Wortschatz | Vocabulaire Lernziel 1–3 (Niveau Basis), Vocabulaire plus (Niveau Erweitert), Randvokabeln wie le chapeau, le pantalon, les chaussures (Erweitert) |
+| Wortschatz | Vocabulaire Lernziel 1–3, Vocabulaire plus als eigene Lektionen «Lernziel N plus» (Entscheid 18.10.2026, vorher Niveau Erweitert), Randvokabeln wie le chapeau, le pantalon, les chaussures (in «Lernziel 1 plus») |
 | Grammatik | Possessivbegleiter *mon/ma/mes* · *être* 3. Person *est/sont* · *s'appeler* *s'appelle/s'appellent* · *c'est / ce sont* · *voici/voilà* · Genus und Artikel *le/la/l'/les* |
 | Satzmuster | «X est la sœur de Y», «C'est ma mère. Elle s'appelle …» – als Lücken- und Satzbau-Übungen |
 
@@ -144,7 +144,7 @@ Jedes Item trägt ein `level`. Wo das Lehrmittel eine Einteilung hat, wird sie
 | Niveau | Wortumfang | Herkunft bei *dis donc!* |
 |---|---|---|
 | Basis | Grundwortschatz | «Vocabulaire» |
-| Erweitert | + erweiterter Wortschatz | «Vocabulaire plus», Randvokabeln der Buchseiten |
+| Erweitert | + erweiterter Wortschatz | – (seit 18.10.2026 stehen «Vocabulaire plus» und Randvokabeln in eigenen Lektionen, auf jedem Niveau wählbar) |
 | Expert | + Wendungen und Sätze, Wiederholung aus früheren Units | Satz-Items (`pos: phrase`), ältere Sections |
 
 Ein Niveau schliesst die darunterliegenden ein. Decks ohne Einteilung
@@ -695,8 +695,8 @@ damit live.
    ab, im Deck steht nur die Ausnahme. Sprachprofil als Modul
    `js/learning/languages.js` statt als JSON-Datei. `fr-unite-1` ist im Kurs
    `fr-disdonc` aufgegangen (Aliase für den Lernstand).
-5. ~~**Unité 2 importieren**~~ – erledigt: 60 Einträge (36 Basis, 24
-   Erweitert), Übungen *le/la/l'/les*, *mon/ma/mes*, *est/sont*,
+5. ~~**Unité 2 importieren**~~ – erledigt: 60 Einträge in sechs Lektionen
+   (36 «Lernziel N», 24 «Lernziel N plus»), Übungen *le/la/l'/les*, *mon/ma/mes*, *est/sont*,
    *s'appelle/s'appellent*, *c'est/ce sont* und «Wer ist wer?» mit Generatoren
    `article`, `possessive`, `kinship`. Die GrammarPoints leben als Übungssets
    mit `grammarId` in `data/exercises/fr-disdonc.json`.
