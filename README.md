@@ -23,7 +23,13 @@ orange mit Hinweis. Wer getippt zweimal danebenliegt oder zu einer richtigen
 Antwort einen Hinweis bekommt, sieht den Knopf **Weiter** – die Runde wartet,
 bis man gelesen hat; Enter tut dasselbe.
 
-Ergebnis und Fortschritt bekommen das neue Aussehen in den nächsten Schritten.
+Das **Ergebnis** zeigt einen Ring mit den auf Anhieb richtigen Wörtern, einen
+Satz je nach Quote und die Wörter, die noch nicht sitzen. Die Knöpfe
+«Fehler wiederholen», «Ganze Runde nochmals» und «Zur Übersicht» bleiben auf
+dem Handy unten sichtbar, auch bei langer Liste.
+
+«Meine Stolpersteine» (Fortschritt) bekommt das neue Aussehen im nächsten
+Schritt.
 
 ## Lernmodi
 

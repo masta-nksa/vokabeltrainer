@@ -500,8 +500,7 @@ function finish() {
     const total = session.items.length;
     const solved = total - session.missed.length;
 
-    document.getElementById('result-score').textContent =
-        `${solved} von ${total} auf Anhieb richtig`;
+    showScore(solved, total);
 
     const list = document.getElementById('result-list');
     list.replaceChildren();
@@ -523,7 +522,7 @@ function finish() {
         target.lang = session.deck.targetLang;
 
         const source = document.createElement('span');
-        source.textContent = ` – ${secondary}`;
+        source.textContent = secondary;
         source.lang = isTask ? session.deck.targetLang : session.deck.sourceLang;
 
         row.append(target, source);
@@ -532,7 +531,13 @@ function finish() {
 
     const hasMissed = missed.length > 0;
     document.getElementById('result-missed-box').hidden = !hasMissed;
-    document.getElementById('result-missed').hidden = !hasMissed;
+    const again = document.getElementById('result-missed');
+    again.hidden = !hasMissed;
+    again.textContent = missed.length === 1
+        ? 'Den Fehler wiederholen'
+        : `Die ${missed.length} Fehler wiederholen`;
+    // Ohne Fehler ist «nochmals» der Hauptknopf.
+    document.getElementById('result-again').classList.toggle('primary', !hasMissed);
 
     if (!hasMissed) reward.reveal();
 
@@ -540,6 +545,38 @@ function finish() {
         .catch(error => console.warn('Runde konnte nicht vermerkt werden:', error));
 
     screens.show('screen-result');
+}
+
+/**
+ * Ring, Titel und ein Satz zum Ergebnis.
+ * @param {number} solved auf Anhieb richtig
+ * @param {number} total Wörter der Runde
+ */
+function showScore(solved, total) {
+    const share = total > 0 ? solved / total : 0;
+    const missed = total - solved;
+    const name = state.learnerName.trim();
+    const to = name ? `, ${name}` : '';
+
+    document.getElementById('result-score').textContent = `${solved}/${total}`;
+    document.getElementById('result-ring').setAttribute('aria-label',
+        `${solved} von ${total} auf Anhieb richtig`);
+
+    // Kreisumfang bei r = 54, so lang ist der volle Ring.
+    const length = 2 * Math.PI * 54;
+    const fill = document.getElementById('result-ring-fill');
+    fill.style.strokeDasharray = `${share * length} ${length}`;
+
+    const [title, text] =
+        missed === 0 ? [`Alles richtig${to}!`, 'Kein einziger Fehler – stark.']
+        : share >= .8 ? [`Stark${to}!`, missed === 1
+            ? 'Ein Wort sitzt noch nicht. Übe es gleich nochmals.'
+            : `${missed} Wörter sitzen noch nicht. Übe sie gleich nochmals.`]
+        : share >= .5 ? [`Gut gemacht${to}!`, 'Wiederhole die Fehler gleich – dann sitzen sie schneller.']
+        : [`Dranbleiben${to}!`, 'Aller Anfang ist schwer. Wiederhole die Fehler gleich nochmals.'];
+
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-text').textContent = text;
 }
 
 // So viele Runden bleiben für den Niveau-Vorschlag im Gedächtnis.

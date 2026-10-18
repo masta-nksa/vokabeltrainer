@@ -303,24 +303,36 @@
         </section>
 
         <!-- Ergebnis -->
-        <section id="screen-result" class="screen" hidden>
-            <h1>Runde beendet</h1>
-            <p id="result-score" class="prompt"></p>
-
-            <div id="result-missed-box" class="card" hidden>
-                <h2>Das war noch nicht sicher</h2>
-                <ul id="result-list" class="result-list"></ul>
+        <section id="screen-result" class="screen result" hidden>
+            <div class="result-head">
+                <div class="ring" role="img" id="result-ring">
+                    <svg viewBox="0 0 132 132" aria-hidden="true">
+                        <circle class="ring-track" cx="66" cy="66" r="54"/>
+                        <circle class="ring-fill" id="result-ring-fill" cx="66" cy="66" r="54"/>
+                    </svg>
+                    <span class="ring-label" aria-hidden="true">
+                        <span id="result-score" class="ring-value"></span>
+                        <span class="ring-unit">auf Anhieb</span>
+                    </span>
+                </div>
+                <h1 id="result-title"></h1>
+                <p id="result-text" class="result-text"></p>
             </div>
 
-            <div id="result-level" class="card" hidden>
+            <div id="result-missed-box" class="card" hidden>
+                <h2 class="card-label">Noch nicht sicher</h2>
+                <ul id="result-list" class="word-list"></ul>
+            </div>
+
+            <div id="result-level" class="card accent-card" hidden>
                 <p id="result-level-text"></p>
                 <button type="button" id="result-level-up" class="primary"></button>
             </div>
 
-            <div class="modes">
-                <button type="button" id="result-missed" class="primary">Fehler wiederholen</button>
-                <button type="button" id="result-again">ganze Runde nochmals</button>
-                <button type="button" id="result-home" class="link">zur Auswahl</button>
+            <div class="result-actions">
+                <button type="button" id="result-missed" class="primary big">Fehler wiederholen</button>
+                <button type="button" id="result-again" class="big">Ganze Runde nochmals</button>
+                <button type="button" id="result-home" class="link">Zur Übersicht</button>
             </div>
         </section>
 
