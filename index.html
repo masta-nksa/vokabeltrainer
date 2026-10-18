@@ -24,6 +24,7 @@
         <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
         <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
         <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
         <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
     </svg>
 
@@ -240,22 +241,37 @@
         </section>
 
         <!-- Lernrunde -->
-        <section id="screen-quiz" class="screen" hidden>
-            <div class="row spread">
-                <div>
-                    <h1 id="quiz-title"></h1>
-                    <p id="quiz-subtitle" class="hint"></p>
+        <section id="screen-quiz" class="screen quiz" hidden>
+            <header class="quiz-head">
+                <button type="button" id="quiz-home" class="icon-button" aria-label="Runde abbrechen">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+                </button>
+                <div id="quiz-progress" class="progress" role="progressbar" aria-label="Fortschritt der Runde"
+                    aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+                    <div id="quiz-progress-fill" class="progress-fill"></div>
                 </div>
-                <button type="button" id="quiz-home" class="link">abbrechen</button>
+                <span id="quiz-count" class="quiz-count"></span>
+            </header>
+
+            <div class="quiz-meta">
+                <h1 id="quiz-title" class="pill"></h1>
+                <span id="quiz-level" class="pill muted"></span>
             </div>
 
-            <figure id="quiz-figure" class="quiz-figure" hidden>
-                <span id="quiz-emoji" aria-hidden="true"></span>
-                <img id="quiz-image" alt="" hidden>
-            </figure>
+            <div class="quiz-card">
+                <figure id="quiz-figure" class="quiz-figure" hidden>
+                    <span id="quiz-emoji" aria-hidden="true"></span>
+                    <img id="quiz-image" alt="" hidden>
+                </figure>
 
-            <p id="quiz-prompt" class="prompt"></p>
-            <button type="button" id="quiz-speak" class="link" hidden>nochmals hören</button>
+                <p id="quiz-prompt" class="prompt"></p>
+                <button type="button" id="quiz-speak" class="speak" hidden>
+                    <svg class="icon" aria-hidden="true"><use href="#i-sound"/></svg>
+                    nochmals hören
+                </button>
+            </div>
+
+            <p id="quiz-subtitle" class="quiz-instruction"></p>
 
             <div id="quiz-options" class="options"></div>
 
@@ -268,8 +284,22 @@
                 <button type="submit" class="primary">prüfen</button>
             </form>
 
-            <p id="quiz-note" class="note" role="status" aria-live="polite"></p>
-            <p id="scoreboard" class="scoreboard" role="status" aria-live="polite" hidden></p>
+            <p id="scoreboard" class="quiz-stats" role="status" aria-live="polite" hidden></p>
+
+            <!-- Rückmeldung zur Antwort, unten über die ganze Breite -->
+            <div id="quiz-feedback" class="feedback" hidden>
+                <div class="feedback-inner">
+                    <div class="feedback-head">
+                        <span class="feedback-badge" aria-hidden="true">
+                            <svg class="icon feedback-ok"><use href="#i-check"/></svg>
+                            <svg class="icon feedback-no"><use href="#i-close"/></svg>
+                        </span>
+                        <p id="feedback-title" class="feedback-title" role="status" aria-live="polite"></p>
+                    </div>
+                    <p id="quiz-note" class="feedback-note"></p>
+                    <button type="button" id="quiz-next" class="feedback-next" hidden>Weiter</button>
+                </div>
+            </div>
         </section>
 
         <!-- Ergebnis -->

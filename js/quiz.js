@@ -24,6 +24,10 @@ let question = null;
 let onLeave = null;
 /** @type {((level: string) => void) | null} */
 let onLevelUp = null;
+/** Die Antwort ist ausgewertet, die Runde wartet auf «Weiter» oder die Pause. */
+let waiting = false;
+/** @type {number | null} */
+let advanceTimer = null;
 
 /** @param {{onLeave: () => void, onLevelUp: (level: string) => void}} config */
 export function init(config) {
@@ -43,8 +47,12 @@ export function init(config) {
     field.addEventListener('keydown', event => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
-        submitTyped();
+        if (waiting) advance();
+        else submitTyped();
     });
+
+    document.getElementById('quiz-next')
+        .addEventListener('click', () => advance());
 
     document.getElementById('quiz-speak')
         .addEventListener('click', () => speakPrompt());
@@ -87,6 +95,8 @@ export function start(modeId, deck, items, context = null) {
 
     document.getElementById('quiz-title').textContent = context?.title ?? mode.label;
     document.getElementById('quiz-subtitle').textContent = context?.subtitle ?? mode.description;
+    document.getElementById('quiz-level').textContent =
+        state.level.charAt(0).toUpperCase() + state.level.slice(1);
 
     reward.reset();
     screens.show('screen-quiz');
@@ -123,6 +133,8 @@ function missedItems() {
 }
 
 function leave() {
+    stopWaiting();
+    hideFeedback();
     tts.stop();
     endSession();
     scoreboard.clear();
@@ -134,6 +146,9 @@ function leave() {
 function nextQuestion() {
     const session = state.session;
     if (!session) return;
+
+    stopWaiting();
+    hideFeedback();
 
     if (session.index >= session.items.length) {
         finish();
@@ -180,7 +195,6 @@ function renderQuestion() {
 
     renderFigure(question.image);
 
-    document.getElementById('quiz-note').textContent = '';
     document.getElementById('quiz-speak').hidden = !question.speakPrompt;
 
     const optionsBox = document.getElementById('quiz-options');
@@ -270,11 +284,9 @@ function submitTyped() {
  */
 function answer(given, button) {
     const session = state.session;
-    if (!session || !question) return;
+    if (!session || !question || waiting) return;
 
     const result = mode.check(question, given, session.level);
-    const note = document.getElementById('quiz-note');
-    note.classList.toggle('ok', result.correct);
 
     if (result.correct) {
         // Als richtig gewertet, aber nicht ganz – auf Basis etwa ein fehlender
@@ -293,10 +305,15 @@ function answer(given, button) {
         resolveItem();
         scoreboard.render(session);
 
-        // Ein Hinweis zur richtigen Antwort braucht Zeit zum Lesen.
-        note.textContent = result.note ?? '';
-        const pause = result.note ? 1800 : button ? 550 : 300;
-        window.setTimeout(nextQuestion, pause);
+        // Ein Hinweis zur richtigen Antwort braucht Zeit zum Lesen: Dann geht
+        // es erst mit «Weiter» weiter, sonst nach einer kurzen Pause.
+        waiting = true;
+        if (result.note) {
+            showFeedback('ok', 'Richtig!', result.note, true);
+        } else {
+            showFeedback('ok', 'Richtig!', '');
+            advanceTimer = window.setTimeout(advance, button ? 700 : 600);
+        }
         return;
     }
 
@@ -309,13 +326,14 @@ function answer(given, button) {
     // Getippte Antworten bekommen einen Hinweis auf die Art des Fehlers – auf
     // Expert nicht, dort muss man selbst darauf kommen.
     const hint = !button && session.level !== 'expert' ? hintForError(error) : null;
-    note.textContent = result.note ?? hint ?? '';
+    const note = result.note ?? hint ?? '';
     scoreboard.render(session);
 
     if (button) {
         // Falsch geklickt: Knopf sperren, die Frage bleibt stehen.
         button.classList.add('wrong');
         button.disabled = true;
+        showFeedback('no', 'Nicht ganz – versuch es nochmals.', note);
         return;
     }
 
@@ -325,11 +343,54 @@ function answer(given, button) {
 
     if (session.tries >= MAX_TRIES) {
         field.value = question.fieldAnswer ?? question.answer;
-        note.textContent = `Richtig wäre: ${question.answer}`;
         tts.speak(question.answer, langFor(question.answerSide));
         resolveItem();
-        window.setTimeout(nextQuestion, 2500);
+        scoreboard.render(session);
+        waiting = true;
+        showFeedback('no', `Richtig wäre: ${question.answer}`,
+            'Am Ende der Runde lässt es sich mit «Fehler wiederholen» nochmals üben.', true);
+        return;
     }
+
+    showFeedback('no', 'Nicht ganz – noch ein Versuch.', note);
+}
+
+// ------------------------------------------------------------ Rückmeldung
+
+/**
+ * Zeigt unten, wie die Antwort war.
+ * @param {'ok' | 'no'} kind
+ * @param {string} title
+ * @param {string} note Hinweis darunter, leer = keiner
+ * @param {boolean} [withNext] Mit Knopf «Weiter» – die Runde wartet darauf
+ */
+function showFeedback(kind, title, note, withNext = false) {
+    const box = document.getElementById('quiz-feedback');
+    box.dataset.kind = kind;
+    document.getElementById('feedback-title').textContent = title;
+    document.getElementById('quiz-note').textContent = note;
+
+    const next = document.getElementById('quiz-next');
+    next.hidden = !withNext;
+    box.hidden = false;
+    if (withNext) next.focus();
+}
+
+function hideFeedback() {
+    document.getElementById('quiz-feedback').hidden = true;
+}
+
+function stopWaiting() {
+    waiting = false;
+    if (advanceTimer !== null) window.clearTimeout(advanceTimer);
+    advanceTimer = null;
+}
+
+/** Zur nächsten Frage – vom Knopf «Weiter», der Enter-Taste oder der Pause. */
+function advance() {
+    if (!waiting) return;
+    stopWaiting();
+    nextQuestion();
 }
 
 /**
@@ -433,6 +494,7 @@ function finish() {
     if (!session) return;
 
     tts.stop();
+    hideFeedback();
     scoreboard.clear();
 
     const total = session.items.length;

@@ -15,8 +15,15 @@ breiten Bildschirmen steht es oben. **Fortschritt** öffnet «Meine
 Stolpersteine», **Mehr** enthält Stimme, Drucken und das Laden eines eigenen
 Wortschatzes. In einer Runde oder einem Spiel ist das Menü ausgeblendet.
 
-Der Entwurf für die übrigen Bildschirme (Lernrunde, Ergebnis, Fortschritt)
-wird Schritt für Schritt umgesetzt.
+In der **Lernrunde** stehen oben Schliessen, ein Fortschrittsbalken und der
+Zähler der erledigten Wörter, darunter Modus und Niveau, die Wortkarte und die
+Antworten. Die Rückmeldung erscheint unten über die ganze Breite: grün
+«Richtig!» (die Runde geht nach einer kurzen Pause von selbst weiter) oder
+orange mit Hinweis. Wer getippt zweimal danebenliegt oder zu einer richtigen
+Antwort einen Hinweis bekommt, sieht den Knopf **Weiter** – die Runde wartet,
+bis man gelesen hat; Enter tut dasselbe.
+
+Ergebnis und Fortschritt bekommen das neue Aussehen in den nächsten Schritten.
 
 ## Lernmodi
 

@@ -5,7 +5,7 @@ import { shuffle, normalize, misspellings, optionCount } from '../util.js';
 import { fromOperations } from '../learning/errors.js';
 
 export const id = 'spelling';
-export const label = 'spelling';
+export const label = 'Buchstabieren';
 export const description = 'Aus mehreren Schreibweisen die richtige erkennen';
 export const inputKind = 'choice';
 export const skill = 'spell';

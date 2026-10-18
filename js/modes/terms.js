@@ -5,7 +5,7 @@ import { sample, shuffle, normalize, optionCount } from '../util.js';
 import { targetForms } from '../data/decks.js';
 
 export const id = 'terms';
-export const label = 'terms';
+export const label = 'Erkennen';
 export const description = 'Wort hören und die richtige Übersetzung wählen';
 export const inputKind = 'choice';
 export const skill = 'recognize';

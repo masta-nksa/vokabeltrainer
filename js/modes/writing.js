@@ -5,7 +5,7 @@ import { normalize, stripDiacritics, splitArticle } from '../util.js';
 import { targetForms } from '../data/decks.js';
 
 export const id = 'writing';
-export const label = 'writing';
+export const label = 'Schreiben';
 export const description = 'Übersetzung selbst schreiben';
 export const inputKind = 'text';
 export const skill = 'produce';
