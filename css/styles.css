@@ -1376,18 +1376,36 @@ td.blank {
 
 /* ---------------------------------------------------------- Lernstand */
 
-button.wide {
-    display: block;
-    width: 100%;
-    margin: .75rem 0 .25rem;
-    font-size: 1.1rem;
+.insight-head {
+    margin-bottom: 1.25rem;
 }
 
-/* Lernkartei: ein Balken je Fach */
+.insight-head h1 {
+    margin: 0;
+}
+
+.insight h2 {
+    font-size: 1.1rem;
+    margin: 0 0 .75rem;
+}
+
+.card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.card-meta {
+    font-size: .85rem;
+    color: var(--ink-soft);
+}
+
+/* Lernkartei: ein Balken je Fach, von warm (wackelt) nach blau (sitzt) */
 .boxes {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: .5rem;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: .4rem;
     text-align: center;
 }
 
@@ -1396,12 +1414,12 @@ button.wide {
     flex-direction: column;
     align-items: center;
     gap: .2rem;
-    font-size: .9rem;
+    font-size: .85rem;
 }
 
 .box small {
     color: var(--ink-soft);
-    font-size: .72rem;
+    font-size: .7rem;
     line-height: 1.2;
 }
 
@@ -1409,24 +1427,36 @@ button.wide {
     display: flex;
     align-items: flex-end;
     width: 100%;
-    height: 5rem;
-    background: var(--bg);
-    border-radius: 6px;
-    overflow: hidden;
+    height: 5.5rem;
 }
 
 .box-bar {
     width: 100%;
-    min-height: 2px;
-    background: var(--accent);
+    min-height: 4px;
+    border-radius: 6px;
+    background: var(--track);
 }
 
+.box-1 .box-bar { background: var(--warm); }
+.box-2 .box-bar { background: color-mix(in srgb, var(--accent) 35%, var(--surface)); }
+.box-3 .box-bar { background: color-mix(in srgb, var(--accent) 60%, var(--surface)); }
+.box-4 .box-bar { background: color-mix(in srgb, var(--accent) 80%, var(--surface)); }
+.box-5 .box-bar { background: var(--accent-strong); }
+
+/* Auf dem Handy reichen Zahl und Fach; die Wartezeit steht im Tooltip. */
+@media (max-width: 30rem) {
+    .box small {
+        display: none;
+    }
+}
+
+/* Zeilen mit Balken und Knopf «üben» */
 .insight-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: .6rem 0;
+    padding: .75rem 0;
     border-top: 1px solid var(--line);
 }
 
@@ -1435,8 +1465,21 @@ button.wide {
     padding-top: 0;
 }
 
+.insight-text {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: .35rem;
+}
+
+.insight-line {
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
 .insight-row p {
-    margin: .15rem 0 0;
+    margin: 0;
 }
 
 .insight-row button {
@@ -1444,7 +1487,58 @@ button.wide {
 }
 
 .insight-row s {
-    color: var(--wrong);
+    color: var(--warn);
+}
+
+.meter {
+    height: .5rem;
+    border-radius: 999px;
+    background: var(--track);
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent);
+}
+
+.meter.warm .meter-fill {
+    background: var(--warm);
+}
+
+/* Verwechslungen als Wortpaare */
+/* Ein Paar je Zeile; lange Wendungen brechen in ihrem Feld um. */
+.pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .6rem;
+}
+
+.pair-word {
+    padding: .3rem .8rem;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.pair .icon {
+    color: var(--ink-soft);
+}
+
+button.pair-practice {
+    margin-top: .4rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-height: 2.75rem;
+}
+
+button.wide-button {
+    width: 100%;
+    margin-top: 1rem;
 }
 
 /* ------------------------------------------------------------- Spiele */

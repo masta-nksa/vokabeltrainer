@@ -491,7 +491,6 @@ function initSelection() {
     }
 
     document.getElementById('foryou-start').addEventListener('click', startForYou);
-    document.getElementById('insight-home').addEventListener('click', () => screens.show('screen-select'));
 
     for (const tab of document.querySelectorAll('[data-tab]')) {
         tab.addEventListener('click', () => {

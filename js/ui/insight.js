@@ -22,11 +22,31 @@ function el(tag, className, text) {
     return node;
 }
 
-function practiceButton(label, onClick) {
-    const button = el('button', null, label);
+function practiceButton(label, onClick, className = 'chip') {
+    const button = el('button', className, label);
     button.type = 'button';
     button.addEventListener('click', onClick);
     return button;
+}
+
+/** Ein schmaler Balken, gefüllt zu `share` (0 bis 1). */
+function meter(share, className = '') {
+    const track = el('div', `meter ${className}`.trim());
+    const fill = el('div', 'meter-fill');
+    fill.style.width = `${Math.round(Math.max(0, Math.min(1, share)) * 100)}%`;
+    track.append(fill);
+    return track;
+}
+
+/** @param {string} id Kennung eines Symbols in index.html */
+function icon(id) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'icon');
+    svg.setAttribute('aria-hidden', 'true');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', `#${id}`);
+    svg.append(use);
+    return svg;
 }
 
 /**
@@ -55,6 +75,8 @@ function renderBoxes(scope, insight) {
     const box = document.getElementById('insight-boxes');
     box.replaceChildren();
 
+    document.getElementById('insight-total').textContent = `${summary.total} Wörter`;
+
     const columns = [
         ['neu', summary.new, 'noch nie geübt'],
         ...summary.boxes.slice(1).map((count, index) =>
@@ -62,15 +84,16 @@ function renderBoxes(scope, insight) {
     ];
     const most = Math.max(1, ...columns.map(([, count]) => count));
 
-    for (const [label, count, caption] of columns) {
-        const column = el('div', 'box');
+    columns.forEach(([label, count, caption], index) => {
+        const column = el('div', `box box-${index}`);
+        column.title = caption;
         const bar = el('div', 'box-bar');
         bar.style.height = `${Math.round(count / most * 100)}%`;
         const track = el('div', 'box-track');
         track.append(bar);
         column.append(el('strong', null, String(count)), track, el('span', null, label), el('small', null, caption));
         box.append(column);
-    }
+    });
 
     document.getElementById('insight-summary').textContent = summary.total === 0
         ? 'Keine Wörter in der Auswahl.'
@@ -88,10 +111,15 @@ function renderErrors(insight, byId, deck, handlers) {
         return;
     }
 
+    const most = Math.max(...types.map(entry => entry.count));
+
     for (const entry of types) {
         const row = el('div', 'insight-row');
-        const text = el('div');
-        text.append(el('strong', null, `${ERROR_LABELS[entry.type] ?? entry.type} · ${entry.count}×`));
+        const text = el('div', 'insight-text');
+
+        const head = el('div', 'insight-line');
+        head.append(el('span', null, ERROR_LABELS[entry.type] ?? entry.type), el('strong', null, `${entry.count}×`));
+        text.append(head, meter(entry.count / most, 'warm'));
 
         for (const example of entry.examples) {
             const item = byId.get(example.itemId);
@@ -108,7 +136,7 @@ function renderErrors(insight, byId, deck, handlers) {
 
         const items = entry.itemIds.map(id => byId.get(id)).filter(Boolean);
         if (items.length > 0) {
-            row.append(practiceButton('gezielt üben', () =>
+            row.append(practiceButton('üben', () =>
                 handlers.practice(items, 'writing', ERROR_LABELS[entry.type] ?? 'Gezielt üben')));
         }
         box.append(row);
@@ -129,21 +157,23 @@ function renderConfusions(insight, byId, deck, handlers) {
     if (pairs.length === 0) return;
 
     for (const pair of pairs) {
-        const row = el('div', 'insight-row');
-        const text = el('div');
-        for (const item of [pair.first, pair.second]) {
-            const line = el('p');
-            const target = el('strong', null, item.target);
-            target.lang = deck.targetLang;
-            line.append(target, ` – ${item.source}`);
-            text.append(line);
-        }
-        row.append(text);
+        const row = el('div', 'pair');
+        const [first, second] = [pair.first, pair.second].map(item => {
+            const tag = el('span', 'pair-word', item.target);
+            tag.lang = deck.targetLang;
+            tag.title = item.source;
+            return tag;
+        });
+        const swap = icon('i-swap');
+        swap.setAttribute('aria-hidden', 'false');
+        swap.setAttribute('role', 'img');
+        swap.setAttribute('aria-label', 'verwechselt mit');
+        row.append(first, swap, second);
         box.append(row);
     }
 
     const all = [...new Set(pairs.flatMap(pair => [pair.first, pair.second]))];
-    box.append(practiceButton('diese Paare üben', () => handlers.practice(all, 'terms', 'Verwechslungen')));
+    box.append(practiceButton('Diese Paare üben', () => handlers.practice(all, 'terms', 'Verwechslungen'), 'pair-practice'));
 }
 
 function renderGrammar(insight, sets, handlers) {
@@ -159,12 +189,15 @@ function renderGrammar(insight, sets, handlers) {
 
     for (const entry of rows) {
         const row = el('div', 'insight-row');
-        const percent = Math.round(entry.clean / entry.total * 100);
-        const text = el('div');
-        text.append(
-            el('strong', null, entry.set.title.replace(/^Unit[ée]?\s*\d+\s*[–-]\s*/, '')),
-            el('p', 'hint', `${percent} % auf Anhieb richtig (${entry.clean} von ${entry.total})`)
+        const share = entry.clean / entry.total;
+        const text = el('div', 'insight-text');
+
+        const head = el('div', 'insight-line');
+        head.append(
+            el('span', null, entry.set.title.replace(/^Unit[ée]?\s*\d+\s*[–-]\s*/, '')),
+            el('strong', null, `${Math.round(share * 100)} %`)
         );
+        text.append(head, meter(share), el('p', 'hint', `${entry.clean} von ${entry.total} auf Anhieb richtig`));
         row.append(text, practiceButton('üben', () => handlers.practiceGrammar(entry.exerciseId)));
         box.append(row);
     }
@@ -185,12 +218,17 @@ function renderWeak(scope, insight, deck, handlers) {
         const row = el('li');
         const target = el('strong', null, targetForms(item).join(', '));
         target.lang = deck.targetLang;
-        row.append(target, ` – ${item.source}`);
+        const source = el('span', null, item.source);
+        source.lang = deck.sourceLang;
+        row.append(target, source);
         list.append(row);
     }
     if (weak.length > WEAK_SHOWN) list.append(el('li', 'hint', `… und ${weak.length - WEAK_SHOWN} weitere`));
 
     // Der Knopf übt alle unsicheren Wörter, nicht nur die gezeigten.
     const button = document.getElementById('insight-weak-start');
+    button.textContent = weak.length === 1
+        ? 'Meinen Stolperstein üben'
+        : `Meine ${weak.length} Stolpersteine üben`;
     button.onclick = () => handlers.practice(weak, 'terms', 'Noch unsicher');
 }

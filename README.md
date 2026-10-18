@@ -28,8 +28,10 @@ Satz je nach Quote und die Wörter, die noch nicht sitzen. Die Knöpfe
 «Fehler wiederholen», «Ganze Runde nochmals» und «Zur Übersicht» bleiben auf
 dem Handy unten sichtbar, auch bei langer Liste.
 
-«Meine Stolpersteine» (Fortschritt) bekommt das neue Aussehen im nächsten
-Schritt.
+**Fortschritt** («Meine Stolpersteine») zeigt die Lernkartei als Balken von
+warm (wackelt) bis blau (sitzt), die häufigsten Fehlerarten mit Balken und
+Beispielen, verwechselte Wortpaare, die Trefferquote je Grammatikübung und
+die unsicheren Wörter – jeweils mit einem Knopf «üben».
 
 ## Lernmodi
 

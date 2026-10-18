@@ -25,6 +25,7 @@
         <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
         <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
         <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+        <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 7h13l-3-3"/><path d="M17 17H4l3 3"/></symbol>
         <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
     </svg>
 
@@ -400,39 +401,41 @@
         </section>
 
         <!-- Lernstand und Schwächen -->
-        <section id="screen-insight" class="screen" hidden>
-            <div class="row spread">
-                <h1>Meine Stolpersteine</h1>
-                <button type="button" id="insight-home" class="link">zurück</button>
-            </div>
-            <p id="insight-scope" class="hint"></p>
+        <section id="screen-insight" class="screen insight" hidden>
+            <header class="insight-head">
+                <p id="insight-scope" class="eyebrow"></p>
+                <h1>Dein Fortschritt</h1>
+            </header>
 
-            <div class="card">
-                <h2>Lernkartei</h2>
+            <section class="card">
+                <div class="card-head">
+                    <h2>Lernkartei</h2>
+                    <span id="insight-total" class="card-meta"></span>
+                </div>
                 <div id="insight-boxes" class="boxes"></div>
                 <p id="insight-summary" class="hint"></p>
-            </div>
+            </section>
 
-            <div class="card">
+            <section class="card">
                 <h2>Das passiert dir oft</h2>
                 <div id="insight-errors"></div>
-            </div>
+            </section>
 
-            <div id="insight-confusions-card" class="card" hidden>
+            <section id="insight-confusions-card" class="card" hidden>
                 <h2>Diese Wörter verwechselst du</h2>
                 <div id="insight-confusions"></div>
-            </div>
+            </section>
 
-            <div id="insight-grammar-card" class="card" hidden>
+            <section id="insight-grammar-card" class="card" hidden>
                 <h2>Grammatik</h2>
                 <div id="insight-grammar"></div>
-            </div>
+            </section>
 
-            <div id="insight-weak-card" class="card" hidden>
+            <section id="insight-weak-card" class="card" hidden>
                 <h2>Noch unsicher</h2>
-                <ul id="insight-weak" class="result-list"></ul>
-                <button type="button" id="insight-weak-start" class="primary">diese Wörter üben</button>
-            </div>
+                <ul id="insight-weak" class="word-list"></ul>
+                <button type="button" id="insight-weak-start" class="primary big wide-button">Diese Wörter üben</button>
+            </section>
         </section>
 
     </main>
