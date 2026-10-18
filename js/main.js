@@ -31,17 +31,33 @@ const HEROES = {
 
 // --------------------------------------------------------------- Startseite
 
+/** Der gewählte Held, leer = keiner. */
+function chosenHero() {
+    return document.querySelector('input[name="hero"]:checked')?.value ?? '';
+}
+
+/** @param {string} name */
+function chooseHero(name) {
+    const radio = [...document.querySelectorAll('input[name="hero"]')].find(input => input.value === name);
+    if (radio) radio.checked = true;
+}
+
 function initStart() {
-    const heroSelect = document.getElementById('hero-select');
+    const choice = document.getElementById('hero-choice');
 
     for (const name of Object.keys(HEROES)) {
-        const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
-        heroSelect.append(option);
+        const label = document.createElement('label');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'hero';
+        radio.value = name;
+        const text = document.createElement('span');
+        text.textContent = name;
+        label.append(radio, text);
+        choice.append(label);
     }
 
-    heroSelect.addEventListener('change', () => showHero(heroSelect.value));
+    choice.addEventListener('change', () => showHero(chosenHero()));
 
     document.getElementById('start-form').addEventListener('submit', async event => {
         event.preventDefault();
@@ -50,10 +66,10 @@ function initStart() {
         if (name === '') return;
 
         state.learnerName = name;
-        state.hero = heroSelect.value;
+        state.hero = chosenHero();
 
         await storage.setSetting('learnerName', name);
-        await storage.setSetting('hero', heroSelect.value);
+        await storage.setSetting('hero', state.hero);
 
         await openSelection();
         if (pendingChallenge) await presentChallenge();
@@ -257,6 +273,12 @@ function setLevel(level) {
     // Das Niveau bestimmt auch, welche Wörter dazugehören.
     lessonSelect.refreshCounts();
     onSelectionChange();
+}
+
+/** Name und Held als Zeile unter «Mehr». */
+function showProfile() {
+    document.getElementById('profile-summary').textContent =
+        `${state.learnerName || 'ohne Namen'} · ${state.hero ? `Held: ${state.hero}` : 'kein Held'}`;
 }
 
 /** Was das Niveau in den Modi bewirkt, in einem Satz (Werte: LEVELS der Modi). */
@@ -497,10 +519,15 @@ function initSelection() {
             if (tab.dataset.tab === 'screen-insight') {
                 openInsight().catch(error => console.warn('Lernstand nicht geladen:', error));
             } else {
+                if (tab.dataset.tab === 'screen-more') showProfile();
                 screens.show(tab.dataset.tab);
             }
         });
     }
+
+    // «Name und Held» führt zurück zur Startseite; dort geht es wie beim
+    // ersten Besuch mit «Los geht's» weiter.
+    document.getElementById('profile-edit').addEventListener('click', () => screens.show('screen-start'));
 
     for (const button of document.querySelectorAll('[data-mode]')) {
         button.addEventListener('click', () => {
@@ -623,7 +650,7 @@ async function main() {
 
     if (name) document.getElementById('name-input').value = name;
     if (hero && HEROES[hero]) {
-        document.getElementById('hero-select').value = hero;
+        chooseHero(hero);
         showHero(hero);
     }
 

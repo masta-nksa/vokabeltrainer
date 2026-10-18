@@ -26,6 +26,9 @@
         <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
         <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
         <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 7h13l-3-3"/><path d="M17 17H4l3 3"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+        <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol>
+        <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></symbol>
         <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
     </svg>
 
@@ -52,19 +55,31 @@
     <main class="page">
 
         <!-- Startseite -->
-        <section id="screen-start" class="screen" hidden>
-            <h1>Vokabeltrainer</h1>
-            <p id="start-challenge" class="card" hidden></p>
-            <form id="start-form" class="card">
-                <label for="name-input">Wie heisst du?</label>
-                <input type="text" id="name-input" autocomplete="given-name" required>
+        <section id="screen-start" class="screen start" hidden>
+            <header class="start-head">
+                <span class="logo" aria-hidden="true">
+                    <svg class="icon"><use href="#i-book"/></svg>
+                </span>
+                <h1>Vokabeltrainer</h1>
+                <p class="eyebrow">Wörter üben, bis sie sitzen.</p>
+            </header>
 
-                <label for="hero-select">Wen möchtest du freispielen?</label>
-                <select id="hero-select">
-                    <option value="">Niemanden</option>
-                </select>
+            <p id="start-challenge" class="card accent-card" hidden></p>
 
-                <button type="submit" class="primary">Los geht es</button>
+            <form id="start-form" class="card start-form">
+                <label for="name-input" class="field-label">Wie heisst du?</label>
+                <input type="text" id="name-input" autocomplete="given-name" required
+                    placeholder="dein Vorname">
+
+                <fieldset class="hero-field">
+                    <legend class="field-label">Wen möchtest du freispielen?</legend>
+                    <p class="hint">Das Bild ist erst unscharf und wird mit jeder richtigen Antwort klarer.</p>
+                    <div id="hero-choice" class="chip-choice">
+                        <label><input type="radio" name="hero" value="" checked><span>Niemanden</span></label>
+                    </div>
+                </fieldset>
+
+                <button type="submit" class="primary big">Los geht's</button>
             </form>
         </section>
 
@@ -146,99 +161,141 @@
         </section>
 
         <!-- Mehr: Einstellungen, die man selten braucht -->
-        <section id="screen-more" class="screen" hidden>
+        <section id="screen-more" class="screen more" hidden>
             <h1>Mehr</h1>
 
-            <details class="card">
-                <summary>Stimme</summary>
-                <div id="voice-picker"></div>
-                <p class="hint">
-                    Welche Stimmen zur Verfügung stehen, hängt vom Browser ab.
-                    Die über das Netz erzeugten klingen meist deutlich besser als
-                    die auf dem Gerät gespeicherten.
-                </p>
-            </details>
-
-            <details class="card">
-                <summary>Drucken</summary>
-                <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
-                <fieldset class="row">
-                    <legend class="label">Was soll auf dem Blatt stehen?</legend>
-                    <label><input type="radio" name="print-mode" value="both" checked> beide Sprachen</label>
-                    <label><input type="radio" name="print-mode" value="target"> nur Zielsprache</label>
-                    <label><input type="radio" name="print-mode" value="source"> nur Ausgangssprache</label>
-                </fieldset>
-                <fieldset class="row">
-                    <legend class="label">Format</legend>
-                    <label><input type="radio" name="print-layout" value="list" checked> Liste</label>
-                    <label><input type="radio" name="print-layout" value="cards"> Karteikarten</label>
-                </fieldset>
-                <label class="check">
-                    <input type="checkbox" id="print-duplex">
-                    doppelseitig (Zielsprache vorne, Ausgangssprache hinten)
-                </label>
-                <p class="hint">
-                    Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt – zum
-                    Ausschneiden und Laminieren als Lernkärtchen. Doppelseitig:
-                    im Druckdialog beidseitiges Drucken mit Wendung an der
-                    langen Kante wählen; die Karte danach zum Umdrehen ebenfalls
-                    um ihre lange Kante drehen.
-                </p>
-                <button type="button" id="print-open">Vorschau öffnen</button>
-            </details>
-
-            <details class="card">
-                <summary>Eigenen Wortschatz laden</summary>
-                <form id="import-form">
-                    <label for="import-file">CSV-Datei</label>
-                    <input type="file" id="import-file" accept=".csv,text/csv">
-
-                    <label for="import-title">Bezeichnung</label>
-                    <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
-
-                    <div class="row">
-                        <span>
-                            <label for="import-source">Ausgangssprache</label>
-                            <select id="import-source">
-                                <option value="de" selected>Deutsch</option>
-                                <option value="en">Englisch</option>
-                                <option value="fr">Französisch</option>
-                                <option value="it">Italienisch</option>
-                                <option value="es">Spanisch</option>
-                                <option value="la">Latein</option>
-                            </select>
-                        </span>
-                        <span>
-                            <label for="import-target">Zielsprache</label>
-                            <select id="import-target">
-                                <option value="en" selected>Englisch</option>
-                                <option value="fr">Französisch</option>
-                                <option value="it">Italienisch</option>
-                                <option value="es">Spanisch</option>
-                                <option value="la">Latein</option>
-                                <option value="de">Deutsch</option>
-                            </select>
-                        </span>
-                    </div>
-
-                    <label class="check">
-                        <input type="checkbox" id="import-target-first" checked>
-                        Spalte 2 enthält die Zielsprache
-                    </label>
-
-                    <button type="submit">Importieren</button>
-                    <p id="import-message" class="hint"></p>
-                </form>
-
-                <p class="hint">
-                    Erwartet werden drei Spalten, getrennt durch Semikolon:
-                    <code>Lektion;Zielsprache;Ausgangssprache</code>
-                </p>
-
-                <button type="button" id="deck-delete" class="link danger">
-                    Gewählten Wortschatz löschen
+            <div class="settings">
+                <button type="button" id="profile-edit" class="setting setting-button">
+                    <span class="setting-icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>
+                    <span class="setting-text">
+                        <span class="setting-title">Name und Held</span>
+                        <span id="profile-summary" class="setting-sub"></span>
+                    </span>
+                    <svg class="icon setting-chevron side" aria-hidden="true"><use href="#i-chevron"/></svg>
                 </button>
-            </details>
+
+                <details class="setting">
+                    <summary>
+                        <span class="setting-icon"><svg class="icon" aria-hidden="true"><use href="#i-sound"/></svg></span>
+                        <span class="setting-text">
+                            <span class="setting-title">Stimme</span>
+                            <span class="setting-sub">Wer die Wörter vorliest</span>
+                        </span>
+                        <svg class="icon setting-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+                    </summary>
+                    <div class="setting-body">
+                        <div id="voice-picker"></div>
+                        <p class="hint">
+                            Welche Stimmen zur Verfügung stehen, hängt vom Browser ab.
+                            Die über das Netz erzeugten klingen meist deutlich besser als
+                            die auf dem Gerät gespeicherten.
+                        </p>
+                    </div>
+                </details>
+
+                <details class="setting">
+                    <summary>
+                        <span class="setting-icon"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg></span>
+                        <span class="setting-text">
+                            <span class="setting-title">Drucken</span>
+                            <span class="setting-sub">Liste oder Karteikarten der gewählten Wörter</span>
+                        </span>
+                        <svg class="icon setting-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+                    </summary>
+                    <div class="setting-body">
+                        <fieldset>
+                            <legend class="field-label">Was soll auf dem Blatt stehen?</legend>
+                            <div class="segmented">
+                                <label><input type="radio" name="print-mode" value="both" checked><span>beide</span></label>
+                                <label><input type="radio" name="print-mode" value="target"><span>Zielsprache</span></label>
+                                <label><input type="radio" name="print-mode" value="source"><span>Ausgangs&shy;sprache</span></label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend class="field-label">Format</legend>
+                            <div class="segmented two">
+                                <label><input type="radio" name="print-layout" value="list" checked><span>Liste</span></label>
+                                <label><input type="radio" name="print-layout" value="cards"><span>Karteikarten</span></label>
+                            </div>
+                        </fieldset>
+                        <label class="check">
+                            <input type="checkbox" id="print-duplex">
+                            doppelseitig (Zielsprache vorne, Ausgangssprache hinten)
+                        </label>
+                        <p class="hint">
+                            Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt – zum
+                            Ausschneiden und Laminieren als Lernkärtchen. Doppelseitig:
+                            im Druckdialog beidseitiges Drucken mit Wendung an der
+                            langen Kante wählen; die Karte danach zum Umdrehen ebenfalls
+                            um ihre lange Kante drehen.
+                        </p>
+                        <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
+                        <button type="button" id="print-open" class="primary big">Vorschau öffnen</button>
+                    </div>
+                </details>
+
+                <details class="setting">
+                    <summary>
+                        <span class="setting-icon"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg></span>
+                        <span class="setting-text">
+                            <span class="setting-title">Eigenen Wortschatz laden</span>
+                            <span class="setting-sub">CSV-Datei mit eigenen Wörtern</span>
+                        </span>
+                        <svg class="icon setting-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+                    </summary>
+                    <div class="setting-body">
+                        <form id="import-form">
+                            <label for="import-file" class="field-label">CSV-Datei</label>
+                            <input type="file" id="import-file" accept=".csv,text/csv">
+
+                            <label for="import-title" class="field-label">Bezeichnung</label>
+                            <input type="text" id="import-title" placeholder="zum Beispiel: Französisch Unité 3">
+
+                            <div class="row">
+                                <span>
+                                    <label for="import-source" class="field-label">Ausgangssprache</label>
+                                    <select id="import-source">
+                                        <option value="de" selected>Deutsch</option>
+                                        <option value="en">Englisch</option>
+                                        <option value="fr">Französisch</option>
+                                        <option value="it">Italienisch</option>
+                                        <option value="es">Spanisch</option>
+                                        <option value="la">Latein</option>
+                                    </select>
+                                </span>
+                                <span>
+                                    <label for="import-target" class="field-label">Zielsprache</label>
+                                    <select id="import-target">
+                                        <option value="en" selected>Englisch</option>
+                                        <option value="fr">Französisch</option>
+                                        <option value="it">Italienisch</option>
+                                        <option value="es">Spanisch</option>
+                                        <option value="la">Latein</option>
+                                        <option value="de">Deutsch</option>
+                                    </select>
+                                </span>
+                            </div>
+
+                            <label class="check">
+                                <input type="checkbox" id="import-target-first" checked>
+                                Spalte 2 enthält die Zielsprache
+                            </label>
+
+                            <button type="submit" class="primary big">Importieren</button>
+                            <p id="import-message" class="hint"></p>
+                        </form>
+
+                        <p class="hint">
+                            Erwartet werden drei Spalten, getrennt durch Semikolon:
+                            <code>Lektion;Zielsprache;Ausgangssprache</code>
+                        </p>
+
+                        <button type="button" id="deck-delete" class="link danger">
+                            Gewählten Wortschatz löschen
+                        </button>
+                    </div>
+                </details>
+            </div>
         </section>
 
         <!-- Lernrunde -->

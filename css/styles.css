@@ -138,13 +138,31 @@ input[type="text"],
 input[type="file"],
 select {
     width: 100%;
-    padding: .6rem;
+    min-height: 2.75rem;
+    padding: .55rem .8rem;
     margin-bottom: .9rem;
     font: inherit;
     color: var(--ink);
     background: var(--bg);
     border: 1px solid var(--line);
-    border-radius: 6px;
+    border-radius: 12px;
+}
+
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Beschriftung über einem Feld, kräftiger als die graue .label */
+.field-label {
+    display: block;
+    margin: .25rem 0 .4rem;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
 }
 
 fieldset {
@@ -255,6 +273,217 @@ button.link.danger {
     stroke-linejoin: round;
 }
 
+/* ----------------------------------------------------------- Startseite */
+
+.screen.start {
+    max-width: 28rem;
+    padding-top: 1.5rem;
+}
+
+.start-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .35rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.start-head h1 {
+    margin: .4rem 0 0;
+    font-size: 1.9rem;
+}
+
+.logo {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.logo .icon {
+    width: 2.1rem;
+    height: 2.1rem;
+}
+
+.start-form {
+    display: grid;
+    gap: .25rem;
+    padding: 1.25rem;
+}
+
+.start-form input[type="text"] {
+    min-height: 3.25rem;
+    font-size: 1.1rem;
+}
+
+.start-form button.big {
+    margin-top: 1rem;
+}
+
+.hero-field {
+    margin: .5rem 0 0;
+}
+
+.hero-field .hint {
+    margin: 0 0 .6rem;
+}
+
+/* Auswahl als Chips; das Optionsfeld selbst bleibt unsichtbar */
+.chip-choice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.chip-choice label {
+    position: relative;
+    display: block;
+    margin: 0;
+    color: var(--ink);
+}
+
+.chip-choice input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.chip-choice span {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 2px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-weight: 600;
+}
+
+.chip-choice input:checked + span {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.chip-choice input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ----------------------------------------------------------------- Mehr */
+
+.settings {
+    display: grid;
+    gap: .75rem;
+}
+
+.setting {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+.setting > summary,
+button.setting-button {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    min-height: 4.25rem;
+    padding: .75rem 1rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+.setting > summary::-webkit-details-marker {
+    display: none;
+}
+
+button.setting-button {
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    color: var(--ink);
+}
+
+.setting-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.setting-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.setting-title {
+    font-weight: 700;
+}
+
+.setting-sub {
+    font-size: .85rem;
+    color: var(--ink-soft);
+}
+
+.setting-chevron {
+    color: var(--ink-soft);
+    transition: transform .2s ease;
+}
+
+.setting[open] .setting-chevron {
+    transform: rotate(180deg);
+}
+
+/* Führt zu einem anderen Bereich, statt aufzuklappen. */
+.setting-chevron.side {
+    transform: rotate(-90deg);
+}
+
+.setting-body {
+    display: grid;
+    gap: .5rem;
+    padding: 0 1rem 1rem;
+}
+
+.setting-body fieldset {
+    margin: 0 0 .5rem;
+}
+
+.setting-body .hint {
+    margin: 0;
+}
+
+.setting-body button.big {
+    width: 100%;
+    margin-top: .25rem;
+}
+
+.segmented.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.segmented span {
+    padding: 0 .25rem;
+    text-align: center;
+    hyphens: auto;
+}
+
 /* ------------------------------------------------------------- Lernen */
 
 .learn {
@@ -284,8 +513,8 @@ button.link.danger {
     margin-bottom: 1.25rem;
 }
 
-/* Der Held oben rechts soll den Titel nicht verdecken. */
-body:has(#hero:not([hidden])) .learn-head {
+/* Der Held oben rechts soll die Titel nicht verdecken. */
+body:has(#hero:not([hidden])) :is(.learn-head, .insight-head, .more > h1) {
     padding-right: 5.5rem;
 }
 

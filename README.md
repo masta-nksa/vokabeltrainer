@@ -5,15 +5,18 @@ auf GitHub Pages – kein Build-Schritt, keine Abhängigkeiten.
 
 ## Aufbau
 
-Nach dem Namen landet man bei **Lernen**: Kurs wählen, darunter die Units als
+Die **Startseite** fragt nach dem Vornamen und dem Helden, der freigespielt
+werden soll (Auswahl als Chips; das Bild ist erst unscharf und wird mit jeder
+richtigen Antwort klarer). Danach landet man bei **Lernen**: Kurs wählen, darunter die Units als
 aufklappbare Blöcke mit einer Kachel je Lektion (bei *dis donc!* je Lernziel
 «Vocabulaire» und «plus» nebeneinander). Rechts – auf dem Handy darunter –
 Niveau, der Knopf **Für dich**, die Modi zum Selbstwählen, Grammatik und
 Spiele. Auf dem Handy klebt «Für dich» unten und nennt, wie viele Wörter
 gewählt sind; darunter liegt das Menü **Lernen · Fortschritt · Mehr**, auf
 breiten Bildschirmen steht es oben. **Fortschritt** öffnet «Meine
-Stolpersteine», **Mehr** enthält Stimme, Drucken und das Laden eines eigenen
-Wortschatzes. In einer Runde oder einem Spiel ist das Menü ausgeblendet.
+Stolpersteine», **Mehr** enthält aufklappbare Zeilen für Stimme, Drucken und
+das Laden eines eigenen Wortschatzes sowie «Name und Held», das zurück zur
+Startseite führt. In einer Runde oder einem Spiel ist das Menü ausgeblendet.
 
 In der **Lernrunde** stehen oben Schliessen, ein Fortschrittsbalken und der
 Zähler der erledigten Wörter, darunter Modus und Niveau, die Wortkarte und die
