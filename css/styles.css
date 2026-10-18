@@ -1,6 +1,8 @@
 /* Vokabeltrainer – Grundgestaltung */
 
 :root {
+    /* Eingebaute Bedienelemente (Auswahllisten, Scrollbalken) folgen dem Modus. */
+    color-scheme: light dark;
     --bg: #f4f6fa;
     --surface: #ffffff;
     --track: #e6eaf1;
@@ -322,6 +324,13 @@ body:has(#hero:not([hidden])) .learn-head {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    color: var(--ink);
+}
+
+/* Die aufgeklappte Liste malt der Browser selbst – Farben ausdrücklich setzen,
+   sonst steht im dunklen Modus helle Schrift auf weissem Grund. */
+select option {
+    background: var(--surface);
     color: var(--ink);
 }
 
