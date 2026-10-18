@@ -1,5 +1,32 @@
 /* Vokabeltrainer – Grundgestaltung */
 
+/* Schriften liegen im Repo (fonts/, SIL Open Font License 1.1), damit kein
+   Aufruf an einen fremden Server geht. Nur der Latin-Ausschnitt – er enthält
+   alle Akzente des Französischen samt œ. */
+@font-face {
+    font-family: "Atkinson Hyperlegible";
+    src: url("../fonts/atkinson-hyperlegible-latin-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible";
+    src: url("../fonts/atkinson-hyperlegible-latin-700.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Fredoka";
+    src: url("../fonts/fredoka-latin-600.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     /* Eingebaute Bedienelemente (Auswahllisten, Scrollbalken) folgen dem Modus. */
     color-scheme: light dark;
@@ -26,6 +53,8 @@
     --wrong: #c0392b;
     --radius: 16px;
     --tabbar-height: 4rem;
+    --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-display: "Fredoka", var(--font-body);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -68,7 +97,7 @@
 body {
     margin: 0;
     padding: 1rem;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-body);
     font-size: 17px;
     line-height: 1.5;
     color: var(--ink);
@@ -89,6 +118,20 @@ body {
 h1 {
     font-size: 1.5rem;
     margin: 0 0 1rem;
+}
+
+/* Titel und grosse Zahlen in der runden Schrift, alles andere bleibt in der
+   gut lesbaren Atkinson Hyperlegible. */
+h1,
+h2,
+.cta-title,
+.ring-value,
+.game-score,
+.feedback-title,
+.prompt,
+.challenge-text {
+    font-family: var(--font-display);
+    font-weight: 600;
 }
 
 h2 {

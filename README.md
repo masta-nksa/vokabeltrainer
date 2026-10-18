@@ -175,6 +175,7 @@ stehen?* gilt dann nicht.
 ```
 index.html          Einstieg, alle Screens
 css/styles.css
+fonts/              Schriften (WOFF2, Latin) mit Lizenztexten
 js/
   main.js           Bootstrap und Screen-Steuerung
   state.js          Zentraler App-Zustand
@@ -198,6 +199,15 @@ img/decks/<deck>/   Bilddateien zu einzelnen Wörtern (optional)
 tools/              Entwicklungsskripte, werden nicht ausgeliefert
 tools/voci-import/  Vokabelblatt (PDF/Foto) -> Lektion; Skill /voci-unit
 ```
+
+**Schriften.** Titel, grosse Zahlen und das Wort in der Lernrunde stehen in
+*Fredoka* (600), alles andere in *Atkinson Hyperlegible* (400 und 700), einer
+Schrift des Braille Institute, die auf gute Unterscheidbarkeit der Buchstaben
+ausgelegt ist. Beide stehen unter der SIL Open Font License 1.1 (Lizenztexte
+in `fonts/`) und liegen im Repo – die Seite ruft keinen fremden Server auf.
+Quelle: die npm-Pakete `@fontsource/fredoka` und
+`@fontsource/atkinson-hyperlegible`, Version 5.3.0, nur der Latin-Ausschnitt
+(enthält alle französischen Akzente und œ).
 
 ## Wortschatz ergänzen
 
