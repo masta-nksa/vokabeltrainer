@@ -675,36 +675,40 @@ treffen, die das später verbaut.
 
 ## 8. Umsetzung in Schritten
 
-Jeder Schritt ist für sich nutzbar und veröffentlichbar.
+Jeder Schritt ist für sich nutzbar und veröffentlichbar. Die Schritte 2–8
+entstanden auf dem Branch `v2` und sind seit dem 18.10.2026 auf `main` und
+damit live.
 
 1. ~~**Apostroph-Normalisierung** in `normalize()`~~ – erledigt, auf `main`
    (81462d3).
-2. ~~**Niveau-Schalter Basis / Erweitert / Expert**~~ – erledigt auf `v2`.
+2. ~~**Niveau-Schalter Basis / Erweitert / Expert**~~ – erledigt.
    Alte Einstellung wird übernommen; Startwerte als `LEVELS` je Modus.
-3. ~~**Fehlerspeicher**~~ – erledigt auf `v2`: `errors[]`, `skill`, `source`,
+3. ~~**Fehlerspeicher**~~ – erledigt: `errors[]`, `skill`, `source`,
    `level`, `durationMs`, `contentVersion` im Event; Klassifizierer
    `js/learning/errors.js`; *spelling*-Optionen tragen ihre Operation mit;
    IndexedDB Version 3 mit Index `byUserItem`. Selbsttest
    `node tools/test-learning.mjs`.
-4. ~~**Inhaltsmodell v2**~~ – erledigt auf `v2`. Umgesetzt schonender als oben
+4. ~~**Inhaltsmodell v2**~~ – erledigt. Umgesetzt schonender als oben
    skizziert: `units` bleibt die flache Liste der Lektionen (= Section), jede
    nennt mit `group` ihre Unit; so laufen selbst importierte und ältere Decks
    unverändert weiter. Lemma, Genus und Zahl leitet die App aus dem Artikel
    ab, im Deck steht nur die Ausnahme. Sprachprofil als Modul
    `js/learning/languages.js` statt als JSON-Datei. `fr-unite-1` ist im Kurs
    `fr-disdonc` aufgegangen (Aliase für den Lernstand).
-5. ~~**Unité 2 importieren**~~ – erledigt auf `v2`: 60 Einträge (36 Basis, 24
+5. ~~**Unité 2 importieren**~~ – erledigt: 60 Einträge (36 Basis, 24
    Erweitert), Übungen *le/la/l'/les*, *mon/ma/mes*, *est/sont*,
    *s'appelle/s'appellent*, *c'est/ce sont* und «Wer ist wer?» mit Generatoren
    `article`, `possessive`, `kinship`. Die GrammarPoints leben als Übungssets
    mit `grammarId` in `data/exercises/fr-disdonc.json`.
+   Am 18.10.2026 gegen die Wortlisten im Buch geprüft (S. 72 «Vocabulaire»,
+   S. 73 «Vocabulaire plus»): vollständig, dazu die vier Randvokabeln von S. 44.
 6. ~~**Lernstand und «Für dich»-Runde**, Ansicht «Meine Stolpersteine»~~ –
-   erledigt auf `v2`, dazu Hinweise nach Fehlerart, Verwechslungspaare als
+   erledigt, dazu Hinweise nach Fehlerart, Verwechslungspaare als
    Ablenker und der Niveau-Vorschlag nach drei fast fehlerfreien Runden.
-7. ~~**Kreuzworträtsel**, **Genus-Sortierer**, **Speed-Runde**~~ – erledigt
-   auf `v2`. Im Kreuzworträtsel werden im Übungsmodus unsichere Wörter
+7. ~~**Kreuzworträtsel**, **Genus-Sortierer**, **Speed-Runde**~~ – erledigt.
+   Im Kreuzworträtsel werden im Übungsmodus unsichere Wörter
    bevorzugt; das Gitter selbst hängt nur am Startwert und an der Wortliste.
-8. ~~**Challenge-Links** (Stufe A)~~ – erledigt auf `v2`: Link mit Kopieren
+8. ~~**Challenge-Links** (Stufe A)~~ – erledigt: Link mit Kopieren
    und Teilen, eingehende Herausforderung mit Vergleich. Noch ohne QR-Code –
    dafür bräuchte es eine QR-Bibliothek im Repo.
 9. **Prototyp, Teil 1:** Konto mit Zugangskarte und Abgleich zwischen
