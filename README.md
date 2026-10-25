@@ -276,6 +276,10 @@ Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
   zeigt jede Unit als offenen Block mit einer Zeile je Lektion; eine Lektion
   `<id>-plus` steht eingerückt unter der Lektion `<id>`, «alle wählen» nimmt
   die ganze Unit.
+  Optional **`test.date`** (`JJJJ-MM-TT`) ist der Prüfungstermin einer
+  Lektion: vergangene Tests erscheinen blasser mit «vorbei», der nächste
+  anstehende mit «als Nächstes». Am Prüfungstag selbst und ohne Datum gilt
+  eine Lektion als nicht vorbei.
   Decks ohne Gruppen – ältere, selbst importierte – erscheinen als ein Block
   «Lektionen».
 - **`id`** eines Eintrags ist stabil: nie für einen anderen Eintrag

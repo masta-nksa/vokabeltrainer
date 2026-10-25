@@ -82,8 +82,16 @@ function renderUnits(deck) {
         groups.get(group).push(unit);
     }
 
+    // Der nächste anstehende Test wird hervorgehoben, vergangene treten zurück.
+    const today = todayIso();
+    const upcoming = deck.units
+        .map(unit => unit.test?.date)
+        .filter(date => date && date >= today)
+        .sort();
+    const dates = { today, next: upcoming[0] ?? null };
+
     for (const [group, units] of groups) {
-        container.append(renderGroup(group, titles.get(group) ?? 'Lektionen', units));
+        container.append(renderGroup(group, titles.get(group) ?? 'Lektionen', units, dates));
     }
 
     refreshCounts();
@@ -93,7 +101,7 @@ function renderUnits(deck) {
  * Eine Unit als offener Block: Kopfzeile mit «alle wählen», darunter je
  * Lektion eine Zeile mit Kästchen.
  */
-function renderGroup(group, title, units) {
+function renderGroup(group, title, units, dates) {
     const block = document.createElement('section');
     block.className = 'unit-group';
     block.dataset.group = group;
@@ -125,18 +133,30 @@ function renderGroup(group, title, units) {
     for (const unit of units) {
         // «Lernziel 2 plus» steht eingerückt unter «Lernziel 2».
         const isPlus = unit.id.endsWith('-plus') && ids.has(unit.id.slice(0, -'-plus'.length));
-        list.append(renderTile(unit, group, isPlus));
+        list.append(renderTile(unit, group, isPlus, dates));
     }
 
     block.append(head, list);
     return block;
 }
 
-/** Eine Lektion als Zeile mit Kästchen zum An- und Abwählen. */
-function renderTile(unit, group, isPlus) {
+/**
+ * Eine Lektion als Zeile mit Kästchen zum An- und Abwählen.
+ * @param {{ today: string, next: string | null }} dates
+ */
+function renderTile(unit, group, isPlus, dates) {
     const tile = document.createElement('button');
     tile.type = 'button';
     tile.className = isPlus ? 'unit-tile plus' : 'unit-tile';
+
+    // Ohne Testdatum gilt eine Lektion als nicht vorbei. Am Prüfungstag
+    // selbst ist der Test noch nicht vorbei.
+    const date = unit.test?.date;
+    const status = !date ? null
+        : date < dates.today ? 'past'
+        : date === dates.next ? 'next'
+        : null;
+    if (status) tile.classList.add(status);
     tile.value = unit.id;
     tile.dataset.group = group;
     tile.setAttribute('aria-pressed', String(state.selectedUnits.includes(unit.id)));
@@ -157,8 +177,22 @@ function renderTile(unit, group, isPlus) {
     count.className = 'unit-tile-count';
     count.dataset.unit = unit.id;
 
-    tile.append(box, name, count);
+    tile.append(box, name);
+    if (status) {
+        const badge = document.createElement('span');
+        badge.className = 'unit-tile-badge';
+        badge.textContent = status === 'past' ? 'vorbei' : 'als Nächstes';
+        tile.append(badge);
+    }
+    tile.append(count);
     return tile;
+}
+
+/** Heutiges Datum als JJJJ-MM-TT in Ortszeit, vergleichbar mit `test.date`. */
+function todayIso() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
 /** @param {string} id @param {string} className */

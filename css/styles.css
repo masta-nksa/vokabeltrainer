@@ -739,6 +739,33 @@ button.unit-tile.plus {
     color: var(--ink-soft);
 }
 
+/* Testdatum: vergangene Tests treten zurück, der nächste wird hervorgehoben. */
+.unit-tile-badge {
+    flex: none;
+    padding: .1rem .5rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.unit-tile.past .unit-tile-name {
+    color: var(--ink-soft);
+}
+
+.unit-tile.past .unit-tile-badge {
+    background: var(--warn-soft);
+    color: var(--warn-ink);
+}
+
+.unit-tile.next .unit-tile-name {
+    font-weight: 700;
+}
+
+.unit-tile.next .unit-tile-badge {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
 /* Niveau als Schalter mit drei Feldern */
 
 .panel {
