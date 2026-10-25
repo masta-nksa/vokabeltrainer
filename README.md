@@ -164,11 +164,13 @@ Unter **Mehr › Drucken**: die unter «Lernen» gewählten Wörter entweder als
 Karteikarten sind DIN A8 quer (74 × 52 mm), 8 pro A4-Blatt – zum Ausschneiden
 und Laminieren als Lernkärtchen. Mit der Option **doppelseitig** entstehen
 abwechselnd Vorder- und Rückseiten (Zielsprache vorne, Ausgangssprache
-hinten) für den Duplex-Druck; die Rückseite ist gedreht für einen Drucker,
-der an der langen Kante wendet, und für eine Karte, die man selbst an ihrer
-langen Kante umdreht. Beim doppelseitigen Druck steht immer die Zielsprache
-vorne und die Ausgangssprache hinten – die Wahl *Was soll auf dem Blatt
-stehen?* gilt dann nicht.
+hinten) für den Duplex-Druck mit Wendung an der langen Kante. Auf der
+Rückseite sind die beiden Spalten vertauscht, damit jedes Wort hinter seiner
+Vorderseite liegt; die fertige Karte dreht man seitwärts um wie eine
+Buchseite. Einseitige Karten tragen beide Sprachen untereinander.
+Die Wahl *Was soll auf dem Blatt stehen?* gibt es nur für die Liste; die
+Option *doppelseitig* nur für Karteikarten – das jeweils andere Feld ist
+ausgeblendet.
 
 ## Aufbau
 

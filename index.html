@@ -206,7 +206,7 @@
                         <svg class="icon setting-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
                     </summary>
                     <div class="setting-body">
-                        <fieldset>
+                        <fieldset id="print-mode-field">
                             <legend class="field-label">Was soll auf dem Blatt stehen?</legend>
                             <div class="segmented">
                                 <label><input type="radio" name="print-mode" value="both" checked><span>beide</span></label>
@@ -221,16 +221,16 @@
                                 <label><input type="radio" name="print-layout" value="cards"><span>Karteikarten</span></label>
                             </div>
                         </fieldset>
-                        <label class="check">
+                        <label class="check" id="print-duplex-field" hidden>
                             <input type="checkbox" id="print-duplex">
                             doppelseitig (Zielsprache vorne, Ausgangssprache hinten)
                         </label>
-                        <p class="hint">
+                        <p class="hint" id="print-cards-hint" hidden>
                             Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt – zum
                             Ausschneiden und Laminieren als Lernkärtchen. Doppelseitig:
                             im Druckdialog beidseitiges Drucken mit Wendung an der
-                            langen Kante wählen; die Karte danach zum Umdrehen ebenfalls
-                            um ihre lange Kante drehen.
+                            langen Kante wählen; die fertige Karte seitwärts umdrehen
+                            wie eine Buchseite.
                         </p>
                         <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
                         <button type="button" id="print-open" class="primary big">Vorschau öffnen</button>
