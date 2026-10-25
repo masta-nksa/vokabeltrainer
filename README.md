@@ -7,14 +7,15 @@ auf GitHub Pages – kein Build-Schritt, keine Abhängigkeiten.
 
 Die **Startseite** fragt nach dem Vornamen und dem Helden, der freigespielt
 werden soll (Auswahl als Chips; das Bild ist erst unscharf und wird mit jeder
-richtigen Antwort klarer). Danach landet man bei **Lernen**: Kurs wählen, darunter die Units als
-aufklappbare Blöcke mit einer Kachel je Lektion (bei *dis donc!* je Lernziel
-«Vocabulaire» und «plus» nebeneinander). Rechts – auf dem Handy darunter –
+richtigen Antwort klarer). Danach landet man bei **Lernen**: Kurs wählen, darunter alle Units offen
+untereinander, je Lektion eine Zeile mit Kästchen und Wortzahl (bei *dis donc!*
+steht «Lernziel … plus» eingerückt unter seinem Lernziel). Rechts – auf dem Handy darunter –
 Niveau, der Knopf **Für dich**, die Modi zum Selbstwählen, Grammatik und
 Spiele. Auf dem Handy klebt «Für dich» unten und nennt, wie viele Wörter
-gewählt sind; darunter liegt das Menü **Lernen · Fortschritt · Mehr**, auf
+gewählt sind; darunter liegt das Menü **Lernen · Fortschritt · Drucken · Mehr**, auf
 breiten Bildschirmen steht es oben. **Fortschritt** öffnet «Meine
-Stolpersteine», **Mehr** enthält aufklappbare Zeilen für Stimme, Drucken und
+Stolpersteine», **Drucken** Liste oder Karteikarten der gewählten Wörter,
+**Mehr** enthält aufklappbare Zeilen für Stimme und
 das Laden eines eigenen Wortschatzes sowie «Name und Held», das zurück zur
 Startseite führt. In einer Runde oder einem Spiel ist das Menü ausgeblendet.
 
@@ -157,20 +158,17 @@ dem Start. Einen QR-Code erzeugt sie noch nicht.
 
 ## Drucken
 
-Unter **Mehr › Drucken**: die unter «Lernen» gewählten Wörter entweder als
+Im Hauptmenü unter **Drucken**: die unter «Lernen» gewählten Wörter entweder als
 **Liste** (Tabelle, wahlweise mit Lücke zum Ausfüllen) oder als
 **Karteikarten** ausgeben.
 
 Karteikarten sind DIN A8 quer (74 × 52 mm), 8 pro A4-Blatt – zum Ausschneiden
-und Laminieren als Lernkärtchen. Mit der Option **doppelseitig** entstehen
-abwechselnd Vorder- und Rückseiten (Zielsprache vorne, Ausgangssprache
-hinten) für den Duplex-Druck mit Wendung an der langen Kante. Auf der
-Rückseite sind die beiden Spalten vertauscht, damit jedes Wort hinter seiner
-Vorderseite liegt; die fertige Karte dreht man seitwärts um wie eine
-Buchseite. Einseitige Karten tragen beide Sprachen untereinander.
-Die Wahl *Was soll auf dem Blatt stehen?* gibt es nur für die Liste; die
-Option *doppelseitig* nur für Karteikarten – das jeweils andere Feld ist
-ausgeblendet.
+und Laminieren als Lernkärtchen. Sie sind immer doppelseitig: abwechselnd
+Vorder- und Rückseiten (Zielsprache vorne, Ausgangssprache hinten) für den
+Duplex-Druck mit Wendung an der langen Kante. Auf der Rückseite sind die
+beiden Spalten vertauscht, damit jedes Wort hinter seiner Vorderseite liegt;
+die fertige Karte dreht man seitwärts um wie eine Buchseite. Die Wahl *Was
+soll auf dem Blatt stehen?* gibt es nur für die Liste.
 
 ## Aufbau
 
@@ -275,8 +273,9 @@ Ein Deck ist ein Kurs: ein Lehrmittel in einer Sprache.
   Wortliste «Vocabulaire» und «Lernziel 2 plus» mit «Vocabulaire plus».
   **`group`**
   nennt die Unit des Lehrmittels; `groups` gibt ihr einen Titel. Die Auswahl
-  zeigt jede Unit als aufklappbaren Block; eine Lektion `<id>-plus` steht als
-  zweite Kachel neben der Lektion `<id>`, «alle wählen» nimmt die ganze Unit.
+  zeigt jede Unit als offenen Block mit einer Zeile je Lektion; eine Lektion
+  `<id>-plus` steht eingerückt unter der Lektion `<id>`, «alle wählen» nimmt
+  die ganze Unit.
   Decks ohne Gruppen – ältere, selbst importierte – erscheinen als ein Block
   «Lektionen».
 - **`id`** eines Eintrags ist stabil: nie für einen anderen Eintrag

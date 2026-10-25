@@ -1,7 +1,7 @@
 // Screen-Wechsel. Genau ein Bereich ist sichtbar.
 
 /** Bereiche mit Hauptmenü. In einer Runde oder einem Spiel fehlt es. */
-const WITH_TABBAR = ['screen-select', 'screen-insight', 'screen-more'];
+const WITH_TABBAR = ['screen-select', 'screen-insight', 'screen-print', 'screen-more'];
 
 /** @param {string} id */
 export function show(id) {

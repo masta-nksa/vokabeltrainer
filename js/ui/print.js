@@ -31,11 +31,10 @@ export function init() {
 }
 
 // Die Wahl "Was soll auf dem Blatt stehen?" gilt nur für die Liste – eine
-// Karteikarte trägt immer beide Seiten. Doppelseitig gibt es nur bei Karten.
+// Karteikarte hat immer eine Sprache vorne und die andere hinten.
 function updateLayoutFields() {
     const cards = printLayout() === 'cards';
     document.getElementById('print-mode-field').hidden = cards;
-    document.getElementById('print-duplex-field').hidden = !cards;
     document.getElementById('print-cards-hint').hidden = !cards;
 }
 
@@ -152,61 +151,33 @@ const CARD_HEIGHT_MM = 52;
 const CARD_GAP_MM = 4;
 const CARDS_PER_PAGE = 8; // 2 Spalten x 4 Zeilen
 
-function cardLines(item) {
-    const mode = printMode();
-    if (mode === 'target') return [targetText(item)];
-    if (mode === 'source') return [item.source];
-    return [targetText(item), item.source];
+function cardHtml(text) {
+    return '<div class="card"><span class="line-main">' + escapeHtml(text) + '</span></div>';
 }
 
-function isDuplex() {
-    const checkbox = document.getElementById('print-duplex');
-    return !!(checkbox && checkbox.checked);
-}
-
-function cardHtml(text, isBack) {
-    const cls = isBack ? 'card back' : 'card';
-    return '<div class="' + cls + '"><span class="line-main">' + escapeHtml(text) + '</span></div>';
-}
-
-function cardPageHtml(pageItems, isBack) {
-    const cardsHtml = pageItems.map(item => {
-        const [main, sub] = cardLines(item);
-        const subHtml = sub ? '<span class="line-sub">' + escapeHtml(sub) + '</span>' : '';
-        const cls = isBack ? 'card back' : 'card';
-        return '<div class="' + cls + '"><span class="line-main">' + escapeHtml(main) + '</span>' + subHtml + '</div>';
-    }).join('');
-    return '<section class="card-page">' + cardsHtml + '</section>';
-}
-
+/** Karteikarten: abwechselnd Vorderseite (Zielsprache) und Rückseite (Ausgangssprache). */
 function printCardsWindow() {
     const win = openPrintWindow();
     if (!win) return;
 
     const title = deck ? deck.title : 'Wortschatz';
-    const duplex = isDuplex();
     const pagesHtml = [];
 
     for (let i = 0; i < rows.length; i += CARDS_PER_PAGE) {
         const pageItems = rows.slice(i, i + CARDS_PER_PAGE);
-        if (duplex) {
-            const frontHtml = pageItems.map(item => cardHtml(targetText(item), false)).join('');
-            // Der Drucker wendet das Blatt an der langen (senkrechten) Kante:
-            // was vorne links steht, liegt hinten rechts. Deshalb tauschen die
-            // beiden Karten jeder Zeile auf der Rückseite ihre Plätze; fehlt
-            // in der letzten Zeile die rechte Karte, bleibt hinten links frei.
-            const backCells = [];
-            for (let j = 0; j < pageItems.length; j += 2) {
-                const right = pageItems[j + 1];
-                backCells.push(right ? cardHtml(right.source, true) : '<div class="card empty"></div>');
-                backCells.push(cardHtml(pageItems[j].source, true));
-            }
-            const backHtml = backCells.join('');
-            pagesHtml.push('<section class="card-page">' + frontHtml + '</section>');
-            pagesHtml.push('<section class="card-page">' + backHtml + '</section>');
-        } else {
-            pagesHtml.push(cardPageHtml(pageItems, false));
+        const frontHtml = pageItems.map(item => cardHtml(targetText(item))).join('');
+        // Der Drucker wendet das Blatt an der langen (senkrechten) Kante:
+        // was vorne links steht, liegt hinten rechts. Deshalb tauschen die
+        // beiden Karten jeder Zeile auf der Rückseite ihre Plätze; fehlt
+        // in der letzten Zeile die rechte Karte, bleibt hinten links frei.
+        const backCells = [];
+        for (let j = 0; j < pageItems.length; j += 2) {
+            const right = pageItems[j + 1];
+            backCells.push(right ? cardHtml(right.source) : '<div class="card empty"></div>');
+            backCells.push(cardHtml(pageItems[j].source));
         }
+        pagesHtml.push('<section class="card-page">' + frontHtml + '</section>');
+        pagesHtml.push('<section class="card-page">' + backCells.join('') + '</section>');
     }
 
     win.document.write(
@@ -227,7 +198,6 @@ function printCardsWindow() {
         // Buchseite), die Schrift steht danach auf beiden Seiten aufrecht.
         '.card.empty{border:none}' +
         '.line-main{font-size:clamp(.9rem,3.2vw,1.3rem);font-weight:600;overflow-wrap:break-word}' +
-        '.line-sub{font-size:clamp(.7rem,2.2vw,.95rem);color:#555;overflow-wrap:break-word}' +
         '</style></head><body>' + pagesHtml.join('') + '</body></html>'
     );
     win.document.close();

@@ -49,6 +49,10 @@
             <svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>
             Fortschritt
         </button>
+        <button type="button" data-tab="screen-print">
+            <svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>
+            Drucken
+        </button>
         <button type="button" data-tab="screen-more">
             <svg class="icon" aria-hidden="true"><use href="#i-more"/></svg>
             Mehr
@@ -193,47 +197,6 @@
                             Die über das Netz erzeugten klingen meist deutlich besser als
                             die auf dem Gerät gespeicherten.
                         </p>
-                    </div>
-                </details>
-
-                <details class="setting">
-                    <summary>
-                        <span class="setting-icon"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg></span>
-                        <span class="setting-text">
-                            <span class="setting-title">Drucken</span>
-                            <span class="setting-sub">Liste oder Karteikarten der gewählten Wörter</span>
-                        </span>
-                        <svg class="icon setting-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
-                    </summary>
-                    <div class="setting-body">
-                        <fieldset id="print-mode-field">
-                            <legend class="field-label">Was soll auf dem Blatt stehen?</legend>
-                            <div class="segmented">
-                                <label><input type="radio" name="print-mode" value="both" checked><span>beide</span></label>
-                                <label><input type="radio" name="print-mode" value="target"><span>Zielsprache</span></label>
-                                <label><input type="radio" name="print-mode" value="source"><span>Ausgangs&shy;sprache</span></label>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <legend class="field-label">Format</legend>
-                            <div class="segmented two">
-                                <label><input type="radio" name="print-layout" value="list" checked><span>Liste</span></label>
-                                <label><input type="radio" name="print-layout" value="cards"><span>Karteikarten</span></label>
-                            </div>
-                        </fieldset>
-                        <label class="check" id="print-duplex-field" hidden>
-                            <input type="checkbox" id="print-duplex">
-                            doppelseitig (Zielsprache vorne, Ausgangssprache hinten)
-                        </label>
-                        <p class="hint" id="print-cards-hint" hidden>
-                            Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt – zum
-                            Ausschneiden und Laminieren als Lernkärtchen. Doppelseitig:
-                            im Druckdialog beidseitiges Drucken mit Wendung an der
-                            langen Kante wählen; die fertige Karte seitwärts umdrehen
-                            wie eine Buchseite.
-                        </p>
-                        <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
-                        <button type="button" id="print-open" class="primary big">Vorschau öffnen</button>
                     </div>
                 </details>
 
@@ -468,6 +431,40 @@
                 <div class="result-actions plain">
                     <button type="button" id="challenge-accept" class="primary big">Annehmen</button>
                     <button type="button" id="challenge-decline" class="link">Nicht jetzt</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drucken: Liste oder Karteikarten der gewählten Wörter -->
+        <section id="screen-print" class="screen more" hidden>
+            <h1>Drucken</h1>
+
+            <div class="setting print-panel">
+                <div class="setting-body">
+                    <fieldset id="print-mode-field">
+                        <legend class="field-label">Was soll auf dem Blatt stehen?</legend>
+                        <div class="segmented">
+                            <label><input type="radio" name="print-mode" value="both" checked><span>beide</span></label>
+                            <label><input type="radio" name="print-mode" value="target"><span>Zielsprache</span></label>
+                            <label><input type="radio" name="print-mode" value="source"><span>Ausgangs&shy;sprache</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend class="field-label">Format</legend>
+                        <div class="segmented two">
+                            <label><input type="radio" name="print-layout" value="list" checked><span>Liste</span></label>
+                            <label><input type="radio" name="print-layout" value="cards"><span>Karteikarten</span></label>
+                        </div>
+                    </fieldset>
+                    <p class="hint" id="print-cards-hint" hidden>
+                        Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt, vorne
+                        Zielsprache, hinten Ausgangssprache – zum Ausschneiden und
+                        Laminieren. Im Druckdialog beidseitiges Drucken mit Wendung
+                        an der langen Kante wählen; die fertige Karte seitwärts
+                        umdrehen wie eine Buchseite.
+                    </p>
+                    <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
+                    <button type="button" id="print-open" class="primary big">Vorschau öffnen</button>
                 </div>
             </div>
         </section>

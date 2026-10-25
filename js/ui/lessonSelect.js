@@ -1,8 +1,8 @@
 // Auswahl von Wortschatz und Lektionen.
 //
-// Die Lektionen erscheinen als Kacheln, gruppiert nach Unit. Eine Lektion
-// «… plus» steht als zweite Kachel neben der Lektion, zu der sie gehört
-// (dis donc!: «Lernziel 2» und «Lernziel 2 plus»).
+// Die Lektionen erscheinen als Liste mit Kästchen, gruppiert nach Unit, alle
+// Units immer offen. Eine Lektion «… plus» steht eingerückt unter der
+// Lektion, zu der sie gehört (dis donc!: «Lernziel 2» und «Lernziel 2 plus»).
 
 import * as storage from '../storage/index.js';
 import { languageName, countItems, prepareDeck, inLevel, groupOf } from '../data/decks.js';
@@ -10,9 +10,6 @@ import { state } from '../state.js';
 
 /** @type {() => void} */
 let onChange = () => {};
-
-/** Welche Units aufgeklappt sind, je Deck. Überlebt das Neuzeichnen. */
-const openGroups = new Map();
 
 /** @param {() => void} handler Wird bei jeder Änderung der Auswahl gerufen. */
 export function init(handler) {
@@ -62,31 +59,6 @@ async function selectDeck(deckId) {
     updateSelection();
 }
 
-/**
- * Teilt die Lektionen einer Unit in Zeilen: eine Lektion mit ihrer
- * «plus»-Lektion bildet eine Zeile mit Titel, alle übrigen kommen als
- * Kacheln in eine gemeinsame Zeile ohne Titel.
- * @param {import('../storage/index.js').Unit[]} units
- */
-function rowsOf(units) {
-    const ids = new Set(units.map(unit => unit.id));
-    const plusOf = id => `${id}-plus`;
-    const isPlus = unit => unit.id.endsWith('-plus') && ids.has(unit.id.slice(0, -'-plus'.length));
-
-    const paired = [];
-    const single = [];
-    for (const unit of units) {
-        if (isPlus(unit)) continue;
-        const plus = units.find(entry => entry.id === plusOf(unit.id));
-        if (plus) paired.push({ title: unit.title, units: [unit, plus] });
-        else single.push(unit);
-    }
-
-    const rows = [...paired];
-    if (single.length > 0) rows.push({ title: null, units: single });
-    return rows;
-}
-
 /** @param {import('../storage/index.js').Deck | null} deck */
 function renderUnits(deck) {
     const container = document.getElementById('unit-list');
@@ -110,45 +82,25 @@ function renderUnits(deck) {
         groups.get(group).push(unit);
     }
 
-    // Aufgeklappt: was schon offen war, sonst Units mit gewählten Lektionen,
-    // sonst die neueste Unit.
-    const keys = [...groups.keys()];
-    let open = openGroups.get(deck.id);
-    if (!open) {
-        open = new Set(keys.filter(key =>
-            groups.get(key).some(unit => state.selectedUnits.includes(unit.id))));
-        if (open.size === 0) open.add(keys[keys.length - 1]);
-        openGroups.set(deck.id, open);
-    }
-
-    const plusLabels = deck.targetLang === 'fr'
-        ? ['Vocabulaire', 'plus']
-        : ['Wortliste', 'plus'];
-
     for (const [group, units] of groups) {
-        container.append(renderGroup(deck, group, titles.get(group) ?? 'Lektionen', units, open, plusLabels));
+        container.append(renderGroup(group, titles.get(group) ?? 'Lektionen', units));
     }
 
     refreshCounts();
 }
 
 /**
- * Eine Unit als aufklappbarer Block mit ihren Kacheln.
- * @param {Set<string>} open
- * @param {string[]} plusLabels Beschriftung der beiden Kacheln einer Zeile
+ * Eine Unit als offener Block: Kopfzeile mit «alle wählen», darunter je
+ * Lektion eine Zeile mit Kästchen.
  */
-function renderGroup(deck, group, title, units, open, plusLabels) {
-    const block = document.createElement('details');
+function renderGroup(group, title, units) {
+    const block = document.createElement('section');
     block.className = 'unit-group';
     block.dataset.group = group;
-    block.open = open.has(group);
-    block.addEventListener('toggle', () => {
-        if (block.open) open.add(group);
-        else open.delete(group);
-    });
 
-    const summary = document.createElement('summary');
-    const name = document.createElement('span');
+    const head = document.createElement('div');
+    head.className = 'unit-group-head';
+    const name = document.createElement('h3');
     name.className = 'unit-group-title';
     // textContent statt innerHTML: Titel stammen teils aus hochgeladenen
     // Dateien und dürfen kein Markup einschleusen.
@@ -159,48 +111,32 @@ function renderGroup(deck, group, title, units, open, plusLabels) {
     const text = document.createElement('span');
     text.className = 'unit-group-text';
     text.append(name, meta);
-    summary.append(text, icon('i-chevron', 'chevron'));
-
-    const body = document.createElement('div');
-    body.className = 'unit-group-body';
 
     const all = document.createElement('button');
     all.type = 'button';
     all.className = 'link unit-group-all';
     all.dataset.groupAll = group;
     all.addEventListener('click', () => toggleGroup(group));
-    body.append(all);
+    head.append(text, all);
 
-    for (const row of rowsOf(units)) {
-        const line = document.createElement('div');
-        line.className = row.title ? 'unit-row' : 'unit-row plain';
-
-        if (row.title) {
-            const heading = document.createElement('span');
-            heading.className = 'unit-row-title';
-            heading.textContent = row.title;
-            line.append(heading);
-        }
-
-        const tiles = document.createElement('div');
-        tiles.className = 'unit-tiles';
-        row.units.forEach((unit, index) => {
-            const label = row.title ? plusLabels[index] : unit.title;
-            tiles.append(renderTile(unit, group, label));
-        });
-        line.append(tiles);
-        body.append(line);
+    const list = document.createElement('div');
+    list.className = 'unit-rows';
+    const ids = new Set(units.map(unit => unit.id));
+    for (const unit of units) {
+        // «Lernziel 2 plus» steht eingerückt unter «Lernziel 2».
+        const isPlus = unit.id.endsWith('-plus') && ids.has(unit.id.slice(0, -'-plus'.length));
+        list.append(renderTile(unit, group, isPlus));
     }
 
-    block.append(summary, body);
+    block.append(head, list);
     return block;
 }
 
-/** Eine Lektion als Kachel zum An- und Abwählen. */
-function renderTile(unit, group, label) {
+/** Eine Lektion als Zeile mit Kästchen zum An- und Abwählen. */
+function renderTile(unit, group, isPlus) {
     const tile = document.createElement('button');
     tile.type = 'button';
-    tile.className = 'unit-tile';
+    tile.className = isPlus ? 'unit-tile plus' : 'unit-tile';
     tile.value = unit.id;
     tile.dataset.group = group;
     tile.setAttribute('aria-pressed', String(state.selectedUnits.includes(unit.id)));
@@ -209,16 +145,19 @@ function renderTile(unit, group, label) {
         updateSelection();
     });
 
+    const box = document.createElement('span');
+    box.className = 'unit-tile-box';
+    box.append(icon('i-check', 'check'));
+
     const name = document.createElement('span');
     name.className = 'unit-tile-name';
-    name.append(icon('i-check', 'check'));
-    name.append(document.createTextNode(label));
+    name.textContent = unit.title;
 
     const count = document.createElement('span');
     count.className = 'unit-tile-count';
     count.dataset.unit = unit.id;
 
-    tile.append(name, count);
+    tile.append(box, name, count);
     return tile;
 }
 
