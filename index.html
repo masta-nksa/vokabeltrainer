@@ -436,46 +436,60 @@
         </section>
 
         <!-- Drucken: Liste oder Karteikarten der gewählten Wörter -->
-        <section id="screen-print" class="screen more" hidden>
+        <section id="screen-print" class="screen more print" hidden>
             <h1>Drucken</h1>
 
-            <div class="setting print-panel">
-                <div class="setting-body">
-                    <fieldset id="print-mode-field">
-                        <legend class="field-label">Was soll auf dem Blatt stehen?</legend>
-                        <div class="segmented">
-                            <label><input type="radio" name="print-mode" value="both" checked><span>beide</span></label>
-                            <label><input type="radio" name="print-mode" value="target"><span>Zielsprache</span></label>
-                            <label><input type="radio" name="print-mode" value="source"><span>Ausgangs&shy;sprache</span></label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend class="field-label">Format</legend>
-                        <div class="segmented two">
-                            <label><input type="radio" name="print-layout" value="list" checked><span>Liste</span></label>
-                            <label><input type="radio" name="print-layout" value="cards"><span>Karteikarten</span></label>
-                        </div>
-                    </fieldset>
-                    <label class="check" id="print-twice-field">
-                        <input type="checkbox" id="print-twice">
-                        Liste ein zweites Mal anhängen, neu gemischt
+            <div class="learn-grid">
+                <div class="learn-main">
+                    <!-- Dieselbe Auswahl wie unter «Lernen»: was hier gewählt wird, gilt dort auch. -->
+                    <label class="course">
+                        <span class="eyebrow">Kurs</span>
+                        <select id="print-deck-select"></select>
                     </label>
-                    <p class="hint" id="print-list-hint">
-                        Die zweite Liste beginnt auf einer neuen Seite. Im
-                        Druckdialog beidseitigen Druck wählen (je nach Browser unter
-                        «Weitere Einstellungen»), dann steht sie auf der Rückseite.
-                        Die Spaltenköpfe stehen auf jeder Seite, keine Zeile wird
-                        geteilt.
-                    </p>
-                    <p class="hint" id="print-cards-hint" hidden>
-                        Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt, vorne
-                        Zielsprache, hinten Ausgangssprache – zum Ausschneiden und
-                        Laminieren. Im Druckdialog beidseitiges Drucken mit Wendung
-                        an der langen Kante wählen; die fertige Karte seitwärts
-                        umdrehen wie eine Buchseite.
-                    </p>
-                    <p class="hint">Gedruckt werden die Wörter der Lektionen, die unter «Lernen» gewählt sind.</p>
-                    <button type="button" id="print-open" class="primary big">Vorschau öffnen</button>
+
+                    <div id="print-unit-list" class="unit-list"></div>
+                </div>
+
+                <div class="learn-side">
+                    <div class="setting print-panel">
+                        <div class="setting-body">
+                            <fieldset id="print-mode-field">
+                                <legend class="field-label">Was soll auf dem Blatt stehen?</legend>
+                                <div class="segmented">
+                                    <label><input type="radio" name="print-mode" value="both"><span>beide</span></label>
+                                    <label><input type="radio" name="print-mode" value="target"><span>Zielsprache</span></label>
+                                    <label><input type="radio" name="print-mode" value="source" checked><span>Ausgangs&shy;sprache</span></label>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend class="field-label">Format</legend>
+                                <div class="segmented two">
+                                    <label><input type="radio" name="print-layout" value="list" checked><span>Liste</span></label>
+                                    <label><input type="radio" name="print-layout" value="cards"><span>Karteikarten</span></label>
+                                </div>
+                            </fieldset>
+                            <label class="check" id="print-twice-field">
+                                <input type="checkbox" id="print-twice">
+                                Liste ein zweites Mal anhängen, neu gemischt
+                            </label>
+                            <p class="hint" id="print-list-hint">
+                                Die zweite Liste beginnt auf einer neuen Seite. Im
+                                Druckdialog beidseitigen Druck wählen (je nach Browser unter
+                                «Weitere Einstellungen»), dann steht sie auf der Rückseite.
+                                Die Spaltenköpfe stehen auf jeder Seite, keine Zeile wird
+                                geteilt.
+                            </p>
+                            <p class="hint" id="print-cards-hint" hidden>
+                                Karteikarten: DIN A8 quer (74 × 52 mm), 8 pro Blatt, vorne
+                                Zielsprache, hinten Ausgangssprache – zum Ausschneiden und
+                                Laminieren. Im Druckdialog beidseitiges Drucken mit Wendung
+                                an der langen Kante wählen; die fertige Karte seitwärts
+                                umdrehen wie eine Buchseite.
+                            </p>
+                            <p class="hint">Die Auswahl der Lektionen gilt auch unter «Lernen».</p>
+                            <button type="button" id="print-open" class="primary big">Vorschau öffnen</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

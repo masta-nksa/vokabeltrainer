@@ -14,7 +14,8 @@ Niveau, der Knopf **Für dich**, die Modi zum Selbstwählen, Grammatik und
 Spiele. Auf dem Handy klebt «Für dich» unten und nennt, wie viele Wörter
 gewählt sind; darunter liegt das Menü **Lernen · Fortschritt · Drucken · Mehr**, auf
 breiten Bildschirmen steht es oben. **Fortschritt** öffnet «Meine
-Stolpersteine», **Drucken** Liste oder Karteikarten der gewählten Wörter,
+Stolpersteine», **Drucken** eine eigene Kurs- und Lektionswahl samt Liste
+oder Karteikarten,
 **Mehr** enthält aufklappbare Zeilen für Stimme und
 das Laden eines eigenen Wortschatzes sowie «Name und Held», das zurück zur
 Startseite führt. In einer Runde oder einem Spiel ist das Menü ausgeblendet.
@@ -158,9 +159,11 @@ dem Start. Einen QR-Code erzeugt sie noch nicht.
 
 ## Drucken
 
-Im Hauptmenü unter **Drucken**: die unter «Lernen» gewählten Wörter entweder als
-**Liste** (Tabelle, wahlweise mit Lücke zum Ausfüllen) oder als
-**Karteikarten** ausgeben.
+Im Hauptmenü unter **Drucken**: Kurs und Lektionen wählen – dieselbe Auswahl
+wie unter «Lernen», was hier an- oder abgewählt wird, gilt dort auch – und
+die Wörter entweder als **Liste** (Tabelle, wahlweise mit Lücke zum
+Ausfüllen) oder als **Karteikarten** ausgeben. Vorgewählt ist bei der Liste
+die **Ausgangssprache** mit Lücke für die Übersetzung.
 
 Die Liste lässt sich mit **Liste ein zweites Mal anhängen, neu gemischt**
 verdoppeln: Dieselben Wörter folgen in neuer Reihenfolge auf einer neuen

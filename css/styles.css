@@ -109,8 +109,8 @@ body {
     margin: 0 auto;
 }
 
-/* Lernen nutzt die volle Breite, die übrigen Bereiche bleiben schmal. */
-.screen:not(.learn) {
+/* Lernen und Drucken nutzen die volle Breite, die übrigen Bereiche bleiben schmal. */
+.screen:not(.learn, .print) {
     max-width: 42rem;
     margin-inline: auto;
 }

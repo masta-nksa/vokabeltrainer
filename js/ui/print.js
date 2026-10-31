@@ -60,7 +60,7 @@ export function close() {
 function printMode() {
     if (printLayout() === 'cards') return 'both';
     const checked = document.querySelector('input[name="print-mode"]:checked');
-    return checked ? checked.value : 'both';
+    return checked ? checked.value : 'source';
 }
 
 function printLayout() {
