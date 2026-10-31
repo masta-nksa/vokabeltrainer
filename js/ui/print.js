@@ -35,6 +35,8 @@ export function init() {
 function updateLayoutFields() {
     const cards = printLayout() === 'cards';
     document.getElementById('print-mode-field').hidden = cards;
+    document.getElementById('print-list-hint').hidden = cards;
+    document.getElementById('print-twice-field').hidden = cards;
     document.getElementById('print-cards-hint').hidden = !cards;
 }
 
@@ -78,7 +80,14 @@ function headings() {
 }
 
 function renderTable() {
-    const table = document.getElementById('print-table');
+    fillTable(document.getElementById('print-table'), rows);
+}
+
+/**
+ * @param {HTMLTableElement} table
+ * @param {import('../storage/index.js').Item[]} list
+ */
+function fillTable(table, list) {
     table.replaceChildren();
 
     const [left, right] = headings();
@@ -92,7 +101,7 @@ function renderTable() {
     const mode = printMode();
     const body = table.createTBody();
 
-    for (const item of rows) {
+    for (const item of list) {
         const row = body.insertRow();
         if (mode === 'both') {
             row.insertCell().textContent = targetText(item);
@@ -128,16 +137,31 @@ function printListWindow() {
     win.document.write(
         '<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">' +
         '<title>' + escapeHtml(title) + '</title><style>' +
-        'body{font-family:system-ui,sans-serif;margin:2rem}' +
-        'h1{font-size:1.2rem}' +
+        // Für den beidseitigen Druck: der Kopf wiederholt sich auf jeder
+        // Seite, und keine Zeile wird zwischen Vorder- und Rückseite geteilt.
+        '@page{size:A4;margin:15mm}' +
+        'body{font-family:system-ui,sans-serif;margin:0}' +
+        'h1{font-size:1.2rem;margin-top:0}' +
         'table{width:100%;border-collapse:collapse;margin-top:1rem}' +
+        'thead{display:table-header-group}' +
+        'tr{break-inside:avoid}' +
         'th,td{border:1px solid #999;padding:.5rem;text-align:left}' +
         'td.blank{width:55%}' +
+        '.again{break-before:page}' +
         '</style></head><body><h1></h1></body></html>'
     );
     win.document.close();
     win.document.querySelector('h1').textContent = title;
     win.document.body.append(win.document.importNode(table, true));
+
+    // Dieselben Wörter noch einmal, neu gemischt und auf einer neuen Seite –
+    // beim beidseitigen Druck landet die zweite Liste auf der Rückseite.
+    if (document.getElementById('print-twice').checked) {
+        const again = win.document.createElement('table');
+        again.className = 'again';
+        fillTable(again, shuffle(rows));
+        win.document.body.append(again);
+    }
 
     win.focus();
     win.print();

@@ -162,6 +162,13 @@ Im Hauptmenü unter **Drucken**: die unter «Lernen» gewählten Wörter entwede
 **Liste** (Tabelle, wahlweise mit Lücke zum Ausfüllen) oder als
 **Karteikarten** ausgeben.
 
+Die Liste lässt sich mit **Liste ein zweites Mal anhängen, neu gemischt**
+verdoppeln: Dieselben Wörter folgen in neuer Reihenfolge auf einer neuen
+Seite – beim beidseitigen Druck also auf der Rückseite. Den Duplex-Druck
+wählt man im Druckdialog, denn eine Webseite kann ihn nicht selbst
+einschalten. Der Tabellenkopf wiederholt sich auf jeder Seite, und keine
+Zeile wird zwischen Vorder- und Rückseite geteilt.
+
 Karteikarten sind DIN A8 quer (74 × 52 mm), 8 pro A4-Blatt – zum Ausschneiden
 und Laminieren als Lernkärtchen. Sie sind immer doppelseitig: abwechselnd
 Vorder- und Rückseiten (Zielsprache vorne, Ausgangssprache hinten) für den
